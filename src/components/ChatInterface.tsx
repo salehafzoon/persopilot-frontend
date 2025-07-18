@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { Send, Bot, User } from 'lucide-react';
+import { Send, Bot, User, Brain } from 'lucide-react';
 import { Task } from './TaskCard';
 
 interface Message {
@@ -21,8 +21,20 @@ export const ChatInterface = ({ selectedTask, onBack }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: `Hello! I'm here to help you with ${selectedTask.title.toLowerCase()}. What specific assistance can I provide for you today?`,
+      content: "I like jogging in the morning.",
+      sender: 'user',
+      timestamp: new Date()
+    },
+    {
+      id: '2',
+      content: "Great! I've noted that down as a hobby.",
       sender: 'assistant',
+      timestamp: new Date()
+    },
+    {
+      id: '3',
+      content: "Also meditation helps me relax.",
+      sender: 'user',
       timestamp: new Date()
     }
   ]);
@@ -63,70 +75,124 @@ export const ChatInterface = ({ selectedTask, onBack }: ChatInterfaceProps) => {
     }, 1000);
   };
 
-  return (
-    <div className="h-screen flex flex-col bg-gradient-subtle">
-      {/* Header */}
-      <header className="bg-card/90 backdrop-blur-sm border-b border-border p-4">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={onBack} className="text-muted-foreground hover:text-foreground">
-              ← Back
-            </Button>
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">{selectedTask.icon}</span>
-              <h1 className="text-xl font-semibold text-foreground">{selectedTask.title}</h1>
-            </div>
-          </div>
-        </div>
-      </header>
+  // Get task-specific color for user messages
+  const getUserMessageColor = () => {
+    switch (selectedTask.title) {
+      case 'Content Consumption':
+        return 'bg-blue-500';
+      case 'Lifestyle Optimization':
+        return 'bg-emerald-500';
+      case 'Career Development':
+        return 'bg-purple-500';
+      default:
+        return 'bg-primary';
+    }
+  };
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="max-w-4xl mx-auto space-y-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`flex items-start gap-3 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                  message.sender === 'user' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-muted text-muted-foreground'
-                }`}>
-                  {message.sender === 'user' ? <User size={16} /> : <Bot size={16} />}
-                </div>
-                <Card className={`${
-                  message.sender === 'user' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-card'
-                }`}>
-                  <CardContent className="p-3">
-                    <p className="text-sm">{message.content}</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
+  return (
+    <div className="h-screen flex bg-gradient-subtle">
+      {/* Fixed Brand Header */}
+      <div className="fixed top-0 left-0 z-50 p-4">
+        <h1 className="text-2xl font-bold text-foreground">PersoAgent</h1>
       </div>
 
-      {/* Input */}
-      <div className="border-t border-border bg-card/90 backdrop-blur-sm p-4">
-        <form onSubmit={handleSendMessage} className="max-w-4xl mx-auto">
-          <div className="flex gap-2">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Type your message..."
-              className="flex-1"
-            />
-            <Button type="submit" disabled={!inputValue.trim()}>
-              <Send size={16} />
-            </Button>
+      {/* Main Layout */}
+      <div className="flex w-full pt-16">
+        {/* Left 2/3: Chatbot Panel */}
+        <div className="w-2/3 flex flex-col border-r border-border">
+          {/* Chat Header */}
+          <header className="bg-card/90 backdrop-blur-sm border-b border-border p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Button variant="ghost" onClick={onBack} className="text-muted-foreground hover:text-foreground">
+                  ← Back
+                </Button>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">{selectedTask.icon}</span>
+                  <h2 className="text-xl font-semibold text-foreground">{selectedTask.title}</h2>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4">
+            <div className="space-y-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.sender === 'user' ? 'justify-start' : 'justify-end'}`}
+                >
+                  <div className={`relative max-w-[70%] ${message.sender === 'user' ? '' : ''}`}>
+                    {message.sender === 'user' ? (
+                      <div className={`${getUserMessageColor()} text-white p-3 rounded-2xl rounded-bl-sm`}>
+                        <p className="text-sm">{message.content}</p>
+                      </div>
+                    ) : (
+                      <div className="bg-white text-black p-3 rounded-2xl rounded-br-sm border border-border">
+                        <p className="text-sm">{message.content}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
-        </form>
+
+          {/* Input */}
+          <div className="border-t border-border bg-card/90 backdrop-blur-sm p-4">
+            <form onSubmit={handleSendMessage}>
+              <div className="flex gap-2">
+                <Input
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="Type your message..."
+                  className="flex-1"
+                />
+                <Button type="submit" disabled={!inputValue.trim()}>
+                  <Send size={16} />
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* Right 1/3: Persona Graph + Explanation Panel */}
+        <div className="w-1/3 flex flex-col bg-card">
+          <header className="p-4 border-b border-border">
+            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <Brain size={20} />
+              Persona Graph
+            </h3>
+          </header>
+          
+          <div className="flex-1 p-4">
+            <div className="space-y-4">
+              <div className="bg-muted rounded-lg p-3">
+                <h4 className="font-medium text-foreground mb-2">Hobbies</h4>
+                <div className="flex flex-wrap gap-2">
+                  <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">Jogging</span>
+                  <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">Meditation</span>
+                </div>
+              </div>
+              
+              <div className="bg-muted rounded-lg p-3">
+                <h4 className="font-medium text-foreground mb-2">Preferences</h4>
+                <p className="text-sm text-muted-foreground">
+                  Based on your conversation, I'm building a profile of your interests and preferences to provide more personalized assistance.
+                </p>
+              </div>
+              
+              <div className="bg-muted rounded-lg p-3">
+                <h4 className="font-medium text-foreground mb-2">Context</h4>
+                <p className="text-sm text-muted-foreground">
+                  Currently helping with: {selectedTask.title}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
