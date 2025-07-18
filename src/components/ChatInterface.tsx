@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Send, Bot, User, Brain } from 'lucide-react';
 import { Task } from './TaskCard';
+import { PersonaGraph } from './PersonaGraph';
 
 interface Message {
   id: string;
@@ -167,30 +168,8 @@ export const ChatInterface = ({ selectedTask, onBack }: ChatInterfaceProps) => {
             </h3>
           </header>
           
-          <div className="flex-1 p-4">
-            <div className="space-y-4">
-              <div className="bg-muted rounded-lg p-3">
-                <h4 className="font-medium text-foreground mb-2">Hobbies</h4>
-                <div className="flex flex-wrap gap-2">
-                  <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">Jogging</span>
-                  <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">Meditation</span>
-                </div>
-              </div>
-              
-              <div className="bg-muted rounded-lg p-3">
-                <h4 className="font-medium text-foreground mb-2">Preferences</h4>
-                <p className="text-sm text-muted-foreground">
-                  Based on your conversation, I'm building a profile of your interests and preferences to provide more personalized assistance.
-                </p>
-              </div>
-              
-              <div className="bg-muted rounded-lg p-3">
-                <h4 className="font-medium text-foreground mb-2">Context</h4>
-                <p className="text-sm text-muted-foreground">
-                  Currently helping with: {selectedTask.title}
-                </p>
-              </div>
-            </div>
+          <div className="flex-1 overflow-hidden">
+            <PersonaGraph selectedTask={selectedTask} />
           </div>
         </div>
       </div>
