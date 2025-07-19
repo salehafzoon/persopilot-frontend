@@ -21,19 +21,11 @@ const Console = () => {
           </Button>
         </div>
 
-        {/* Content */}
-        <div className="text-center py-20">
-          <h1 className="text-4xl font-bold text-foreground mb-4">
+        {/* Title */}
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-foreground">
             RecoPilot Console
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Knowledge Worker Interface
-          </p>
-          <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-muted p-12 max-w-2xl mx-auto">
-            <p className="text-muted-foreground text-lg">
-              Console interface for creating classification tasks and defining targeting strategies coming soon...
-            </p>
-          </div>
         </div>
       </div>
     </div>
