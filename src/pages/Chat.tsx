@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Bot } from 'lucide-react';
+import { Bot, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
 import { useAppContext } from '@/context/AppContext';
 import { getTasks, getUserGraph } from '@/services/api';
+import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState<Task[]>([]);
   const {
     selectedTask,
@@ -57,6 +60,7 @@ const Chat = () => {
 
   const handleBack = () => {
     resetState();
+    navigate('/');
   };
 
   if (showChat && selectedTask) {
@@ -65,6 +69,18 @@ const Chat = () => {
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex flex-col items-center justify-center p-6">
+      {/* Back to Home Button */}
+      <div className="absolute top-6 left-6">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => navigate('/')}
+          className="hover:bg-muted"
+        >
+          <ArrowLeft size={20} className="mr-2" />
+          Back to Home
+        </Button>
+      </div>
       {/* Logo - Fades out during transition */}
       <div className={`mb-8 ${animationPhase === 'transitioning' ? 'animate-fade-out' : 'animate-slide-up'}`}>
         <div className="w-24 h-24 bg-primary rounded-2xl flex items-center justify-center shadow-glow animate-glow">
