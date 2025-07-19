@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { ArrowLeft, Plus, X, Loader2, CheckCircle, User, Send } from 'lucide-react';
+import { ArrowLeft, Plus, X, Loader2, CheckCircle, User, Send, AlertCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 
 const Console = () => {
@@ -127,10 +128,37 @@ const Console = () => {
   };
 
   const handleSubmitLabels = () => {
-    console.log('Submitting labels:', userAssignments);
-    // Here you would typically send the assignments to your backend
+    const meetsRequirements = checkLabelingRequirements();
+    if (meetsRequirements) {
+      console.log('Submitting labels:', userAssignments);
+      // Here you would typically send the assignments to your backend
+    }
   };
 
+  const checkLabelingRequirements = () => {
+    const groupCounts = getGroupCounts();
+    return categories.every(category => groupCounts[category] >= MIN_LABELS_PER_GROUP);
+  };
+
+  const getGroupCounts = () => {
+    const counts: {[key: string]: number} = {};
+    categories.forEach(category => {
+      counts[category] = 0;
+    });
+    
+    Object.values(userAssignments).forEach(assignment => {
+      if (counts.hasOwnProperty(assignment)) {
+        counts[assignment]++;
+      }
+    });
+    
+    return counts;
+  };
+
+  const MIN_LABELS_PER_GROUP = 10;
+  const meetsRequirements = checkLabelingRequirements();
+  const groupCounts = getGroupCounts();
+  
   const isNextEnabled = currentStep === 1 
     ? description.trim() && categories.length > 0 
     : selectedTaskName.trim();
@@ -320,9 +348,68 @@ const Console = () => {
               {/* User Labeling Grid */}
               {showUserGrid && (
                 <div className="animate-fade-in">
-                  <h3 className="text-lg font-semibold text-foreground mb-6">
+                  <h3 className="text-lg font-semibold text-foreground mb-4">
                     User Labeling Grid
                   </h3>
+                  
+                  {/* Labeling Guidance */}
+                  <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                    <div className="flex items-start gap-3">
+                      <Info size={20} className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
+                          Labeling Guidance
+                        </p>
+                        <p className="text-sm text-blue-700 dark:text-blue-200">
+                          To ensure model accuracy, please label at least {MIN_LABELS_PER_GROUP} users for each group.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Progress Tracker */}
+                  <div className="mb-6 space-y-3">
+                    <h4 className="text-sm font-medium text-foreground mb-3">Labeling Progress</h4>
+                    <div className="grid gap-3">
+                      {categories.map((category) => {
+                        const count = groupCounts[category] || 0;
+                        const percentage = Math.min((count / MIN_LABELS_PER_GROUP) * 100, 100);
+                        const isComplete = count >= MIN_LABELS_PER_GROUP;
+                        
+                        return (
+                          <div key={category} className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm font-medium text-foreground">
+                                {category}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className={`text-sm font-medium ${
+                                  isComplete ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
+                                }`}>
+                                  {count} / {MIN_LABELS_PER_GROUP} labeled
+                                </span>
+                                {isComplete && (
+                                  <CheckCircle size={16} className="text-green-600 dark:text-green-400" />
+                                )}
+                              </div>
+                            </div>
+                            <div className="w-full bg-muted rounded-full h-2">
+                              <div 
+                                className={`h-2 rounded-full transition-all duration-300 ${
+                                  isComplete 
+                                    ? 'bg-green-500' 
+                                    : percentage > 0 
+                                      ? 'bg-primary' 
+                                      : 'bg-muted'
+                                }`}
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
                   
                   {/* Scrollable Grid Container */}
                   <div className="max-h-96 overflow-y-auto pr-2 mb-8">
@@ -392,13 +479,42 @@ const Console = () => {
                   {/* Submit Labels Button */}
                   {hasAssignments && (
                     <div className="flex justify-center mb-6">
-                      <Button 
-                        onClick={handleSubmitLabels}
-                        className="px-6 py-2 bg-primary hover:bg-primary/90"
-                      >
-                        <Send size={16} className="mr-2" />
-                        Submit Labels ({Object.keys(userAssignments).length} assigned)
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <Button 
+                                onClick={handleSubmitLabels}
+                                disabled={!meetsRequirements}
+                                className={`px-6 py-2 ${
+                                  meetsRequirements 
+                                    ? 'bg-primary hover:bg-primary/90' 
+                                    : 'bg-muted text-muted-foreground cursor-not-allowed'
+                                }`}
+                              >
+                                {meetsRequirements ? (
+                                  <>
+                                    <Send size={16} className="mr-2" />
+                                    Train Model ({Object.keys(userAssignments).length} assigned)
+                                  </>
+                                ) : (
+                                  <>
+                                    <AlertCircle size={16} className="mr-2" />
+                                    Train Model ({Object.keys(userAssignments).length} assigned)
+                                  </>
+                                )}
+                              </Button>
+                            </div>
+                          </TooltipTrigger>
+                          {!meetsRequirements && (
+                            <TooltipContent>
+                              <p className="text-sm">
+                                Please label at least {MIN_LABELS_PER_GROUP} users for each group to train the model
+                              </p>
+                            </TooltipContent>
+                          )}
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   )}
                 </div>
