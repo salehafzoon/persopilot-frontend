@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
 export interface Task {
@@ -15,33 +13,6 @@ interface TaskCardProps {
   onSelect: (task: Task) => void;
   loading: boolean;
 }
-
-// Synthetic function to simulate loading tasks
-export const getTasks = async (): Promise<Task[]> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  return [
-    {
-      id: 'content',
-      title: 'Content Consumption',
-      description: 'Get personalized recommendations for articles, videos, and learning resources tailored to your interests.',
-      icon: '📚'
-    },
-    {
-      id: 'lifestyle',
-      title: 'Lifestyle Optimization',
-      description: 'Receive guidance on health, fitness, productivity, and daily routines to enhance your well-being.',
-      icon: '🎯'
-    },
-    {
-      id: 'career',
-      title: 'Career Development',
-      description: 'Access career advice, skill development plans, and professional growth strategies.',
-      icon: '🚀'
-    }
-  ];
-};
 
 export const TaskCard = ({ task, onSelect, loading }: TaskCardProps) => {
   const handleClick = () => {

@@ -1,14 +1,25 @@
 import { useState, useEffect } from 'react';
 import { Bot } from 'lucide-react';
-import { TaskCard, Task, getTasks } from '@/components/TaskCard';
+import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
+import { useAppContext } from '@/context/AppContext';
+import { getTasks, getUserGraph } from '@/services/api';
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [showChat, setShowChat] = useState(false);
-  const [animationPhase, setAnimationPhase] = useState<'initial' | 'loading' | 'transitioning' | 'chat'>('initial');
+  const {
+    selectedTask,
+    loading,
+    showChat,
+    animationPhase,
+    userId,
+    setSelectedTask,
+    setUserGraph,
+    setLoading,
+    setShowChat,
+    setAnimationPhase,
+    resetState,
+  } = useAppContext();
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -23,8 +34,16 @@ const Index = () => {
     setLoading(true);
     setAnimationPhase('loading');
 
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    // Simulate processing time (2 seconds as requested)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Load user graph
+    try {
+      const graphData = await getUserGraph(userId, task.title);
+      setUserGraph(graphData);
+    } catch (error) {
+      console.error('Failed to load user graph:', error);
+    }
 
     setAnimationPhase('transitioning');
     
@@ -37,14 +56,11 @@ const Index = () => {
   };
 
   const handleBack = () => {
-    setShowChat(false);
-    setSelectedTask(null);
-    setAnimationPhase('initial');
-    setLoading(false);
+    resetState();
   };
 
   if (showChat && selectedTask) {
-    return <ChatInterface selectedTask={selectedTask} onBack={handleBack} />;
+    return <ChatInterface onBack={handleBack} />;
   }
 
   return (

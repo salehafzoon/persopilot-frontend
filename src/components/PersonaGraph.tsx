@@ -9,11 +9,7 @@ import {
   Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Task } from './TaskCard';
-
-interface PersonaGraphProps {
-  selectedTask: Task;
-}
+import { useAppContext } from '@/context/AppContext';
 
 interface GraphNode {
   id: string;
@@ -31,30 +27,6 @@ interface GraphData {
   nodes: GraphNode[];
   edges: GraphEdge[];
 }
-
-// Simulate API call
-const getUserGraph = async (userId: string, task: string): Promise<GraphData> => {
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  return {
-    nodes: [
-      { id: "user_1", label: "user_1", type: "User" },
-      { id: "Lifestyle Optimization", label: "Lifestyle Optimization", type: "Task" },
-      { id: "Exercise", label: "Exercise", type: "Topic" },
-      { id: "jogging", label: "jogging", type: "Object" },
-      { id: "Skill", label: "Skill", type: "Topic" },
-      { id: "meditate", label: "meditate", type: "Object" }
-    ],
-    edges: [
-      { source: "user_1", target: "Lifestyle Optimization", label: "has_task" },
-      { source: "Lifestyle Optimization", target: "Exercise", label: "has_topic" },
-      { source: "Exercise", target: "jogging", label: "has_hobby" },
-      { source: "Lifestyle Optimization", target: "Skill", label: "has_topic" },
-      { source: "Skill", target: "meditate", label: "has_ability" }
-    ]
-  };
-};
 
 const getNodeColor = (type: string): string => {
   switch (type) {
@@ -173,24 +145,18 @@ const convertToReactFlowData = (graphData: GraphData) => {
   return { nodes, edges };
 };
 
-export const PersonaGraph = ({ selectedTask }: PersonaGraphProps) => {
+export const PersonaGraph = () => {
+  const { userGraph } = useAppContext();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(() => {
-    const loadGraph = async () => {
-      try {
-        const graphData = await getUserGraph('user_1', selectedTask.title);
-        const { nodes: flowNodes, edges: flowEdges } = convertToReactFlowData(graphData);
-        setNodes(flowNodes);
-        setEdges(flowEdges);
-      } catch (error) {
-        console.error('Failed to load graph:', error);
-      }
-    };
-
-    loadGraph();
-  }, [selectedTask, setNodes, setEdges]);
+    if (userGraph) {
+      const { nodes: flowNodes, edges: flowEdges } = convertToReactFlowData(userGraph);
+      setNodes(flowNodes);
+      setEdges(flowEdges);
+    }
+  }, [userGraph, setNodes, setEdges]);
 
   return (
     <div className="h-full w-full">

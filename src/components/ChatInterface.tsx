@@ -1,46 +1,25 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { Send, Bot, User, Brain } from 'lucide-react';
-import { Task } from './TaskCard';
+import { Send, Brain } from 'lucide-react';
 import { PersonaGraph } from './PersonaGraph';
-
-interface Message {
-  id: string;
-  content: string;
-  sender: 'user' | 'assistant';
-  timestamp: Date;
-}
+import { useAppContext } from '@/context/AppContext';
 
 interface ChatInterfaceProps {
-  selectedTask: Task;
   onBack: () => void;
 }
 
-export const ChatInterface = ({ selectedTask, onBack }: ChatInterfaceProps) => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: "I like jogging in the morning.",
-      sender: 'user',
-      timestamp: new Date()
-    },
-    {
-      id: '2',
-      content: "Great! I've noted that down as a hobby.",
-      sender: 'assistant',
-      timestamp: new Date()
-    },
-    {
-      id: '3',
-      content: "Also meditation helps me relax.",
-      sender: 'user',
-      timestamp: new Date()
-    }
-  ]);
+export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
+  const {
+    selectedTask,
+    chatMessages,
+    addChatMessage,
+  } = useAppContext();
+
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  if (!selectedTask) return null;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -48,31 +27,31 @@ export const ChatInterface = ({ selectedTask, onBack }: ChatInterfaceProps) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [chatMessages]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
-    const userMessage: Message = {
+    const userMessage = {
       id: Date.now().toString(),
       content: inputValue,
-      sender: 'user',
+      sender: 'user' as const,
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    addChatMessage(userMessage);
     setInputValue('');
 
     // Simulate assistant response
     setTimeout(() => {
-      const assistantMessage: Message = {
+      const assistantMessage = {
         id: (Date.now() + 1).toString(),
         content: `I understand you're interested in "${inputValue}". Let me help you with that in the context of ${selectedTask.title.toLowerCase()}. Here are some personalized suggestions...`,
-        sender: 'assistant',
+        sender: 'assistant' as const,
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, assistantMessage]);
+      addChatMessage(assistantMessage);
     }, 1000);
   };
 
@@ -118,27 +97,27 @@ export const ChatInterface = ({ selectedTask, onBack }: ChatInterfaceProps) => {
 
           {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.sender === 'user' ? 'justify-start' : 'justify-end'}`}
-                >
-                  <div className={`relative max-w-[70%] ${message.sender === 'user' ? '' : ''}`}>
-                    {message.sender === 'user' ? (
-                      <div className={`${getUserMessageColor()} text-white p-3 rounded-2xl rounded-bl-sm`}>
-                        <p className="text-sm">{message.content}</p>
-                      </div>
-                    ) : (
-                      <div className="bg-white text-black p-3 rounded-2xl rounded-br-sm border border-border">
-                        <p className="text-sm">{message.content}</p>
-                      </div>
-                    )}
-                  </div>
+          <div className="space-y-4">
+            {chatMessages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex ${message.sender === 'user' ? 'justify-start' : 'justify-end'}`}
+              >
+                <div className={`relative max-w-[70%] ${message.sender === 'user' ? '' : ''}`}>
+                  {message.sender === 'user' ? (
+                    <div className={`${getUserMessageColor()} text-white p-3 rounded-2xl rounded-bl-sm`}>
+                      <p className="text-sm">{message.content}</p>
+                    </div>
+                  ) : (
+                    <div className="bg-white text-black p-3 rounded-2xl rounded-br-sm border border-border">
+                      <p className="text-sm">{message.content}</p>
+                    </div>
+                  )}
                 </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
           </div>
 
           {/* Input */}
@@ -170,7 +149,7 @@ export const ChatInterface = ({ selectedTask, onBack }: ChatInterfaceProps) => {
           
           {/* Top 2/3: Persona Graph */}
           <div className="flex-1 overflow-hidden h-2/3">
-            <PersonaGraph selectedTask={selectedTask} />
+            <PersonaGraph />
           </div>
 
           {/* Bottom 1/3: Explanation Box */}
