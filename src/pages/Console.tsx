@@ -10,25 +10,8 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Console = () => {
   const navigate = useNavigate();
-  const [description, setDescription] = useState('');
-  const [categoryInput, setCategoryInput] = useState('');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedTaskName, setSelectedTaskName] = useState('');
-  const [customTaskName, setCustomTaskName] = useState('');
-  const [showUserGrid, setShowUserGrid] = useState(false);
-  const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>(() => {
-    const initialAssignments: { [userId: string]: string } = {};
-    mockUsers.forEach(user => {
-      if (user.assignedGroup) {
-        initialAssignments[user.id] = user.assignedGroup;
-      }
-    });
-    return initialAssignments;
-  });
-
-  // Mock data for suggestions and users
+  
+  // Mock data for suggestions and users (moved before state initialization)
   const taskNameSuggestions = ['CampingAffinity', 'OutdoorPreference', 'NatureClassification'];
   const mockUsers = [
     { 
@@ -173,6 +156,24 @@ const Console = () => {
     }
   ];
 
+  // State declarations
+  const [description, setDescription] = useState('');
+  const [categoryInput, setCategoryInput] = useState('');
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedTaskName, setSelectedTaskName] = useState('');
+  const [customTaskName, setCustomTaskName] = useState('');
+  const [showUserGrid, setShowUserGrid] = useState(false);
+  const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>(() => {
+    const initialAssignments: { [userId: string]: string } = {};
+    mockUsers.forEach(user => {
+      if (user.assignedGroup) {
+        initialAssignments[user.id] = user.assignedGroup;
+      }
+    });
+    return initialAssignments;
+  });
   const handleAddCategory = () => {
     if (categoryInput.trim() && !categories.includes(categoryInput.trim())) {
       setCategories([...categories, categoryInput.trim()]);
