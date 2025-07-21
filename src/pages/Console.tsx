@@ -23,51 +23,75 @@ const Console = () => {
   const taskNameSuggestions = ['CampingAffinity', 'OutdoorPreference', 'NatureClassification'];
   const mockUsers = [
     { 
-      id: 'USER_001', 
+      id: 'USER_001',
+      age: 28,
+      gender: 'Female',
       description: 'This user often talks about hiking, outdoor meals, and weekend nature trips. Frequently shares photos from national parks and discusses camping gear. Likely a camping enthusiast who values authentic outdoor experiences.'
     },
     { 
-      id: 'USER_002', 
+      id: 'USER_002',
+      age: 34,
+      gender: 'Male',
       description: 'Occasionally shares scenic photos and enjoys weekend getaways to national parks. Shows moderate interest in outdoor activities but prefers comfortable accommodations over traditional camping.'
     },
     { 
-      id: 'USER_003', 
+      id: 'USER_003',
+      age: 25,
+      gender: 'Non-binary',
       description: 'Focused on city life, technology, and indoor entertainment. Rarely engages with outdoor content and typically posts about restaurants, movies, and urban activities. Unlikely to be interested in camping.'
     },
     { 
-      id: 'USER_004', 
+      id: 'USER_004',
+      age: 31,
+      gender: 'Female',
       description: 'Enjoys outdoor running and cycling but shows limited interest in camping or wilderness activities. Prefers structured outdoor exercise over adventure camping experiences.'
     },
     { 
-      id: 'USER_005', 
+      id: 'USER_005',
+      age: 42,
+      gender: 'Male',
       description: 'Family-oriented person who enjoys organized outdoor activities like picnics and beach visits. Interested in child-friendly outdoor experiences but not extreme camping adventures.'
     },
     { 
-      id: 'USER_006', 
+      id: 'USER_006',
+      age: 29,
+      gender: 'Female',
       description: 'Professional photographer specializing in landscape and wildlife photography. Frequently travels to remote locations for work but camping is more of a necessity than a personal passion.'
     },
     { 
-      id: 'USER_007', 
+      id: 'USER_007',
+      age: 37,
+      gender: 'Male',
       description: 'Travel blogger who covers luxury resorts and five-star accommodations. Appreciates natural beauty but strongly prefers glamping over traditional camping experiences.'
     },
     { 
-      id: 'USER_008', 
+      id: 'USER_008',
+      age: 45,
+      gender: 'Male',
       description: 'Survival skills instructor and wilderness guide who lives off-grid part-time. Deeply passionate about primitive camping, bushcraft, and teaching others outdoor survival techniques.'
     },
     { 
-      id: 'USER_009', 
+      id: 'USER_009',
+      age: 26,
+      gender: 'Female',
       description: 'Weekend warrior who enjoys car camping and RV trips with friends. Likes the social aspect of camping but prefers modern conveniences and established campgrounds.'
     },
     { 
-      id: 'USER_010', 
+      id: 'USER_010',
+      age: 33,
+      gender: 'Female',
       description: 'Environmental activist who participates in conservation efforts and clean-up campaigns. Values nature preservation but camping is secondary to environmental advocacy work.'
     },
     { 
-      id: 'USER_011', 
+      id: 'USER_011',
+      age: 21,
+      gender: 'Male',
       description: 'College student who goes on occasional group camping trips for social reasons. Shows interest in outdoor activities but limited by budget and experience level.'
     },
     { 
-      id: 'USER_012', 
+      id: 'USER_012',
+      age: 68,
+      gender: 'Female',
       description: 'Retired professional who recently discovered camping as a hobby. Enthusiastic about learning new outdoor skills and investing in quality camping equipment for future adventures.'
     }
   ];
@@ -441,6 +465,14 @@ const Console = () => {
                                     </div>
                                   </div>
                                 )}
+                              </div>
+
+                              {/* Demographics */}
+                              <div className="mb-3">
+                                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                  <span>Age: {user.age}</span>
+                                  <span>Gender: {user.gender}</span>
+                                </div>
                               </div>
 
                               {/* User Description */}
