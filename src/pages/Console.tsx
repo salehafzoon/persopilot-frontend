@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Console = () => {
   const navigate = useNavigate();
@@ -17,7 +18,15 @@ const Console = () => {
   const [selectedTaskName, setSelectedTaskName] = useState('');
   const [customTaskName, setCustomTaskName] = useState('');
   const [showUserGrid, setShowUserGrid] = useState(false);
-  const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>({});
+  const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>(() => {
+    const initialAssignments: { [userId: string]: string } = {};
+    mockUsers.forEach(user => {
+      if (user.assignedGroup) {
+        initialAssignments[user.id] = user.assignedGroup;
+      }
+    });
+    return initialAssignments;
+  });
 
   // Mock data for suggestions and users
   const taskNameSuggestions = ['CampingAffinity', 'OutdoorPreference', 'NatureClassification'];
@@ -26,73 +35,141 @@ const Console = () => {
       id: 'USER_001',
       age: 28,
       gender: 'Female',
-      description: 'This user often talks about hiking, outdoor meals, and weekend nature trips. Frequently shares photos from national parks and discusses camping gear. Likely a camping enthusiast who values authentic outdoor experiences.'
+      description: 'This user often talks about hiking, outdoor meals, and weekend nature trips. Frequently shares photos from national parks and discusses camping gear. Likely a camping enthusiast who values authentic outdoor experiences.',
+      assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_002',
       age: 34,
       gender: 'Male',
-      description: 'Occasionally shares scenic photos and enjoys weekend getaways to national parks. Shows moderate interest in outdoor activities but prefers comfortable accommodations over traditional camping.'
+      description: 'Occasionally shares scenic photos and enjoys weekend getaways to national parks. Shows moderate interest in outdoor activities but prefers comfortable accommodations over traditional camping.',
+      assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_003',
       age: 25,
       gender: 'Non-binary',
-      description: 'Focused on city life, technology, and indoor entertainment. Rarely engages with outdoor content and typically posts about restaurants, movies, and urban activities. Unlikely to be interested in camping.'
+      description: 'Focused on city life, technology, and indoor entertainment. Rarely engages with outdoor content and typically posts about restaurants, movies, and urban activities. Unlikely to be interested in camping.',
+      assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_004',
       age: 31,
       gender: 'Female',
-      description: 'Enjoys outdoor running and cycling but shows limited interest in camping or wilderness activities. Prefers structured outdoor exercise over adventure camping experiences.'
+      description: 'Enjoys outdoor running and cycling but shows limited interest in camping or wilderness activities. Prefers structured outdoor exercise over adventure camping experiences.',
+      assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_005',
       age: 42,
       gender: 'Male',
-      description: 'Family-oriented person who enjoys organized outdoor activities like picnics and beach visits. Interested in child-friendly outdoor experiences but not extreme camping adventures.'
+      description: 'Family-oriented person who enjoys organized outdoor activities like picnics and beach visits. Interested in child-friendly outdoor experiences but not extreme camping adventures.',
+      assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_006',
       age: 29,
       gender: 'Female',
-      description: 'Professional photographer specializing in landscape and wildlife photography. Frequently travels to remote locations for work but camping is more of a necessity than a personal passion.'
+      description: 'Professional photographer specializing in landscape and wildlife photography. Frequently travels to remote locations for work but camping is more of a necessity than a personal passion.',
+      assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_007',
       age: 37,
       gender: 'Male',
-      description: 'Travel blogger who covers luxury resorts and five-star accommodations. Appreciates natural beauty but strongly prefers glamping over traditional camping experiences.'
+      description: 'Travel blogger who covers luxury resorts and five-star accommodations. Appreciates natural beauty but strongly prefers glamping over traditional camping experiences.',
+      assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_008',
       age: 45,
       gender: 'Male',
-      description: 'Survival skills instructor and wilderness guide who lives off-grid part-time. Deeply passionate about primitive camping, bushcraft, and teaching others outdoor survival techniques.'
+      description: 'Survival skills instructor and wilderness guide who lives off-grid part-time. Deeply passionate about primitive camping, bushcraft, and teaching others outdoor survival techniques.',
+      assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_009',
       age: 26,
       gender: 'Female',
-      description: 'Weekend warrior who enjoys car camping and RV trips with friends. Likes the social aspect of camping but prefers modern conveniences and established campgrounds.'
+      description: 'Weekend warrior who enjoys car camping and RV trips with friends. Likes the social aspect of camping but prefers modern conveniences and established campgrounds.',
+      assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_010',
       age: 33,
       gender: 'Female',
-      description: 'Environmental activist who participates in conservation efforts and clean-up campaigns. Values nature preservation but camping is secondary to environmental advocacy work.'
+      description: 'Environmental activist who participates in conservation efforts and clean-up campaigns. Values nature preservation but camping is secondary to environmental advocacy work.',
+      assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_011',
       age: 21,
       gender: 'Male',
-      description: 'College student who goes on occasional group camping trips for social reasons. Shows interest in outdoor activities but limited by budget and experience level.'
+      description: 'College student who goes on occasional group camping trips for social reasons. Shows interest in outdoor activities but limited by budget and experience level.',
+      assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_012',
       age: 68,
       gender: 'Female',
-      description: 'Retired professional who recently discovered camping as a hobby. Enthusiastic about learning new outdoor skills and investing in quality camping equipment for future adventures.'
+      description: 'Retired professional who recently discovered camping as a hobby. Enthusiastic about learning new outdoor skills and investing in quality camping equipment for future adventures.',
+      assignedGroup: 'Camping Enthusiast'
+    },
+    { 
+      id: 'USER_013',
+      age: 29,
+      gender: 'Male',
+      description: 'Urban professional who prefers hotel stays and city breaks. Shows no interest in outdoor activities and actively avoids camping-related content.',
+      assignedGroup: 'Not Camping Enthusiast'
+    },
+    { 
+      id: 'USER_014',
+      age: 35,
+      gender: 'Female',
+      description: 'Fitness enthusiast who enjoys gym workouts and indoor sports. Rarely engages with outdoor content and prefers climate-controlled environments.',
+      assignedGroup: 'Not Camping Enthusiast'
+    },
+    { 
+      id: 'USER_015',
+      age: 27,
+      gender: 'Male',
+      description: 'Gaming enthusiast who spends most free time indoors playing video games. Shows minimal interest in outdoor activities or nature-related content.',
+      assignedGroup: 'Not Camping Enthusiast'
+    },
+    { 
+      id: 'USER_016',
+      age: 31,
+      gender: 'Female',
+      description: 'Busy parent who prefers structured indoor activities with children. Values convenience and comfort over outdoor adventures.',
+      assignedGroup: 'Not Camping Enthusiast'
+    },
+    { 
+      id: 'USER_017',
+      age: 24,
+      gender: 'Non-binary',
+      description: 'Art student focused on studio work and gallery exhibitions. Prefers urban cultural experiences over outdoor activities.',
+      assignedGroup: 'Not Camping Enthusiast'
+    },
+    { 
+      id: 'USER_018',
+      age: 39,
+      gender: 'Male',
+      description: 'Business executive who enjoys fine dining and luxury experiences. Shows no interest in camping or roughing it outdoors.',
+      assignedGroup: 'Not Camping Enthusiast'
+    },
+    { 
+      id: 'USER_019',
+      age: 26,
+      gender: 'Female',
+      description: 'Fashion blogger who focuses on style and beauty content. Rarely posts about outdoor activities and prefers urban lifestyle.',
+      assignedGroup: 'Not Camping Enthusiast'
+    },
+    { 
+      id: 'USER_020',
+      age: 33,
+      gender: 'Male',
+      description: 'Tech worker who enjoys indoor hobbies like coding projects and home automation. Limited engagement with outdoor or camping content.',
+      assignedGroup: 'Not Camping Enthusiast'
     }
   ];
 
@@ -217,11 +294,13 @@ const Console = () => {
           </Button>
         </div>
 
-        {/* Title */}
-        <div className="text-center mb-12">
+        {/* Header with Theme Toggle */}
+        <div className="flex items-center justify-between mb-12">
+          <div></div>
           <h1 className="text-5xl font-bold text-foreground">
             RecoPilot Console
           </h1>
+          <ThemeToggle />
         </div>
 
         {/* Main Content */}
@@ -381,11 +460,11 @@ const Console = () => {
                     <div className="flex items-start gap-3">
                       <Info size={20} className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
-                          Labeling Guidance
+                        <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
+                          **To ensure model accuracy, please label at least {MIN_LABELS_PER_GROUP} users for each group.**
                         </p>
-                        <p className="text-sm text-blue-700 dark:text-blue-200">
-                          To ensure model accuracy, please label at least {MIN_LABELS_PER_GROUP} users for each group.
+                        <p className="text-xs text-blue-700 dark:text-blue-300">
+                          Users have been pre-assigned to related groups by AI. Please review them below and make any necessary changes.
                         </p>
                       </div>
                     </div>
@@ -455,7 +534,7 @@ const Console = () => {
                                 <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
                                   <User size={16} className="text-muted-foreground" />
                                 </div>
-                                <span className="font-mono text-sm font-medium text-foreground">
+                                <span className="font-mono text-sm font-medium" style={{ color: `hsl(var(--user-id-color))` }}>
                                   {user.id}
                                 </span>
                                 {isAssigned && (
@@ -469,7 +548,7 @@ const Console = () => {
 
                               {/* Demographics */}
                               <div className="mb-3">
-                                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                <div className="flex items-center gap-4 text-xs font-medium" style={{ color: `hsl(var(--demographic-color))` }}>
                                   <span>Age: {user.age}</span>
                                   <span>Gender: {user.gender}</span>
                                 </div>

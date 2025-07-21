@@ -8,39 +8,43 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 142 76% 36%;
-    --primary-foreground: 355 25% 97%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 142 76% 36%;
-    --accent-foreground: 355 25% 97%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142 76% 36%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
     /* Custom animations and gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(158 64% 52%));
-    --gradient-subtle: linear-gradient(180deg, hsl(240 10% 3.9%), hsl(240 3.7% 15.9%));
-    --shadow-glow: 0 0 40px hsl(142 76% 36% / 0.3);
+    --gradient-primary: linear-gradient(135deg, hsl(222.2 47.4% 11.2%), hsl(215.4 16.3% 46.9%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 96%));
+    --shadow-glow: 0 0 40px hsl(222.2 47.4% 11.2% / 0.3);
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* User card colors */
+    --user-id-color: 217.2 91.2% 59.8%;
+    --demographic-color: 142 76% 36%;
 
     --radius: 0.5rem;
 
@@ -64,6 +68,10 @@ All colors MUST be HSL.
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
+    
+    /* User card colors for dark mode */
+    --user-id-color: 217.2 91.2% 59.8%;
+    --demographic-color: 142 76% 36%;
 
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
