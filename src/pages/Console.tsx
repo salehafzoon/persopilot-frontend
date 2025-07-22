@@ -436,30 +436,48 @@ const Console = () => {
                                 {user.description}
                               </p>
 
-                              {/* Assign Group Dropdown */}
-                              <div className="space-y-2">
-                                <label className="text-xs font-medium text-foreground">
-                                  Assign Group
-                                </label>
-                                <Select
-                                  value={userAssignments[user.id] || binaryGroups[0]}
-                                  onValueChange={(value) => handleUserAssignment(user.id, value)}
-                                >
-                                  <SelectTrigger className="w-full">
-                                    <SelectValue placeholder="Assign Group" />
-                                  </SelectTrigger>
-                                  <SelectContent className="bg-background border border-muted shadow-lg z-50">
-                                    {binaryGroups.map((group) => (
-                                      <SelectItem 
-                                        key={group} 
-                                        value={group}
-                                        className="cursor-pointer hover:bg-muted focus:bg-muted"
-                                      >
-                                        {group}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
+                              {/* Assign Group and Likelihood Section */}
+                              <div className="flex gap-4">
+                                {/* Assign Group - Left Side */}
+                                <div className="flex-1">
+                                  <label className="text-xs font-medium text-foreground">
+                                    Assign Group
+                                  </label>
+                                  <Select
+                                    value={userAssignments[user.id] || binaryGroups[0]}
+                                    onValueChange={(value) => handleUserAssignment(user.id, value)}
+                                  >
+                                    <SelectTrigger className="w-full mt-2">
+                                      <SelectValue placeholder="Assign Group" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-background border border-muted shadow-lg z-50">
+                                      {binaryGroups.map((group) => (
+                                        <SelectItem 
+                                          key={group} 
+                                          value={group}
+                                          className="cursor-pointer hover:bg-muted focus:bg-muted"
+                                        >
+                                          {group}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                {/* Likelihood - Right Side */}
+                                <div className="flex-1">
+                                  <label className="text-xs font-medium text-foreground">
+                                    Likelihood
+                                  </label>
+                                  <div className="mt-2 text-center">
+                                    <div className="text-2xl font-bold text-primary">
+                                      {Math.floor(Math.random() * 40 + 60)}%
+                                    </div>
+                                    <div className="text-xs text-muted-foreground">
+                                      Confidence
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </CardContent>
                           </Card>
