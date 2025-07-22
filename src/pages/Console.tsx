@@ -234,7 +234,7 @@ const Console = () => {
 
   const getNextButtonText = () => {
     if (currentStep === 1) return 'Next';
-    if (currentStep === 2) return 'Finalize Classification';
+    if (currentStep === 2) return `Finalize Classification (${Object.keys(userAssignments).length} assigned)`;
     return 'Next';
   };
 
@@ -490,18 +490,6 @@ const Console = () => {
                     </div>
                   </div>
 
-                  {/* Submit Labels Button */}
-                  {hasAssignments && (
-                    <div className="flex justify-center mb-6">
-                      <Button 
-                        onClick={handleSubmitLabels}
-                        className="px-6 py-2 bg-primary hover:bg-primary/90"
-                      >
-                        <Send size={16} className="mr-2" />
-                        Train Model ({Object.keys(userAssignments).length} assigned)
-                      </Button>
-                    </div>
-                  )}
                 </div>
               )}
 
