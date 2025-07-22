@@ -240,7 +240,7 @@ const Console = () => {
 
   return (
     <div className="min-h-screen bg-gradient-subtle p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button 
@@ -404,7 +404,7 @@ const Console = () => {
                   
                   {/* Scrollable Grid Container */}
                   <div className="max-h-96 overflow-y-auto pr-2 mb-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                       {mockUsers.map((user) => {
                         const isAssigned = userAssignments[user.id];
                         return (
