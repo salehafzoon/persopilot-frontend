@@ -1,17 +1,60 @@
 import { useState } from 'react';
-import { ArrowLeft, Loader2, CheckCircle, User, Send } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle, User, Send, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { 
+  Sidebar, 
+  SidebarContent, 
+  SidebarGroup, 
+  SidebarGroupContent, 
+  SidebarGroupLabel, 
+  SidebarMenu, 
+  SidebarMenuButton, 
+  SidebarMenuItem, 
+  SidebarProvider,
+  SidebarTrigger,
+  useSidebar 
+} from '@/components/ui/sidebar';
 
 const Console = () => {
   const navigate = useNavigate();
   
   // Mock data for suggestions and users
   const taskNameSuggestions = ['CampingAffinity', 'OutdoorPreference', 'NatureClassification'];
+  
+  // Mock data for previously created classification tasks
+  const previousTasks = [
+    {
+      id: 1,
+      name: 'CampingAffinity',
+      description: 'Whether or not a user is interested in camping and outdoor activities'
+    },
+    {
+      id: 2,
+      name: 'FitnessEnthusiast',
+      description: 'Whether or not a user is actively engaged in fitness and exercise routines'
+    },
+    {
+      id: 3,
+      name: 'TechSavvy',
+      description: 'Whether or not a user shows high interest in technology and digital innovations'
+    },
+    {
+      id: 4,
+      name: 'FoodieClassifier',
+      description: 'Whether or not a user is passionate about food experiences and cooking'
+    },
+    {
+      id: 5,
+      name: 'TravelEnthusiast',
+      description: 'Whether or not a user frequently travels and seeks new travel experiences'
+    }
+  ];
+
   const mockUsers = [
     { 
       id: 'USER_001',
@@ -239,30 +282,61 @@ const Console = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
-      {/* Fixed Header */}
-      <div className="sticky top-0 z-50 bg-gradient-subtle p-6 border-b border-muted backdrop-blur-sm">
-        <div className="max-w-8xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => navigate('/')}
-              className="hover:bg-muted"
-            >
-              <ArrowLeft size={20} className="mr-2" />
-              Logout
-            </Button>
-            <ThemeToggle />
-          </div>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gradient-subtle">
+        {/* Sidebar */}
+        <Sidebar className="border-r border-muted">
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Previous Classifications</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {previousTasks.map((task) => (
+                    <SidebarMenuItem key={task.id}>
+                      <SidebarMenuButton asChild>
+                        <div className="cursor-pointer p-3 hover:bg-muted rounded-lg">
+                          <div className="font-medium text-foreground">{task.name}</div>
+                          <div className="text-xs text-muted-foreground mt-1 leading-tight">
+                            {task.description}
+                          </div>
+                        </div>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
 
-          <div className="flex justify-center">
-            <h1 className="text-5xl font-bold text-foreground">
-              RecoPilot Console
-            </h1>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Fixed Header */}
+          <div className="sticky top-0 z-50 bg-gradient-subtle p-6 border-b border-muted backdrop-blur-sm">
+            <div className="max-w-8xl mx-auto">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-4">
+                  <SidebarTrigger />
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => navigate('/')}
+                    className="hover:bg-muted"
+                  >
+                    <ArrowLeft size={20} className="mr-2" />
+                    Logout
+                  </Button>
+                </div>
+                <ThemeToggle />
+              </div>
+
+              <div className="flex justify-center">
+                <h1 className="text-5xl font-bold text-foreground">
+                  RecoPilot Console
+                </h1>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
       {/* Scrollable Content */}
       <div className="overflow-y-auto p-6">
@@ -524,7 +598,9 @@ const Console = () => {
         )}
         </div>
       </div>
-    </div>
+        </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
