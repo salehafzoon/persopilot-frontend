@@ -418,9 +418,9 @@ const Console = () => {
                                  <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
                                    <User size={16} className="text-muted-foreground" />
                                  </div>
-                                 <span className="font-mono text-sm font-medium text-amber-600 dark:text-amber-400">
-                                   {user.id}
-                                 </span>
+                                  <span className="font-mono text-sm font-bold text-black dark:text-white">
+                                    {user.id}
+                                  </span>
                                </div>
 
                               {/* Demographics */}
@@ -470,7 +470,7 @@ const Console = () => {
                                     Likelihood
                                   </label>
                                   <div className="mt-2 text-center">
-                                    <div className="text-2xl font-bold text-primary">
+                                    <div className="text-lg font-bold text-primary">
                                       {Math.floor(Math.random() * 40 + 60)}%
                                     </div>
                                     <div className="text-xs text-muted-foreground">
