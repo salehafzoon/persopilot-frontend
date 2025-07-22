@@ -155,9 +155,6 @@ const Console = () => {
     }
   ];
 
-  // Binary classification groups
-  const binaryGroups = ['Camping Enthusiast', 'Not Camping Enthusiast'];
-  
   // State declarations
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -165,14 +162,20 @@ const Console = () => {
   const [selectedTaskName, setSelectedTaskName] = useState('');
   const [customTaskName, setCustomTaskName] = useState('');
   const [showUserGrid, setShowUserGrid] = useState(false);
+  const [classificationGroup, setClassificationGroup] = useState('');
   const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>(() => {
     const initialAssignments: { [userId: string]: string } = {};
     mockUsers.forEach(user => {
       // Default to first group for all users
-      initialAssignments[user.id] = binaryGroups[0];
+      initialAssignments[user.id] = classificationGroup || 'Group 1';
     });
     return initialAssignments;
   });
+
+  // Binary classification groups derived from user input
+  const binaryGroups = classificationGroup.trim() 
+    ? [classificationGroup.trim(), `Not ${classificationGroup.trim()}`]
+    : ['Group 1', 'Not Group 1'];
 
   const handleNext = async () => {
     if (currentStep === 1) {
@@ -277,20 +280,29 @@ const Console = () => {
                 />
               </div>
 
-              {/* Binary Groups Display */}
+              {/* Classification Group Input */}
               <div className="mb-8">
                 <label className="block text-sm font-medium text-foreground mb-3">
-                  Classification Groups (Binary)
+                  Classification Group
                 </label>
-                <div className="flex flex-wrap gap-2">
-                  {binaryGroups.map((group) => (
-                    <div
-                      key={group}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium"
-                    >
-                      {group}
+                <div className="flex items-center gap-3">
+                  {/* Chips - only show when input has content */}
+                  {classificationGroup.trim() && (
+                    <div className="flex gap-2">
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                        {classificationGroup.trim()}
+                      </div>
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/10 text-secondary-foreground rounded-full text-sm font-medium">
+                        Not {classificationGroup.trim()}
+                      </div>
                     </div>
-                  ))}
+                  )}
+                  <Input
+                    value={classificationGroup}
+                    onChange={(e) => setClassificationGroup(e.target.value)}
+                    placeholder="e.g., Camping Enthusiast"
+                    className="max-w-xs"
+                  />
                 </div>
               </div>
 
