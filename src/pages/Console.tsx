@@ -166,8 +166,8 @@ const Console = () => {
   const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>(() => {
     const initialAssignments: { [userId: string]: string } = {};
     mockUsers.forEach(user => {
-      // Default to first group for all users
-      initialAssignments[user.id] = classificationGroup || 'Group 1';
+      // Use the user's assigned group from mock data
+      initialAssignments[user.id] = user.assignedGroup;
     });
     return initialAssignments;
   });
@@ -404,13 +404,13 @@ const Console = () => {
                   
                   {/* Scrollable Grid Container */}
                   <div className="max-h-96 overflow-y-auto pr-2 mb-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                       {mockUsers.map((user) => {
                         const isAssigned = userAssignments[user.id];
                         return (
                            <Card 
                              key={user.id} 
-                             className="transition-all duration-200 bg-card hover:shadow-md"
+                             className="transition-all duration-200 bg-card hover:shadow-md min-h-[280px]"
                            >
                              <CardContent className="p-4">
                                {/* User ID/Avatar */}
