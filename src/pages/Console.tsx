@@ -242,8 +242,8 @@ const Console = () => {
     <div className="min-h-screen bg-gradient-subtle">
       {/* Fixed Header */}
       <div className="sticky top-0 z-50 bg-gradient-subtle p-6 border-b border-muted backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
+        <div className="max-w-8xl mx-auto">
+          <div className="flex items-center justify-between mb-4">
             <Button 
               variant="ghost" 
               size="sm" 
@@ -251,16 +251,15 @@ const Console = () => {
               className="hover:bg-muted"
             >
               <ArrowLeft size={20} className="mr-2" />
-              Back to Home
+              Logout
             </Button>
+            <ThemeToggle />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div></div>
+          <div className="flex justify-center">
             <h1 className="text-5xl font-bold text-foreground">
               RecoPilot Console
             </h1>
-            <ThemeToggle />
           </div>
         </div>
       </div>
