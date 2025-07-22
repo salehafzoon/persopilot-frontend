@@ -293,14 +293,14 @@ const Console = () => {
                 <SidebarMenu>
                   {previousTasks.map((task) => (
                     <SidebarMenuItem key={task.id}>
-                      <SidebarMenuButton asChild>
-                        <div className="cursor-pointer p-3 hover:bg-muted rounded-lg">
-                          <div className="font-medium text-foreground">{task.name}</div>
-                          <div className="text-xs text-muted-foreground mt-1 leading-tight">
+                      <Card className="m-2 cursor-pointer hover:shadow-md transition-shadow">
+                        <CardContent className="p-3">
+                          <div className="font-medium text-foreground mb-1">{task.name}</div>
+                          <div className="text-xs text-muted-foreground leading-tight">
                             {task.description}
                           </div>
-                        </div>
-                      </SidebarMenuButton>
+                        </CardContent>
+                      </Card>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
