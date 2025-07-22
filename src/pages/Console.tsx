@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Loader2, CheckCircle, User, Send, Menu } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle, User, Send, Menu, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -31,27 +31,37 @@ const Console = () => {
     {
       id: 1,
       name: 'CampingAffinity',
-      description: 'Whether or not a user is interested in camping and outdoor activities'
+      description: 'Whether or not a user is interested in camping and outdoor activities',
+      groups: ['Camping Enthusiast', 'Not Camping Enthusiast'],
+      createdAt: new Date('2024-01-15T10:30:00')
     },
     {
       id: 2,
       name: 'FitnessEnthusiast',
-      description: 'Whether or not a user is actively engaged in fitness and exercise routines'
+      description: 'Whether or not a user is actively engaged in fitness and exercise routines',
+      groups: ['Fitness Enthusiast', 'Not Fitness Enthusiast'],
+      createdAt: new Date('2024-01-12T14:20:00')
     },
     {
       id: 3,
       name: 'TechSavvy',
-      description: 'Whether or not a user shows high interest in technology and digital innovations'
+      description: 'Whether or not a user shows high interest in technology and digital innovations',
+      groups: ['Tech Savvy', 'Not Tech Savvy'],
+      createdAt: new Date('2024-01-10T09:15:00')
     },
     {
       id: 4,
       name: 'FoodieClassifier',
-      description: 'Whether or not a user is passionate about food experiences and cooking'
+      description: 'Whether or not a user is passionate about food experiences and cooking',
+      groups: ['Foodie', 'Not Foodie'],
+      createdAt: new Date('2024-01-08T16:45:00')
     },
     {
       id: 5,
       name: 'TravelEnthusiast',
-      description: 'Whether or not a user frequently travels and seeks new travel experiences'
+      description: 'Whether or not a user frequently travels and seeks new travel experiences',
+      groups: ['Travel Enthusiast', 'Not Travel Enthusiast'],
+      createdAt: new Date('2024-01-05T11:10:00')
     }
   ];
 
@@ -206,6 +216,7 @@ const Console = () => {
   const [customTaskName, setCustomTaskName] = useState('');
   const [showUserGrid, setShowUserGrid] = useState(false);
   const [classificationGroup, setClassificationGroup] = useState('');
+  const [selectedTask, setSelectedTask] = useState<any>(null); // New state for selected task
   const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>(() => {
     const initialAssignments: { [userId: string]: string } = {};
     mockUsers.forEach(user => {
@@ -281,6 +292,18 @@ const Console = () => {
     return 'Next';
   };
 
+  // Handle task selection from sidebar
+  const handleTaskSelect = (task: any) => {
+    setSelectedTask(task);
+    setCurrentStep(1); // Reset to show task details instead of form
+  };
+
+  // Handle creating new task
+  const handleCreateNew = () => {
+    setSelectedTask(null);
+    setCurrentStep(1);
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gradient-subtle">
@@ -293,7 +316,10 @@ const Console = () => {
                 <SidebarMenu>
                   {previousTasks.map((task) => (
                     <SidebarMenuItem key={task.id}>
-                      <Card className="m-2 cursor-pointer hover:shadow-md transition-shadow">
+                      <Card 
+                        className="m-2 cursor-pointer hover:shadow-md transition-shadow"
+                        onClick={() => handleTaskSelect(task)}
+                      >
                         <CardContent className="p-3">
                           <div className="font-medium text-foreground mb-1">{task.name}</div>
                           <div className="text-xs text-muted-foreground leading-tight">
@@ -303,6 +329,16 @@ const Console = () => {
                       </Card>
                     </SidebarMenuItem>
                   ))}
+                  {/* Create New Task Button */}
+                  <SidebarMenuItem>
+                    <Button 
+                      variant="outline" 
+                      className="w-full m-2" 
+                      onClick={handleCreateNew}
+                    >
+                      Create New Task
+                    </Button>
+                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -341,8 +377,75 @@ const Console = () => {
       {/* Scrollable Content */}
       <div className="overflow-y-auto p-6">
         <div className="max-w-8xl mx-auto">
-          {/* Main Content */}
-          {currentStep === 1 && (
+          {/* Task Details View - when a task is selected */}
+          {selectedTask && (
+            <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
+              <CardContent className="p-8">
+                {/* Header with Edit Icon */}
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-foreground mb-2">
+                      {selectedTask.name}
+                    </h2>
+                  </div>
+                  <Button variant="ghost" size="sm" className="hover:bg-muted">
+                    <Edit size={20} className="text-muted-foreground" />
+                  </Button>
+                </div>
+
+                {/* Task Description */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-foreground mb-3">
+                    Description
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {selectedTask.description}
+                  </p>
+                </div>
+
+                {/* Classification Groups */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-foreground mb-3">
+                    Classification Groups
+                  </h3>
+                  <div className="flex gap-3">
+                    {selectedTask.groups.map((group: string, index: number) => (
+                      <div 
+                        key={index}
+                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
+                          index === 0 
+                            ? 'bg-primary/10 text-primary border border-primary/20' 
+                            : 'bg-secondary/10 text-secondary-foreground border border-secondary/20'
+                        }`}
+                      >
+                        {group}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Creation Date & Time */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-foreground mb-3">
+                    Created
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {selectedTask.createdAt.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })} at {selectedTask.createdAt.toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Original Form - when no task is selected */}
+          {!selectedTask && currentStep === 1 && (
             <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
               <CardContent className="p-8">
               {/* Description Input */}
