@@ -239,34 +239,39 @@ const Console = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={() => navigate('/')}
-            className="hover:bg-muted"
-          >
-            <ArrowLeft size={20} className="mr-2" />
-            Back to Home
-          </Button>
-        </div>
+    <div className="min-h-screen bg-gradient-subtle">
+      {/* Fixed Header */}
+      <div className="sticky top-0 z-50 bg-gradient-subtle p-6 border-b border-muted backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4 mb-4">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate('/')}
+              className="hover:bg-muted"
+            >
+              <ArrowLeft size={20} className="mr-2" />
+              Back to Home
+            </Button>
+          </div>
 
-        {/* Header with Theme Toggle */}
-        <div className="flex items-center justify-between mb-12">
-          <div></div>
-          <h1 className="text-5xl font-bold text-foreground">
-            RecoPilot Console
-          </h1>
-          <ThemeToggle />
+          <div className="flex items-center justify-between">
+            <div></div>
+            <h1 className="text-5xl font-bold text-foreground">
+              RecoPilot Console
+            </h1>
+            <ThemeToggle />
+          </div>
         </div>
+      </div>
 
-        {/* Main Content */}
-        {currentStep === 1 && (
-          <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
-            <CardContent className="p-8">
+      {/* Scrollable Content */}
+      <div className="overflow-y-auto p-6">
+        <div className="max-w-8xl mx-auto">
+          {/* Main Content */}
+          {currentStep === 1 && (
+            <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
+              <CardContent className="p-8">
               {/* Description Input */}
               <div className="mb-8">
                 <label className="block text-sm font-medium text-foreground mb-3">
@@ -530,6 +535,7 @@ const Console = () => {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
