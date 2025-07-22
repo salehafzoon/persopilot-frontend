@@ -1,17 +1,16 @@
 import { useState } from 'react';
-import { ArrowLeft, Plus, X, Loader2, CheckCircle, User, Send, AlertCircle, Info } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle, User, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Console = () => {
   const navigate = useNavigate();
   
-  // Mock data for suggestions and users (moved before state initialization)
+  // Mock data for suggestions and users
   const taskNameSuggestions = ['CampingAffinity', 'OutdoorPreference', 'NatureClassification'];
   const mockUsers = [
     { 
@@ -156,10 +155,11 @@ const Console = () => {
     }
   ];
 
+  // Binary classification groups
+  const binaryGroups = ['Camping Enthusiast', 'Not Camping Enthusiast'];
+  
   // State declarations
   const [description, setDescription] = useState('');
-  const [categoryInput, setCategoryInput] = useState('');
-  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTaskName, setSelectedTaskName] = useState('');
@@ -168,22 +168,11 @@ const Console = () => {
   const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>(() => {
     const initialAssignments: { [userId: string]: string } = {};
     mockUsers.forEach(user => {
-      if (user.assignedGroup) {
-        initialAssignments[user.id] = user.assignedGroup;
-      }
+      // Default to first group for all users
+      initialAssignments[user.id] = binaryGroups[0];
     });
     return initialAssignments;
   });
-  const handleAddCategory = () => {
-    if (categoryInput.trim() && !categories.includes(categoryInput.trim())) {
-      setCategories([...categories, categoryInput.trim()]);
-      setCategoryInput('');
-    }
-  };
-
-  const handleRemoveCategory = (categoryToRemove: string) => {
-    setCategories(categories.filter(cat => cat !== categoryToRemove));
-  };
 
   const handleNext = async () => {
     if (currentStep === 1) {
@@ -230,39 +219,12 @@ const Console = () => {
   };
 
   const handleSubmitLabels = () => {
-    const meetsRequirements = checkLabelingRequirements();
-    if (meetsRequirements) {
-      console.log('Submitting labels:', userAssignments);
-      // Here you would typically send the assignments to your backend
-    }
+    console.log('Submitting labels:', userAssignments);
+    // Here you would typically send the assignments to your backend
   };
 
-  const checkLabelingRequirements = () => {
-    const groupCounts = getGroupCounts();
-    return categories.every(category => groupCounts[category] >= MIN_LABELS_PER_GROUP);
-  };
-
-  const getGroupCounts = () => {
-    const counts: {[key: string]: number} = {};
-    categories.forEach(category => {
-      counts[category] = 0;
-    });
-    
-    Object.values(userAssignments).forEach(assignment => {
-      if (counts.hasOwnProperty(assignment)) {
-        counts[assignment]++;
-      }
-    });
-    
-    return counts;
-  };
-
-  const MIN_LABELS_PER_GROUP = 10;
-  const meetsRequirements = checkLabelingRequirements();
-  const groupCounts = getGroupCounts();
-  
   const isNextEnabled = currentStep === 1 
-    ? description.trim() && categories.length > 0 
+    ? description.trim()
     : selectedTaskName.trim();
 
   const hasAssignments = Object.keys(userAssignments).length > 0;
@@ -271,12 +233,6 @@ const Console = () => {
     if (currentStep === 1) return 'Next';
     if (currentStep === 2) return 'Finalize Classification';
     return 'Next';
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleAddCategory();
-    }
   };
 
   return (
@@ -316,56 +272,27 @@ const Console = () => {
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe what you want to classify. For example: I want to analyze users based on whether they are camping enthusiasts or not."
+                  placeholder="Whether or not a user is ..."
                   className="w-full h-32 px-4 py-3 rounded-lg border border-muted bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
                 />
               </div>
 
-              {/* Category Input */}
-              <div className="mb-6">
+              {/* Binary Groups Display */}
+              <div className="mb-8">
                 <label className="block text-sm font-medium text-foreground mb-3">
-                  Category Groups
+                  Classification Groups (Binary)
                 </label>
-                <div className="flex gap-2">
-                  <Input
-                    value={categoryInput}
-                    onChange={(e) => setCategoryInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Add category/group names (e.g., Enthusiasts, Non-Enthusiasts)"
-                    className="flex-1"
-                  />
-                  <Button 
-                    onClick={handleAddCategory}
-                    disabled={!categoryInput.trim()}
-                    size="sm"
-                    className="px-3"
-                  >
-                    <Plus size={16} />
-                  </Button>
+                <div className="flex flex-wrap gap-2">
+                  {binaryGroups.map((group) => (
+                    <div
+                      key={group}
+                      className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium"
+                    >
+                      {group}
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              {/* Category Pills */}
-              {categories.length > 0 && (
-                <div className="mb-8">
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map((category) => (
-                      <div
-                        key={category}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium"
-                      >
-                        {category}
-                        <button
-                          onClick={() => handleRemoveCategory(category)}
-                          className="hover:bg-primary/20 rounded-full p-0.5 transition-colors"
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Action Buttons */}
               <div className="flex justify-between items-center">
@@ -458,61 +385,9 @@ const Console = () => {
                   
                   {/* Labeling Guidance */}
                   <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                    <div className="flex items-start gap-3">
-                      <Info size={20} className="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
-                          **To ensure model accuracy, please label at least {MIN_LABELS_PER_GROUP} users for each group.**
-                        </p>
-                        <p className="text-xs text-blue-700 dark:text-blue-300">
-                          Users have been pre-assigned to related groups by AI. Please review them below and make any necessary changes.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Progress Tracker */}
-                  <div className="mb-6 space-y-3">
-                    <h4 className="text-sm font-medium text-foreground mb-3">Labeling Progress</h4>
-                    <div className="grid gap-3">
-                      {categories.map((category) => {
-                        const count = groupCounts[category] || 0;
-                        const percentage = Math.min((count / MIN_LABELS_PER_GROUP) * 100, 100);
-                        const isComplete = count >= MIN_LABELS_PER_GROUP;
-                        
-                        return (
-                          <div key={category} className="space-y-2">
-                            <div className="flex justify-between items-center">
-                              <span className="text-sm font-medium text-foreground">
-                                {category}
-                              </span>
-                              <div className="flex items-center gap-2">
-                                <span className={`text-sm font-medium ${
-                                  isComplete ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'
-                                }`}>
-                                  {count} / {MIN_LABELS_PER_GROUP} labeled
-                                </span>
-                                {isComplete && (
-                                  <CheckCircle size={16} className="text-green-600 dark:text-green-400" />
-                                )}
-                              </div>
-                            </div>
-                            <div className="w-full bg-muted rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full transition-all duration-300 ${
-                                  isComplete 
-                                    ? 'bg-green-500' 
-                                    : percentage > 0 
-                                      ? 'bg-primary' 
-                                      : 'bg-muted'
-                                }`}
-                                style={{ width: `${percentage}%` }}
-                              />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                    <p className="text-sm text-foreground mb-4">
+                      Users are assigned to related groups by AI and you can check them below for any changes.
+                    </p>
                   </div>
                   
                   {/* Scrollable Grid Container */}
@@ -535,7 +410,7 @@ const Console = () => {
                                 <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
                                   <User size={16} className="text-muted-foreground" />
                                 </div>
-                                <span className="font-mono text-sm font-medium" style={{ color: `hsl(var(--user-id-color))` }}>
+                                <span className="font-mono text-sm font-medium text-amber-600 dark:text-amber-400">
                                   {user.id}
                                 </span>
                                 {isAssigned && (
@@ -549,7 +424,7 @@ const Console = () => {
 
                               {/* Demographics */}
                               <div className="mb-3">
-                                <div className="flex items-center gap-4 text-xs font-medium" style={{ color: `hsl(var(--demographic-color))` }}>
+                                <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
                                   <span>Age: {user.age}</span>
                                   <span>Gender: {user.gender}</span>
                                 </div>
@@ -566,16 +441,20 @@ const Console = () => {
                                   Assign Group
                                 </label>
                                 <Select
-                                  value={userAssignments[user.id] || ''}
+                                  value={userAssignments[user.id] || binaryGroups[0]}
                                   onValueChange={(value) => handleUserAssignment(user.id, value)}
                                 >
-                                  <SelectTrigger className="w-full h-9">
-                                    <SelectValue placeholder="Select group..." />
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Assign Group" />
                                   </SelectTrigger>
-                                  <SelectContent className="bg-popover border-muted z-50">
-                                    {categories.map((category) => (
-                                      <SelectItem key={category} value={category}>
-                                        {category}
+                                  <SelectContent className="bg-background border border-muted shadow-lg z-50">
+                                    {binaryGroups.map((group) => (
+                                      <SelectItem 
+                                        key={group} 
+                                        value={group}
+                                        className="cursor-pointer hover:bg-muted focus:bg-muted"
+                                      >
+                                        {group}
                                       </SelectItem>
                                     ))}
                                   </SelectContent>
@@ -591,42 +470,13 @@ const Console = () => {
                   {/* Submit Labels Button */}
                   {hasAssignments && (
                     <div className="flex justify-center mb-6">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div>
-                              <Button 
-                                onClick={handleSubmitLabels}
-                                disabled={!meetsRequirements}
-                                className={`px-6 py-2 ${
-                                  meetsRequirements 
-                                    ? 'bg-primary hover:bg-primary/90' 
-                                    : 'bg-muted text-muted-foreground cursor-not-allowed'
-                                }`}
-                              >
-                                {meetsRequirements ? (
-                                  <>
-                                    <Send size={16} className="mr-2" />
-                                    Train Model ({Object.keys(userAssignments).length} assigned)
-                                  </>
-                                ) : (
-                                  <>
-                                    <AlertCircle size={16} className="mr-2" />
-                                    Train Model ({Object.keys(userAssignments).length} assigned)
-                                  </>
-                                )}
-                              </Button>
-                            </div>
-                          </TooltipTrigger>
-                          {!meetsRequirements && (
-                            <TooltipContent>
-                              <p className="text-sm">
-                                Please label at least {MIN_LABELS_PER_GROUP} users for each group to train the model
-                              </p>
-                            </TooltipContent>
-                          )}
-                        </Tooltip>
-                      </TooltipProvider>
+                      <Button 
+                        onClick={handleSubmitLabels}
+                        className="px-6 py-2 bg-primary hover:bg-primary/90"
+                      >
+                        <Send size={16} className="mr-2" />
+                        Train Model ({Object.keys(userAssignments).length} assigned)
+                      </Button>
                     </div>
                   )}
                 </div>
