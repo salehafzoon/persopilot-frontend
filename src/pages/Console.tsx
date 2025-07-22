@@ -329,16 +329,6 @@ const Console = () => {
                       </Card>
                     </SidebarMenuItem>
                   ))}
-                  {/* Create New Task Button */}
-                  <SidebarMenuItem>
-                    <Button 
-                      variant="outline" 
-                      className="w-full m-2" 
-                      onClick={handleCreateNew}
-                    >
-                      Create New Task
-                    </Button>
-                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -350,27 +340,34 @@ const Console = () => {
           {/* Fixed Header */}
           <div className="sticky top-0 z-50 bg-gradient-subtle p-6 border-b border-muted backdrop-blur-sm">
             <div className="max-w-8xl mx-auto">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-4">
-                  <SidebarTrigger />
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => navigate('/')}
-                    className="hover:bg-muted"
-                  >
-                    <ArrowLeft size={20} className="mr-2" />
-                    Logout
-                  </Button>
-                </div>
-                <ThemeToggle />
-              </div>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => navigate('/')}
+                className="hover:bg-muted"
+              >
+                <ArrowLeft size={20} className="mr-2" />
+                Logout
+              </Button>
+            </div>
+            <ThemeToggle />
+          </div>
 
-              <div className="flex justify-center">
-                <h1 className="text-5xl font-bold text-foreground">
-                  RecoPilot Console
-                </h1>
-              </div>
+          <div className="flex justify-between items-center">
+            <div></div>
+            <h1 className="text-5xl font-bold text-foreground">
+              RecoPilot Console
+            </h1>
+            <Button 
+              onClick={handleCreateNew}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Create New Task
+            </Button>
+          </div>
             </div>
           </div>
 
