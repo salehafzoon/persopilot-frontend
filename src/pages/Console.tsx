@@ -286,6 +286,12 @@ const Console = () => {
                   Classification Group
                 </label>
                 <div className="flex items-center gap-3">
+                  <Input
+                    value={classificationGroup}
+                    onChange={(e) => setClassificationGroup(e.target.value)}
+                    placeholder="e.g., Camping Enthusiast"
+                    className="max-w-xs"
+                  />
                   {/* Chips - only show when input has content */}
                   {classificationGroup.trim() && (
                     <div className="flex gap-2">
@@ -297,12 +303,6 @@ const Console = () => {
                       </div>
                     </div>
                   )}
-                  <Input
-                    value={classificationGroup}
-                    onChange={(e) => setClassificationGroup(e.target.value)}
-                    placeholder="e.g., Camping Enthusiast"
-                    className="max-w-xs"
-                  />
                 </div>
               </div>
 
@@ -408,31 +408,20 @@ const Console = () => {
                       {mockUsers.map((user) => {
                         const isAssigned = userAssignments[user.id];
                         return (
-                          <Card 
-                            key={user.id} 
-                            className={`transition-all duration-200 ${
-                              isAssigned 
-                                ? 'bg-primary/5 border-primary shadow-md ring-1 ring-primary/20' 
-                                : 'bg-card border-muted hover:shadow-md'
-                            }`}
-                          >
-                            <CardContent className="p-4">
-                              {/* User ID/Avatar */}
-                              <div className="flex items-center gap-3 mb-3 pb-3 border-b border-muted">
-                                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                                  <User size={16} className="text-muted-foreground" />
-                                </div>
-                                <span className="font-mono text-sm font-medium text-amber-600 dark:text-amber-400">
-                                  {user.id}
-                                </span>
-                                {isAssigned && (
-                                  <div className="ml-auto">
-                                    <div className="px-2 py-1 bg-primary text-primary-foreground text-xs rounded-full font-medium">
-                                      {isAssigned}
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
+                           <Card 
+                             key={user.id} 
+                             className="transition-all duration-200 bg-card hover:shadow-md"
+                           >
+                             <CardContent className="p-4">
+                               {/* User ID/Avatar */}
+                               <div className="flex items-center gap-3 mb-3 pb-3 border-b border-muted">
+                                 <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                                   <User size={16} className="text-muted-foreground" />
+                                 </div>
+                                 <span className="font-mono text-sm font-medium text-amber-600 dark:text-amber-400">
+                                   {user.id}
+                                 </span>
+                               </div>
 
                               {/* Demographics */}
                               <div className="mb-3">
