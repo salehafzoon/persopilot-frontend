@@ -437,10 +437,10 @@ const Console = () => {
                       {/* Chips - only show when input has content */}
                       {formData.classificationGroup.trim() && (
                         <div className="flex gap-2">
-                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black text-white rounded-full text-sm font-medium">
                             {formData.classificationGroup.trim()}
                           </div>
-                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/10 text-secondary-foreground rounded-full text-sm font-medium">
+                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-500 text-white rounded-full text-sm font-medium">
                             Non-{formData.classificationGroup.trim()}
                           </div>
                         </div>
