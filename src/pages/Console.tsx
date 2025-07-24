@@ -519,14 +519,16 @@ const Console = () => {
 
                             {/* Assigned Group */}
                             <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-foreground">Group:</span>
-                              <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                user.assignedGroup.includes('Not') 
-                                  ? 'bg-secondary/10 text-secondary-foreground border border-secondary/20' 
-                                  : 'bg-primary/10 text-primary border border-primary/20'
-                              }`}>
-                                {user.assignedGroup}
-                              </div>
+                              <span className="text-xs font-medium text-foreground">Assigned Group:</span>
+                              <Select defaultValue={user.assignedGroup}>
+                                <SelectTrigger className="w-40 h-7 text-xs">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Camping Enthusiast">Camping Enthusiast</SelectItem>
+                                  <SelectItem value="Not Camping Enthusiast">Not Camping Enthusiast</SelectItem>
+                                </SelectContent>
+                              </Select>
                             </div>
                           </CardContent>
                         </Card>
