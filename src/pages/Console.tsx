@@ -427,12 +427,25 @@ const Console = () => {
                     <label className="block text-sm font-medium text-foreground mb-2">
                       Classification Group:
                     </label>
-                    <Input
-                      value={formData.classificationGroup}
-                      onChange={(e) => handleFormChange('classificationGroup', e.target.value)}
-                      placeholder="e.g., Camping Enthusiast"
-                      className="w-full"
-                    />
+                    <div className="flex items-center gap-3">
+                      <Input
+                        value={formData.classificationGroup}
+                        onChange={(e) => handleFormChange('classificationGroup', e.target.value)}
+                        placeholder="e.g., Camping Enthusiast"
+                        className="max-w-xs"
+                      />
+                      {/* Chips - only show when input has content */}
+                      {formData.classificationGroup.trim() && (
+                        <div className="flex gap-2">
+                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                            {formData.classificationGroup.trim()}
+                          </div>
+                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/10 text-secondary-foreground rounded-full text-sm font-medium">
+                            Not {formData.classificationGroup.trim()}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Offer Message Field */}
