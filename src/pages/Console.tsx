@@ -208,100 +208,48 @@ const Console = () => {
     }
   ];
 
-  // State declarations
-  const [description, setDescription] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedTaskName, setSelectedTaskName] = useState('');
-  const [customTaskName, setCustomTaskName] = useState('');
-  const [showUserGrid, setShowUserGrid] = useState(false);
-  const [classificationGroup, setClassificationGroup] = useState('');
-  const [selectedTask, setSelectedTask] = useState<any>(null); // New state for selected task
-  const [userAssignments, setUserAssignments] = useState<{[key: string]: string}>(() => {
-    const initialAssignments: { [userId: string]: string } = {};
-    mockUsers.forEach(user => {
-      // Use the user's assigned group from mock data
-      initialAssignments[user.id] = user.assignedGroup;
-    });
-    return initialAssignments;
+  // Form state
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    classificationGroup: '',
+    offerMessage: ''
   });
+  const [personas, setPersonas] = useState(mockUsers);
+  const [loadingPersonas, setLoadingPersonas] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
 
-  // Binary classification groups derived from user input
-  const binaryGroups = classificationGroup.trim() 
-    ? [classificationGroup.trim(), `Not ${classificationGroup.trim()}`]
-    : ['Group 1', 'Not Group 1'];
-
-  const handleNext = async () => {
-    if (currentStep === 1) {
-      setLoading(true);
-      // Simulate processing delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setLoading(false);
-      setCurrentStep(2);
-    } else if (currentStep === 2) {
-      // Handle finalize classification
-      console.log('Finalizing classification...');
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-      if (currentStep === 2) {
-        setSelectedTaskName('');
-        setCustomTaskName('');
-        setShowUserGrid(false);
-      }
-    }
-  };
-
-  const handleTaskNameSelect = (name: string) => {
-    setSelectedTaskName(name);
-    setCustomTaskName('');
-    setTimeout(() => setShowUserGrid(true), 300);
-  };
-
-  const handleCustomSubmit = () => {
-    if (customTaskName.trim()) {
-      setSelectedTaskName(customTaskName.trim());
-      setTimeout(() => setShowUserGrid(true), 300);
-    }
-  };
-
-  const handleUserAssignment = (userId: string, category: string) => {
-    setUserAssignments(prev => ({
+  // Form handlers
+  const handleFormChange = (field: string, value: string) => {
+    setFormData(prev => ({
       ...prev,
-      [userId]: category
+      [field]: value
     }));
   };
 
-  const handleSubmitLabels = () => {
-    console.log('Submitting labels:', userAssignments);
-    // Here you would typically send the assignments to your backend
+  const handleSubmit = async () => {
+    if (!formData.title || !formData.description || !formData.classificationGroup || !formData.offerMessage) {
+      return;
+    }
+    
+    setLoadingPersonas(true);
+    // Simulate loading user personas
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setPersonas(mockUsers);
+    setLoadingPersonas(false);
   };
 
-  const isNextEnabled = currentStep === 1 
-    ? description.trim()
-    : selectedTaskName.trim();
-
-  const hasAssignments = Object.keys(userAssignments).length > 0;
-
-  const getNextButtonText = () => {
-    if (currentStep === 1) return 'Next';
-    if (currentStep === 2) return `Finalize Classification (${Object.keys(userAssignments).length} assigned)`;
-    return 'Next';
-  };
+  const isFormValid = formData.title.trim() && formData.description.trim() && 
+                     formData.classificationGroup.trim() && formData.offerMessage.trim();
 
   // Handle task selection from sidebar
   const handleTaskSelect = (task: any) => {
     setSelectedTask(task);
-    setCurrentStep(1); // Reset to show task details instead of form
   };
 
   // Handle creating new task
   const handleCreateNew = () => {
     setSelectedTask(null);
-    setCurrentStep(1);
   };
 
   return (
@@ -441,261 +389,141 @@ const Console = () => {
             </Card>
           )}
 
-          {/* Original Form - when no task is selected */}
-          {!selectedTask && currentStep === 1 && (
-            <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
-              <CardContent className="p-8">
-              {/* Description Input */}
-              <div className="mb-8">
-                <label className="block text-sm font-medium text-foreground mb-3">
-                  Classification Description
-                </label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Whether or not a user is ..."
-                  className="w-full h-32 px-4 py-3 rounded-lg border border-muted bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                />
-              </div>
-
-              {/* Classification Group Input */}
-              <div className="mb-8">
-                <label className="block text-sm font-medium text-foreground mb-3">
-                  Classification Group
-                </label>
-                <div className="flex items-center gap-3">
-                  <Input
-                    value={classificationGroup}
-                    onChange={(e) => setClassificationGroup(e.target.value)}
-                    placeholder="e.g., Camping Enthusiast"
-                    className="max-w-xs"
-                  />
-                  {/* Chips - only show when input has content */}
-                  {classificationGroup.trim() && (
-                    <div className="flex gap-2">
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
-                        {classificationGroup.trim()}
-                      </div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-secondary/10 text-secondary-foreground rounded-full text-sm font-medium">
-                        Not {classificationGroup.trim()}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex justify-between items-center">
-                <Button 
-                  variant="outline" 
-                  onClick={handleBack}
-                  disabled={currentStep === 1}
-                >
-                  Back
-                </Button>
-                <Button 
-                  onClick={handleNext}
-                  disabled={!isNextEnabled || loading}
-                  className="min-w-32"
-                >
-                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : getNextButtonText()}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Step 2 */}
-        {currentStep === 2 && (
-          <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
-            <CardContent className="p-8">
-              {/* Task Naming Section */}
-              <div className="mb-8">
-                <h2 className="text-xl font-semibold text-foreground mb-6">
-                  Choose a name for this classification task
-                </h2>
-
-                {/* Suggestion Cards */}
-                <div className="mb-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    {taskNameSuggestions.map((suggestion) => (
-                      <Card
-                        key={suggestion}
-                        className={`cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-md ${
-                          selectedTaskName === suggestion 
-                            ? 'bg-primary text-primary-foreground border-primary' 
-                            : 'bg-card hover:bg-muted border-muted'
-                        }`}
-                        onClick={() => handleTaskNameSelect(suggestion)}
-                      >
-                        <CardContent className="p-4 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            {selectedTaskName === suggestion && <CheckCircle size={16} />}
-                            <span className="font-medium">{suggestion}</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-
-                  {/* Custom Name Input */}
-                  <div className="flex gap-2">
+          {/* Simplified Form - when no task is selected */}
+          {!selectedTask && (
+            <>
+              <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow mb-8">
+                <CardContent className="p-8">
+                  <h2 className="text-2xl font-bold text-foreground mb-6">Create New Classification Task</h2>
+                  
+                  {/* Title Field */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Title:
+                    </label>
                     <Input
-                      value={customTaskName}
-                      onChange={(e) => setCustomTaskName(e.target.value)}
-                      placeholder="Or enter a custom name..."
-                      className="flex-1"
-                      onKeyPress={(e) => e.key === 'Enter' && handleCustomSubmit()}
+                      value={formData.title}
+                      onChange={(e) => handleFormChange('title', e.target.value)}
+                      placeholder="Enter task title..."
+                      className="w-full"
                     />
-                    <Button 
-                      onClick={handleCustomSubmit}
-                      disabled={!customTaskName.trim()}
-                      size="sm"
-                    >
-                      Submit
-                    </Button>
                   </div>
-                </div>
 
-                {/* Selected Task Name Display */}
-                {selectedTaskName && (
-                  <div className="mb-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
-                    <p className="text-sm text-muted-foreground mb-1">Selected task name:</p>
-                    <p className="font-semibold text-primary text-lg">{selectedTaskName}</p>
+                  {/* Description Field */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Description:
+                    </label>
+                    <textarea
+                      value={formData.description}
+                      onChange={(e) => handleFormChange('description', e.target.value)}
+                      placeholder="Describe what this classification task is about..."
+                      className="w-full h-24 px-4 py-3 rounded-lg border border-muted bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                    />
                   </div>
-                )}
-              </div>
 
-              {/* User Labeling Grid */}
-              {showUserGrid && (
-                <div className="animate-fade-in">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">
-                    User Labeling Grid
-                  </h3>
-                  
-                  {/* Labeling Guidance */}
-                  <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                    <p className="text-sm text-foreground mb-4">
-                      Users are assigned to related groups by AI and you can check them below for any changes.
-                    </p>
+                  {/* Classification Group Field */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Classification Group:
+                    </label>
+                    <Input
+                      value={formData.classificationGroup}
+                      onChange={(e) => handleFormChange('classificationGroup', e.target.value)}
+                      placeholder="e.g., Camping Enthusiast"
+                      className="w-full"
+                    />
                   </div>
-                  
-                  {/* Scrollable Grid Container */}
-                  <div className="max-h-96 overflow-y-auto pr-2 mb-8">
+
+                  {/* Offer Message Field */}
+                  <div className="mb-8">
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Offer message:
+                    </label>
+                    <textarea
+                      value={formData.offerMessage}
+                      onChange={(e) => handleFormChange('offerMessage', e.target.value)}
+                      placeholder="Enter the offer message to show to users..."
+                      className="w-full h-24 px-4 py-3 rounded-lg border border-muted bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button 
+                    onClick={handleSubmit}
+                    disabled={!isFormValid || loadingPersonas}
+                    className="w-full bg-primary hover:bg-primary/90"
+                  >
+                    {loadingPersonas ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        Loading User Personas...
+                      </>
+                    ) : (
+                      'Load User Personas'
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* User Personas Grid */}
+              {personas.length > 0 && !loadingPersonas && (
+                <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
+                  <CardContent className="p-8">
+                    <h3 className="text-xl font-semibold text-foreground mb-6">
+                      User Personas ({personas.length} users)
+                    </h3>
+                    
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {mockUsers.map((user) => {
-                        const isAssigned = userAssignments[user.id];
-                        return (
-                           <Card 
-                             key={user.id} 
-                             className="transition-all duration-200 bg-card hover:shadow-md min-h-[280px]"
-                           >
-                             <CardContent className="p-4">
-                               {/* User ID/Avatar */}
-                               <div className="flex items-center gap-3 mb-3 pb-3 border-b border-muted">
-                                 <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                                   <User size={16} className="text-muted-foreground" />
-                                 </div>
-                                  <span className="font-mono text-sm font-bold text-black dark:text-white">
-                                    {user.id}
-                                  </span>
-                               </div>
-
-                              {/* Demographics */}
-                              <div className="mb-3">
-                                <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
-                                  <span>Age: {user.age}</span>
-                                  <span>Gender: {user.gender}</span>
-                                </div>
+                      {personas.map((user) => (
+                        <Card 
+                          key={user.id} 
+                          className="transition-all duration-200 bg-card hover:shadow-md"
+                        >
+                          <CardContent className="p-4">
+                            {/* User ID/Avatar */}
+                            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-muted">
+                              <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                                <User size={16} className="text-muted-foreground" />
                               </div>
+                              <span className="font-mono text-sm font-bold text-foreground">
+                                {user.id}
+                              </span>
+                            </div>
 
-                              {/* User Description */}
-                              <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-4">
-                                {user.description}
-                              </p>
-
-                              {/* Assign Group and Likelihood Section */}
-                              <div className="flex gap-4">
-                                {/* Assign Group - Left Side */}
-                                <div className="flex-1">
-                                  <label className="text-xs font-medium text-foreground">
-                                    Assign Group
-                                  </label>
-                                  <Select
-                                    value={userAssignments[user.id] || binaryGroups[0]}
-                                    onValueChange={(value) => handleUserAssignment(user.id, value)}
-                                  >
-                                    <SelectTrigger className="w-full mt-2">
-                                      <SelectValue placeholder="Assign Group" />
-                                    </SelectTrigger>
-                                    <SelectContent className="bg-background border border-muted shadow-lg z-50">
-                                      {binaryGroups.map((group) => (
-                                        <SelectItem 
-                                          key={group} 
-                                          value={group}
-                                          className="cursor-pointer hover:bg-muted focus:bg-muted"
-                                        >
-                                          {group}
-                                        </SelectItem>
-                                      ))}
-                                    </SelectContent>
-                                  </Select>
-                                </div>
-
-                                {/* Likelihood - Right Side */}
-                                <div className="flex-1">
-                                  <label className="text-xs font-medium text-foreground">
-                                    Likelihood
-                                  </label>
-                                  <div className="mt-2 text-center">
-                                    <div className="text-lg font-bold text-primary">
-                                      {Math.floor(Math.random() * 40 + 60)}%
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      Confidence
-                                    </div>
-                                  </div>
-                                </div>
+                            {/* Demographics */}
+                            <div className="mb-3">
+                              <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
+                                <span>Age: {user.age}</span>
+                                <span>Gender: {user.gender}</span>
                               </div>
-                            </CardContent>
-                          </Card>
-                        );
-                      })}
+                            </div>
+
+                            {/* User Description */}
+                            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                              {user.description}
+                            </p>
+
+                            {/* Assigned Group */}
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-medium text-foreground">Group:</span>
+                              <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                                user.assignedGroup.includes('Not') 
+                                  ? 'bg-secondary/10 text-secondary-foreground border border-secondary/20' 
+                                  : 'bg-primary/10 text-primary border border-primary/20'
+                              }`}>
+                                {user.assignedGroup}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
-                  </div>
-
-                </div>
+                  </CardContent>
+                </Card>
               )}
-
-              {/* Action Buttons */}
-              <div className="flex justify-between items-center">
-                <Button 
-                  variant="outline" 
-                  onClick={handleBack}
-                >
-                  Back
-                </Button>
-                <Button 
-                  onClick={handleNext}
-                  disabled={!isNextEnabled}
-                  className="min-w-32"
-                >
-                  {getNextButtonText()}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Loading State */}
-        {loading && (
-          <div className="flex justify-center mt-8">
-            <div className="flex items-center gap-3 text-muted-foreground">
-              <Loader2 className="h-6 w-6 animate-spin" />
-              <span>Processing your classification request...</span>
-            </div>
-          </div>
-        )}
+            </>
+          )}
         </div>
       </div>
         </div>
