@@ -27,6 +27,7 @@ interface UserGraph {
 
 interface AppState {
   userId: string;
+  userName: string;
   selectedTask: Task | null;
   userGraph: UserGraph | null;
   chatMessages: Message[];
@@ -71,6 +72,7 @@ const initialMessages: Message[] = [
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [userId] = useState('user_1');
+  const [userName] = useState('Alex Johnson');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [userGraph, setUserGraph] = useState<UserGraph | null>(null);
   const [chatMessages, setChatMessages] = useState<Message[]>(initialMessages);
@@ -93,6 +95,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const value: AppContextType = {
     userId,
+    userName,
     selectedTask,
     userGraph,
     chatMessages,

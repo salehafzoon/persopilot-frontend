@@ -14,6 +14,7 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
     selectedTask,
     chatMessages,
     addChatMessage,
+    userName,
   } = useAppContext();
 
   const [inputValue, setInputValue] = useState('');
@@ -95,6 +96,13 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
                   <h2 className="text-xl font-semibold text-foreground">{selectedTask.title}</h2>
                 </div>
               </div>
+              
+              {/* Center Greeting */}
+              <div className="absolute left-1/2 transform -translate-x-1/2">
+                <p className="text-sm text-muted-foreground">Hello {userName}</p>
+              </div>
+              
+              <div></div>
             </div>
           </header>
 
