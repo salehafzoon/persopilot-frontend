@@ -33,35 +33,40 @@ const Console = () => {
       name: 'CampingAffinity',
       description: 'Whether or not a user is interested in camping and outdoor activities',
       groups: ['Camping Enthusiast', 'Not Camping Enthusiast'],
-      createdAt: new Date('2024-01-15T10:30:00')
+      date: '2024-01-15 10:30:00',
+      username: 'analyst_01'
     },
     {
       id: 2,
       name: 'FitnessEnthusiast',
       description: 'Whether or not a user is actively engaged in fitness and exercise routines',
       groups: ['Fitness Enthusiast', 'Not Fitness Enthusiast'],
-      createdAt: new Date('2024-01-12T14:20:00')
+      date: '2024-01-12 14:20:00',
+      username: 'analyst_01'
     },
     {
       id: 3,
       name: 'TechSavvy',
       description: 'Whether or not a user shows high interest in technology and digital innovations',
       groups: ['Tech Savvy', 'Not Tech Savvy'],
-      createdAt: new Date('2024-01-10T09:15:00')
+      date: '2024-01-10 09:15:00',
+      username: 'analyst_01'
     },
     {
       id: 4,
       name: 'FoodieClassifier',
       description: 'Whether or not a user is passionate about food experiences and cooking',
       groups: ['Foodie', 'Not Foodie'],
-      createdAt: new Date('2024-01-08T16:45:00')
+      date: '2024-01-08 16:45:00',
+      username: 'analyst_01'
     },
     {
       id: 5,
       name: 'TravelEnthusiast',
       description: 'Whether or not a user frequently travels and seeks new travel experiences',
       groups: ['Travel Enthusiast', 'Not Travel Enthusiast'],
-      createdAt: new Date('2024-01-05T11:10:00')
+      date: '2024-01-05 11:10:00',
+      username: 'analyst_01'
     }
   ];
 
@@ -215,9 +220,10 @@ const Console = () => {
     classificationGroup: '',
     offerMessage: ''
   });
-  const [personas, setPersonas] = useState(mockUsers);
+  const [personas, setPersonas] = useState<any[]>([]);
   const [loadingPersonas, setLoadingPersonas] = useState(false);
   const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [showPersonas, setShowPersonas] = useState(false);
 
   // Form handlers
   const handleFormChange = (field: string, value: string) => {
@@ -236,6 +242,7 @@ const Console = () => {
     // Simulate loading user personas
     await new Promise(resolve => setTimeout(resolve, 1500));
     setPersonas(mockUsers);
+    setShowPersonas(true);
     setLoadingPersonas(false);
   };
 
@@ -259,6 +266,9 @@ const Console = () => {
         <Sidebar className="border-r border-muted">
           <SidebarContent>
             <SidebarGroup>
+              <div className="px-4 py-3">
+                <div className="text-sm font-bold" style={{ color: '#1e3a8a' }}>Dr. Sarah Mitchell</div>
+              </div>
               <SidebarGroupLabel>Previous Classifications</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -270,8 +280,11 @@ const Console = () => {
                       >
                         <CardContent className="p-3">
                           <div className="font-medium text-foreground mb-1">{task.name}</div>
-                          <div className="text-xs text-muted-foreground leading-tight">
+                          <div className="text-xs text-muted-foreground leading-tight mb-2">
                             {task.description}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {new Date(task.date).toLocaleDateString()} {new Date(task.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
                           </div>
                         </CardContent>
                       </Card>
@@ -306,8 +319,8 @@ const Console = () => {
 
           <div className="flex justify-between items-center">
             <div></div>
-            <h1 className="text-5xl font-bold text-foreground">
-              RecoPilot Console
+            <h1 className="text-4xl font-bold text-foreground">
+              Analysis Console
             </h1>
             <Button 
               onClick={handleCreateNew}
@@ -472,19 +485,19 @@ const Console = () => {
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
                         Loading User Personas...
                       </>
-                    ) : (
-                      'Load User Personas'
-                    )}
+                     ) : (
+                       'Generate Random Candidates'
+                     )}
                   </Button>
                 </CardContent>
               </Card>
 
-              {/* User Personas Grid */}
-              {personas.length > 0 && !loadingPersonas && (
+              {/* Randomized Candidates Grid */}
+              {showPersonas && personas.length > 0 && !loadingPersonas && (
                 <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
                   <CardContent className="p-8">
                     <h3 className="text-xl font-semibold text-foreground mb-6">
-                      User Personas ({personas.length} users)
+                      Randomized Candidates ({personas.length} candidates)
                     </h3>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
