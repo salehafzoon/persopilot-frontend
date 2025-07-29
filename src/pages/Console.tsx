@@ -40,53 +40,43 @@ const Console = () => {
   const previousTasks = [
     {
       id: 1,
-      name: 'CampingAffinity',
-      description: 'Whether or not a user is interested in camping and outdoor activities',
-      label1: 'Camping Enthusiast',
-      label2: 'Not Camping Enthusiast',
-      offer_message: 'Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences.',
-      date: '2024-01-15 10:30:00',
-      username: 'analyst_01'
+      name: "Gamer Identification",
+      description: "Classify users based on whether they actively play video or board games.",
+      label1: "Gamer",
+      label2: "Non-Gamer",
+      offer_message: "Unlock exclusive early access to the latest gaming gear by joining our Gamer ID program!",
+      date: "2025-07-24 05:39:39",
+      username: "analyst_01"
     },
     {
       id: 2,
-      name: 'FitnessEnthusiast',
-      description: 'Whether or not a user is actively engaged in fitness and exercise routines',
-      label1: 'Fitness Enthusiast',
-      label2: 'Not Fitness Enthusiast',
-      offer_message: 'Get access to premium workout plans and exclusive fitness gear discounts!',
-      date: '2024-01-12 14:20:00',
-      username: 'analyst_01'
+      name: "Camping Enthusiast",
+      description: "Classify users according to their interest and participation in camping and outdoor activities.",
+      label1: "Camping Enthusiast",
+      label2: "Not Enthusiast",
+      offer_message: "Join our Outdoor Rewards Club and get discounts on top camping gear—start by sharing your adventure style!",
+      date: "2025-07-24 05:39:39",
+      username: "analyst_01"
     },
     {
       id: 3,
-      name: 'TechSavvy',
-      description: 'Whether or not a user shows high interest in technology and digital innovations',
-      label1: 'Tech Savvy',
-      label2: 'Not Tech Savvy',
-      offer_message: 'Be the first to access cutting-edge tech products and exclusive beta testing opportunities!',
-      date: '2024-01-10 09:15:00',
-      username: 'analyst_01'
+      name: "Bookworm",
+      description: "Classify users based on their passion for reading books and literature.",
+      label1: "Bookworm",
+      label2: "Casual Reader",
+      offer_message: "Discover your next favorite book—help us tailor book boxes just for you by joining our Bookworm program!",
+      date: "2025-07-24 05:39:39",
+      username: "analyst_01"
     },
     {
       id: 4,
-      name: 'FoodieClassifier',
-      description: 'Whether or not a user is passionate about food experiences and cooking',
-      label1: 'Foodie',
-      label2: 'Not Foodie',
-      offer_message: 'Discover exclusive culinary experiences and premium kitchen equipment at special rates!',
-      date: '2024-01-08 16:45:00',
-      username: 'analyst_01'
-    },
-    {
-      id: 5,
-      name: 'TravelEnthusiast',
-      description: 'Whether or not a user frequently travels and seeks new travel experiences',
-      label1: 'Travel Enthusiast',
-      label2: 'Not Travel Enthusiast',
-      offer_message: 'Unlock exclusive travel deals and unique destination experiences worldwide!',
-      date: '2024-01-05 11:10:00',
-      username: 'analyst_01'
+      name: "Career Path Preference",
+      description: "Classify users based on their preferred career path: pursuing academia versus industry jobs.",
+      label1: "Academia-Oriented",
+      label2: "Industry-Oriented",
+      offer_message: "Shape your future—get personalized resources for academia or industry by joining our career navigator initiative!",
+      date: "2025-07-24 05:39:39",
+      username: "analyst_01"
     }
   ];
 
