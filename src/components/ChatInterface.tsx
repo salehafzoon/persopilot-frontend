@@ -291,10 +291,14 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
                 <Input
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Type your message..."
+                  placeholder={isAssistantTyping ? "Assistant is responding..." : "Type your message..."}
                   className="flex-1"
+                  disabled={isAssistantTyping}
                 />
-                <Button type="submit" disabled={!inputValue.trim()}>
+                <Button 
+                  type="submit" 
+                  disabled={!inputValue.trim() || isAssistantTyping}
+                >
                   <Send size={16} />
                 </Button>
               </div>
