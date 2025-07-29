@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AlertCircle, LogIn } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { loginUser, LoginResponse } from '@/services/api';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -19,19 +20,24 @@ const Index = () => {
     setError('');
     setLoading(true);
 
-    // Simulate login delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const userData = await loginUser(username);
+      localStorage.setItem('userData', JSON.stringify(userData));
 
-    // Simple authentication logic
-    if (username === 'user_01' && password === 'pass1') {
-      navigate('/chat'); // User panel
-    } else if (username === 'analyst_01' && password === 'pass2') {
-      navigate('/console'); // Analyst panel
-    } else {
-      setError('Invalid credentials. Try user_01/pass1 or analyst_01/pass2.');
+      if (userData.role === 'user') {
+        navigate('/chat');
+      } else if (userData.role === 'analyst') {
+        // For now, just pass
+        navigate('/console');
+      } else {
+        setError('Unknown user role');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   return (

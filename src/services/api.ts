@@ -1,30 +1,109 @@
 import { Task } from '@/components/TaskCard';
 
+const BASE_URL =  'https://9e5f6543f808.ngrok-free.app'
+
+export interface LoginResponse {
+  username: string;
+  full_name: string;
+  age: number;
+  gender: string;
+  role: string;
+  tasks?: {
+    id: number;
+    name: string;
+    topics: string[];
+  }[];
+  classification_tasks?: {
+    id: number;
+    name: string;
+    description: string;
+    label1: string;
+    label2: string;
+    offer_message: string;
+    date: string;
+  }[];
+}
+
+export interface ChatInitResponse {
+  session_id: string;
+  task_id: number;
+  task_name: string;
+  user: {
+    username: string;
+    full_name: string;
+    age: number;
+    gender: string;
+    role: string;
+    persona_graph: UserGraph;
+  };
+  expires_in: number;
+}
+
+
+export const loginUser = async (username: string): Promise<LoginResponse> => {
+  const response = await fetch(`${BASE_URL}/login?username=${username}`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+  });
+  
+  const text = await response.text();
+  console.log('Raw response:', text);
+  
+  if (!response.ok) {
+    throw new Error(`Login failed with status: ${response.status}`);
+  }
+  
+  return JSON.parse(text);
+};
+
+
+export const initChat = async (username: string, task_id: number): Promise<ChatInitResponse> => {
+  const response = await fetch(`${BASE_URL}/chat/init?username=${username}&task_id=${task_id}`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Chat init failed with status: ${response.status}`);
+  }
+  
+  return await response.json();
+};
+
+
 // Synthetic function to simulate loading tasks
 export const getTasks = async (): Promise<Task[]> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  const response = await fetch(`${BASE_URL}/tasks`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+  });
   
-  return [
-    {
-      id: 'content',
-      title: 'Content Consumption',
-      description: 'Get personalized recommendations for articles, videos, and learning resources tailored to your interests.',
-      icon: '📚'
-    },
-    {
-      id: 'lifestyle',
-      title: 'Lifestyle Optimization',
-      description: 'Receive guidance on health, fitness, productivity, and daily routines to enhance your well-being.',
-      icon: '🎯'
-    },
-    {
-      id: 'career',
-      title: 'Career Development',
-      description: 'Access career advice, skill development plans, and professional growth strategies.',
-      icon: '🚀'
-    }
-  ];
+  if (!response.ok) {
+    throw new Error(`Failed to fetch tasks with status: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  
+  // Map API response to Task interface
+  return data.tasks.map((task: any) => ({
+    id: task.id.toString(),
+    title: task.name,
+    description: task.description,
+    icon: task.name === 'Content Consumption' ? '📚' : 
+          task.name === 'Lifestyle Optimization' ? '🎯' : '🚀'
+  }));
 };
 
 interface GraphNode {

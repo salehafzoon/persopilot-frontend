@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
 import { useAppContext } from '@/context/AppContext';
-import { getTasks, getUserGraph } from '@/services/api';
+import { initChat, getTasks } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
@@ -37,20 +37,22 @@ const Chat = () => {
     setLoading(true);
     setAnimationPhase('loading');
 
-    // Simulate processing time (2 seconds as requested)
     await new Promise(resolve => setTimeout(resolve, 2000));
 
-    // Load user graph
     try {
-      const graphData = await getUserGraph(userId, task.title);
-      setUserGraph(graphData);
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      const chatData = await initChat(userData.username, parseInt(task.id));
+      
+      // Store chat session data
+      localStorage.setItem('chatSession', JSON.stringify(chatData));
+      
+      // Set user graph from API response
+      setUserGraph(chatData.user.persona_graph);
     } catch (error) {
-      console.error('Failed to load user graph:', error);
+      console.error('Failed to initialize chat:', error);
     }
 
     setAnimationPhase('transitioning');
-    
-    // Start animations
     await new Promise(resolve => setTimeout(resolve, 800));
     
     setAnimationPhase('chat');
