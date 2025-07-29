@@ -91,7 +91,9 @@ const convertToReactFlowData = (graphData: GraphData) => {
     nodesByLevel.get(level)!.push(nodeId);
   });
 
-  // Position nodes with better alignment for user nodes above task nodes
+  // Position nodes with user nodes directly above task nodes
+  const taskNodes = graphData.nodes.filter(n => n.type === 'Task');
+  
   graphData.nodes.forEach((graphNode) => {
     const level = levelMap.get(graphNode.id) || 0;
     const nodesAtLevel = nodesByLevel.get(level) || [];
@@ -101,15 +103,15 @@ const convertToReactFlowData = (graphData: GraphData) => {
     let x: number;
     let y: number;
     
-    if (graphNode.type === 'User') {
-      // Position user nodes to align with task nodes below them
-      const taskNodes = graphData.nodes.filter(n => n.type === 'Task');
-      if (taskNodes.length > 0) {
-        // Center user node above the first task node
-        x = 0; // Center position
-      } else {
-        x = (nodeIndex - (totalAtLevel - 1) / 2) * 200;
-      }
+    if (graphNode.type === 'User' && taskNodes.length > 0) {
+      // Position user node directly above the first task node
+      const firstTaskNode = taskNodes[0];
+      const taskLevel = levelMap.get(firstTaskNode.id) || 1;
+      const taskNodesAtLevel = nodesByLevel.get(taskLevel) || [];
+      const taskIndex = taskNodesAtLevel.indexOf(firstTaskNode.id);
+      const totalTasksAtLevel = taskNodesAtLevel.length;
+      
+      x = (taskIndex - (totalTasksAtLevel - 1) / 2) * 200; // Same x as task node
       y = level * 150;
     } else {
       // Regular positioning for other nodes
