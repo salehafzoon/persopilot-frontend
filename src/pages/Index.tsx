@@ -23,12 +23,12 @@ const Index = () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Simple authentication logic
-    if (username === 'user1' && password) {
+    if (username === 'user_01' && password === 'pass1') {
       navigate('/chat'); // User panel
-    } else if (username === 'user2' && password) {
-      navigate('/console'); // Knowledge worker page
+    } else if (username === 'analyst_01' && password === 'pass2') {
+      navigate('/console'); // Analyst panel
     } else {
-      setError('Invalid credentials. Try user1 or user2 with any password.');
+      setError('Invalid credentials. Try user_01/pass1 or analyst_01/pass2.');
     }
     
     setLoading(false);
@@ -130,8 +130,8 @@ const Index = () => {
             <div className="mt-6 p-4 bg-muted/50 rounded-lg">
               <p className="text-sm font-medium text-foreground mb-2">Demo Credentials:</p>
               <div className="text-xs text-muted-foreground space-y-1">
-                <div>• <strong>user1</strong> + any password → User Panel</div>
-                <div>• <strong>user2</strong> + any password → Knowledge Worker</div>
+                <div>• <strong>user_01</strong> + <strong>pass1</strong> → User Panel</div>
+                <div>• <strong>analyst_01</strong> + <strong>pass2</strong> → Analyst Panel</div>
               </div>
             </div>
           </CardContent>
