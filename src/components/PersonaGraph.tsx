@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo } from 'react';
 import {
   ReactFlow,
@@ -111,7 +112,8 @@ const convertToReactFlowData = (graphData: GraphData) => {
       const taskIndex = taskNodesAtLevel.indexOf(firstTaskNode.id);
       const totalTasksAtLevel = taskNodesAtLevel.length;
       
-      x = (taskIndex - (totalTasksAtLevel - 1) / 2) * 200; // Same x as task node
+      // Calculate exact x position to match the task node + small adjustment to center
+      x = (taskIndex - (totalTasksAtLevel - 1) / 2) * 200 + 10; // Added +10 to move slightly right
       y = level * 150;
     } else {
       // Regular positioning for other nodes
