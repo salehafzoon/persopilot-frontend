@@ -78,8 +78,8 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
 
       {/* Main Layout */}
       <div className="flex w-full pt-16">
-        {/* Left 2/3: Chatbot Panel */}
-        <div className="w-2/3 flex flex-col border-r border-border">
+        {/* Left 1/2: Chatbot Panel */}
+        <div className="w-1/2 flex flex-col border-r border-border">
           {/* Chat Header */}
           <header className="bg-card/90 backdrop-blur-sm border-b border-border p-4">
             <div className="flex items-center justify-between">
@@ -138,8 +138,8 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
           </div>
         </div>
 
-        {/* Right 1/3: Persona Graph + Explanation Panel */}
-        <div className="w-1/3 flex flex-col bg-card">
+        {/* Right 1/2: Persona Graph + Explanation Panel */}
+        <div className="w-1/2 flex flex-col bg-card">
           <header className="p-4 border-b border-border">
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <Brain size={20} />
