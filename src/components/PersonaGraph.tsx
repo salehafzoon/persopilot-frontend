@@ -10,6 +10,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useAppContext } from '@/context/AppContext';
+import UserNode from './UserNode';
 
 interface GraphNode {
   id: string;
@@ -27,6 +28,10 @@ interface GraphData {
   nodes: GraphNode[];
   edges: GraphEdge[];
 }
+
+const nodeTypes = {
+  user: UserNode,
+};
 
 const getNodeColor = (type: string): string => {
   switch (type) {
@@ -97,14 +102,21 @@ const convertToReactFlowData = (graphData: GraphData) => {
     const x = (nodeIndex - (totalAtLevel - 1) / 2) * 200;
     const y = level * 150;
 
+    const isUserNode = graphNode.type === 'User';
+    
     nodes.push({
       id: graphNode.id,
+      type: isUserNode ? 'user' : undefined,
       data: { 
         label: graphNode.label,
         type: graphNode.type
       },
       position: { x, y },
-      style: {
+      style: isUserNode ? {
+        background: 'transparent',
+        border: 'none',
+        padding: '0',
+      } : {
         background: getNodeColor(graphNode.type),
         color: 'white',
         border: 'none',
@@ -165,6 +177,7 @@ export const PersonaGraph = () => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{
           padding: 0.2,
