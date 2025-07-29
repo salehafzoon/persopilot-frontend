@@ -6,6 +6,8 @@ interface Message {
   content: string;
   sender: 'user' | 'assistant';
   timestamp: Date;
+  reason?: string;
+  usedTool?: string;
 }
 
 interface GraphNode {

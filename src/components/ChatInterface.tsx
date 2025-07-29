@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send, Brain } from 'lucide-react';
+import { Send, Brain, Wrench } from 'lucide-react';
 import { PersonaGraph } from './PersonaGraph';
 import { useAppContext } from '@/context/AppContext';
 
@@ -15,10 +15,13 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
     chatMessages,
     addChatMessage,
     userName,
+    setUserGraph,
   } = useAppContext();
 
   const [inputValue, setInputValue] = useState('');
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
+  const [currentReason, setCurrentReason] = useState<string>('');
+  const [currentTool, setCurrentTool] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   if (!selectedTask) return null;
@@ -46,17 +49,143 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
     setInputValue('');
     setIsAssistantTyping(true);
 
-    // Simulate assistant response
+    // Simulate server response with new format
     setTimeout(() => {
       setIsAssistantTyping(false);
+      
+      // Simulate server response
+      const mockServerResponse = {
+        session_id: "2f2684e3-ac19-4943-8ad4-ccc9c54a830f",
+        response: {
+          response: "It's great to know that you enjoy drinking wine at night!",
+          reason: "User expressing his/her preferences",
+          used_tool: "PersonaExtractor"
+        },
+        is_persona_updated: true,
+        persona_graph: {
+          nodes: [
+            {
+              id: "user_01",
+              label: "user_01",
+              type: "User"
+            },
+            {
+              id: "1",
+              label: "Content Consumption",
+              type: "Task"
+            },
+            {
+              id: "Book",
+              label: "Book",
+              type: "Topic"
+            },
+            {
+              id: "Game",
+              label: "Game",
+              type: "Topic"
+            },
+            {
+              id: "Movie",
+              label: "Movie",
+              type: "Topic"
+            },
+            {
+              id: "Music",
+              label: "Music",
+              type: "Topic"
+            },
+            {
+              id: "Book_reading novels",
+              label: "reading novels",
+              type: "Object"
+            },
+            {
+              id: "Movie_watching sci-fi",
+              label: "watching sci-fi",
+              type: "Object"
+            },
+            {
+              id: "Music_classical music",
+              label: "classical music",
+              type: "Object"
+            },
+            {
+              id: "Game_video games",
+              label: "video games",
+              type: "Object"
+            }
+          ],
+          edges: [
+            {
+              source: "user_01",
+              target: "1",
+              label: "has_task"
+            },
+            {
+              source: "1",
+              target: "Book",
+              label: "has_topic"
+            },
+            {
+              source: "1",
+              target: "Game",
+              label: "has_topic"
+            },
+            {
+              source: "1",
+              target: "Movie",
+              label: "has_topic"
+            },
+            {
+              source: "1",
+              target: "Music",
+              label: "has_topic"
+            },
+            {
+              source: "Book",
+              target: "Book_reading novels",
+              label: "likes"
+            },
+            {
+              source: "Movie",
+              target: "Movie_watching sci-fi",
+              label: "likes"
+            },
+            {
+              source: "Music",
+              target: "Music_classical music",
+              label: "likes"
+            },
+            {
+              source: "Game",
+              target: "Game_video games",
+              label: "plays"
+            }
+          ]
+        },
+        timestamp: "2025-07-29T09:34:34.497380"
+      };
+
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
-        content: `I understand you're interested in "${inputValue}". Let me help you with that in the context of ${selectedTask.title.toLowerCase()}. Here are some personalized suggestions...`,
+        content: mockServerResponse.response.response,
         sender: 'assistant' as const,
-        timestamp: new Date()
+        timestamp: new Date(),
+        reason: mockServerResponse.response.reason,
+        usedTool: mockServerResponse.response.used_tool
       };
+      
       addChatMessage(assistantMessage);
-    }, 1000);
+      
+      // Update reasoning panel
+      setCurrentReason(mockServerResponse.response.reason);
+      setCurrentTool(mockServerResponse.response.used_tool);
+      
+      // Update persona graph if needed
+      if (mockServerResponse.is_persona_updated) {
+        setUserGraph(mockServerResponse.persona_graph);
+      }
+    }, 2000);
   };
 
   // Get task-specific color for user messages
@@ -117,10 +246,16 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
                   {message.sender === 'user' ? (
                     <div className={`${getUserMessageColor()} text-white p-3 rounded-2xl rounded-bl-sm`}>
                       <p className="text-sm">{message.content}</p>
+                      <p className="text-xs text-white/70 mt-1">
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
                     </div>
                   ) : (
                     <div className="bg-white text-black p-3 rounded-2xl rounded-br-sm border border-border">
                       <p className="text-sm">{message.content}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -181,12 +316,26 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
             <PersonaGraph />
           </div>
 
-          {/* Bottom 1/3: Explanation Box */}
+          {/* Bottom 1/3: Reasoning Panel */}
           <div className="h-1/3 p-4 border-t border-border">
-            <div className="bg-card rounded-lg p-4 shadow-soft border border-border h-full flex items-center">
-              <p className="text-sm text-muted-foreground">
-                This is based on your interest in jogging and meditation.
-              </p>
+            <div className="bg-card rounded-lg p-4 shadow-soft border border-border h-full">
+              <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                <Wrench size={16} />
+                Reasoning
+              </h4>
+              
+              {currentTool && currentTool !== 'Non' && (
+                <div className="mb-3">
+                  <div className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                    <Wrench size={12} />
+                    {currentTool}
+                  </div>
+                </div>
+              )}
+              
+              <div className="text-sm text-muted-foreground">
+                {currentReason || 'Waiting for assistant response...'}
+              </div>
             </div>
           </div>
         </div>
