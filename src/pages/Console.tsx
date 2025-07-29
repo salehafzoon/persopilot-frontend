@@ -494,15 +494,15 @@ const Console = () => {
                       <Input
                         value={formData.classificationGroup}
                         onChange={(e) => handleFormChange('classificationGroup', e.target.value)}
-                        placeholder="e.g., Camping Enthusiast, Not Camping Enthusiast"
+                        placeholder="e.g., Camping Enthusiast"
                         className="w-1/2"
                       />
                       <div className="flex gap-2">
                         <div className="px-3 py-1 bg-black text-white text-sm rounded-md">
-                          Group A
+                          {formData.classificationGroup || "Group A"}
                         </div>
                         <div className="px-3 py-1 bg-gray-500 text-white text-sm rounded-md">
-                          Group B
+                          {formData.classificationGroup ? `Non-${formData.classificationGroup}` : "Non-Group A"}
                         </div>
                       </div>
                     </div>
