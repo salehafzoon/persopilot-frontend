@@ -42,7 +42,9 @@ const Console = () => {
       id: 1,
       name: 'CampingAffinity',
       description: 'Whether or not a user is interested in camping and outdoor activities',
-      groups: ['Camping Enthusiast', 'Not Camping Enthusiast'],
+      label1: 'Camping Enthusiast',
+      label2: 'Not Camping Enthusiast',
+      offer_message: 'Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences.',
       date: '2024-01-15 10:30:00',
       username: 'analyst_01'
     },
@@ -50,7 +52,9 @@ const Console = () => {
       id: 2,
       name: 'FitnessEnthusiast',
       description: 'Whether or not a user is actively engaged in fitness and exercise routines',
-      groups: ['Fitness Enthusiast', 'Not Fitness Enthusiast'],
+      label1: 'Fitness Enthusiast',
+      label2: 'Not Fitness Enthusiast',
+      offer_message: 'Get access to premium workout plans and exclusive fitness gear discounts!',
       date: '2024-01-12 14:20:00',
       username: 'analyst_01'
     },
@@ -58,7 +62,9 @@ const Console = () => {
       id: 3,
       name: 'TechSavvy',
       description: 'Whether or not a user shows high interest in technology and digital innovations',
-      groups: ['Tech Savvy', 'Not Tech Savvy'],
+      label1: 'Tech Savvy',
+      label2: 'Not Tech Savvy',
+      offer_message: 'Be the first to access cutting-edge tech products and exclusive beta testing opportunities!',
       date: '2024-01-10 09:15:00',
       username: 'analyst_01'
     },
@@ -66,7 +72,9 @@ const Console = () => {
       id: 4,
       name: 'FoodieClassifier',
       description: 'Whether or not a user is passionate about food experiences and cooking',
-      groups: ['Foodie', 'Not Foodie'],
+      label1: 'Foodie',
+      label2: 'Not Foodie',
+      offer_message: 'Discover exclusive culinary experiences and premium kitchen equipment at special rates!',
       date: '2024-01-08 16:45:00',
       username: 'analyst_01'
     },
@@ -74,7 +82,9 @@ const Console = () => {
       id: 5,
       name: 'TravelEnthusiast',
       description: 'Whether or not a user frequently travels and seeks new travel experiences',
-      groups: ['Travel Enthusiast', 'Not Travel Enthusiast'],
+      label1: 'Travel Enthusiast',
+      label2: 'Not Travel Enthusiast',
+      offer_message: 'Unlock exclusive travel deals and unique destination experiences worldwide!',
       date: '2024-01-05 11:10:00',
       username: 'analyst_01'
     }
@@ -329,10 +339,11 @@ const Console = () => {
         id: Date.now(),
         name: formData.title,
         description: formData.description,
-        groups: formData.classificationGroup.split(',').map(g => g.trim()),
+        label1: formData.classificationGroup,
+        label2: `Not ${formData.classificationGroup}`,
+        offer_message: formData.offerMessage,
         date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-        username: 'analyst_01',
-        offerMessage: formData.offerMessage
+        username: 'analyst_01'
       };
       
       setNewTasks(prev => [newTask, ...prev]);
@@ -379,8 +390,8 @@ const Console = () => {
     setFormData({
       title: task.name,
       description: task.description,
-      classificationGroup: task.groups.join(', '),
-      offerMessage: task.offerMessage || "Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences."
+      classificationGroup: task.label1,
+      offerMessage: task.offer_message || "Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences."
     });
   };
 
@@ -621,18 +632,12 @@ const Console = () => {
                     Classification Groups
                   </h3>
                   <div className="flex gap-3">
-                    {selectedTask.groups.map((group: string, index: number) => (
-                      <div 
-                        key={index}
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium ${
-                          index === 0 
-                            ? 'bg-primary/10 text-primary border border-primary/20' 
-                            : 'bg-secondary/10 text-secondary-foreground border border-secondary/20'
-                        }`}
-                      >
-                        {group}
-                      </div>
-                    ))}
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/20">
+                      {selectedTask.label1}
+                    </div>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-secondary/10 text-secondary-foreground border border-secondary/20">
+                      {selectedTask.label2}
+                    </div>
                   </div>
                 </div>
 
@@ -642,7 +647,7 @@ const Console = () => {
                     Offer Message
                   </h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    {selectedTask.offerMessage || "Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences."}
+                    {selectedTask.offer_message}
                   </p>
                 </div>
 
