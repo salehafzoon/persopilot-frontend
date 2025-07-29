@@ -17,6 +17,7 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
   } = useAppContext();
 
   const [inputValue, setInputValue] = useState('');
+  const [isAssistantTyping, setIsAssistantTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   if (!selectedTask) return null;
@@ -27,7 +28,7 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatMessages]);
+  }, [chatMessages, isAssistantTyping]);
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,9 +43,11 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
 
     addChatMessage(userMessage);
     setInputValue('');
+    setIsAssistantTyping(true);
 
     // Simulate assistant response
     setTimeout(() => {
+      setIsAssistantTyping(false);
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
         content: `I understand you're interested in "${inputValue}". Let me help you with that in the context of ${selectedTask.title.toLowerCase()}. Here are some personalized suggestions...`,
@@ -116,6 +119,25 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
                 </div>
               </div>
             ))}
+            
+            {/* Typing Indicator */}
+            {isAssistantTyping && (
+              <div className="flex justify-end animate-fade-in">
+                <div className="relative max-w-[70%]">
+                  <div className="bg-white text-black p-3 rounded-2xl rounded-br-sm border border-border">
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-muted-foreground">Assistant is typing</span>
+                      <div className="flex gap-1 ml-2">
+                        <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-muted-foreground/60 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <div ref={messagesEndRef} />
           </div>
           </div>
