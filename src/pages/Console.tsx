@@ -348,7 +348,7 @@ const Console = () => {
     // Exit edit mode if we were editing
     if (isEditing) {
       setIsEditing(false);
-      setSelectedTask(null);
+      // Don't clear selectedTask when editing - keep it selected to show task details
     }
   };
 
