@@ -91,16 +91,31 @@ const convertToReactFlowData = (graphData: GraphData) => {
     nodesByLevel.get(level)!.push(nodeId);
   });
 
-  // Position nodes
+  // Position nodes with better alignment for user nodes above task nodes
   graphData.nodes.forEach((graphNode) => {
     const level = levelMap.get(graphNode.id) || 0;
     const nodesAtLevel = nodesByLevel.get(level) || [];
     const nodeIndex = nodesAtLevel.indexOf(graphNode.id);
     const totalAtLevel = nodesAtLevel.length;
     
-    // Calculate position
-    const x = (nodeIndex - (totalAtLevel - 1) / 2) * 200;
-    const y = level * 150;
+    let x: number;
+    let y: number;
+    
+    if (graphNode.type === 'User') {
+      // Position user nodes to align with task nodes below them
+      const taskNodes = graphData.nodes.filter(n => n.type === 'Task');
+      if (taskNodes.length > 0) {
+        // Center user node above the first task node
+        x = 0; // Center position
+      } else {
+        x = (nodeIndex - (totalAtLevel - 1) / 2) * 200;
+      }
+      y = level * 150;
+    } else {
+      // Regular positioning for other nodes
+      x = (nodeIndex - (totalAtLevel - 1) / 2) * 200;
+      y = level * 150;
+    }
 
     const isUserNode = graphNode.type === 'User';
     

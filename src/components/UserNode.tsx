@@ -15,14 +15,12 @@ const UserNode = memo(({ data }: UserNodeProps) => {
 
   return (
     <div className="flex flex-col items-center">
-      {/* User ID above the icon */}
-      <div className="text-xs text-muted-foreground mb-2 font-medium">
-        {userId}
-      </div>
-      
-      {/* Circled user icon */}
-      <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center">
-        <User size={24} className="text-white" />
+      {/* Larger circled user icon with user ID inside */}
+      <div className="w-16 h-16 rounded-full bg-blue-500 flex flex-col items-center justify-center">
+        <User size={20} className="text-white mb-1" />
+        <div className="text-xs text-white font-medium">
+          {userId}
+        </div>
       </div>
       
       {/* Handles for connections */}
