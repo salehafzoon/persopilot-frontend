@@ -304,24 +304,39 @@ const Console = () => {
     setIsCreating(true);
     setLoadingPersonas(true);
     
-    // Simulate creating task and loading user personas
+    // Simulate creating/updating task and loading user personas
     await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Create new task and add to top of list
-    const newTask = {
-      id: Date.now(),
-      name: formData.title,
-      description: formData.description,
-      groups: formData.classificationGroup.split(',').map(g => g.trim()),
-      date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      username: 'analyst_01'
-    };
+    if (isEditing) {
+      // If editing, just update the existing task (no need to add to menu)
+      // In a real app, this would update the task in the backend
+      console.log('Updating existing task:', formData);
+    } else {
+      // If creating new task, add to top of list
+      const newTask = {
+        id: Date.now(),
+        name: formData.title,
+        description: formData.description,
+        groups: formData.classificationGroup.split(',').map(g => g.trim()),
+        date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        username: 'analyst_01',
+        offerMessage: formData.offerMessage
+      };
+      
+      setNewTasks(prev => [newTask, ...prev]);
+    }
     
-    setNewTasks(prev => [newTask, ...prev]);
+    // Show personas for both create and edit scenarios
     setPersonas(mockUsers);
     setShowPersonas(true);
     setLoadingPersonas(false);
     setIsCreating(false);
+    
+    // Exit edit mode if we were editing
+    if (isEditing) {
+      setIsEditing(false);
+      setSelectedTask(null);
+    }
   };
 
   const isFormValid = formData.title.trim() && formData.description.trim() && 
