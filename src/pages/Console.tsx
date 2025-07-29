@@ -224,6 +224,8 @@ const Console = () => {
   const [loadingPersonas, setLoadingPersonas] = useState(false);
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [showPersonas, setShowPersonas] = useState(false);
+  const [newTasks, setNewTasks] = useState<any[]>([]);
+  const [isCreating, setIsCreating] = useState(false);
 
   // Form handlers
   const handleFormChange = (field: string, value: string) => {
@@ -238,12 +240,27 @@ const Console = () => {
       return;
     }
     
+    setIsCreating(true);
     setLoadingPersonas(true);
-    // Simulate loading user personas
+    
+    // Simulate creating task and loading user personas
     await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Create new task and add to top of list
+    const newTask = {
+      id: Date.now(),
+      name: formData.title,
+      description: formData.description,
+      groups: formData.classificationGroup.split(',').map(g => g.trim()),
+      date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      username: 'analyst_01'
+    };
+    
+    setNewTasks(prev => [newTask, ...prev]);
     setPersonas(mockUsers);
     setShowPersonas(true);
     setLoadingPersonas(false);
+    setIsCreating(false);
   };
 
   const isFormValid = formData.title.trim() && formData.description.trim() && 
@@ -272,7 +289,7 @@ const Console = () => {
               <SidebarGroupLabel>Previous Classifications</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {previousTasks.map((task) => (
+                  {[...newTasks, ...previousTasks].map((task) => (
                     <SidebarMenuItem key={task.id}>
                       <Card 
                         className="m-2 cursor-pointer hover:shadow-md transition-shadow"
@@ -477,16 +494,16 @@ const Console = () => {
                   {/* Submit Button */}
                   <Button 
                     onClick={handleSubmit}
-                    disabled={!isFormValid || loadingPersonas}
+                    disabled={!isFormValid || isCreating}
                     className="w-full bg-primary hover:bg-primary/90"
                   >
-                    {loadingPersonas ? (
+                    {isCreating ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        Loading User Personas...
+                        Creating...
                       </>
                      ) : (
-                       'Generate Random Candidates'
+                       'Create the Classification Task'
                      )}
                   </Button>
                 </CardContent>
