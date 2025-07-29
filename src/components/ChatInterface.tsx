@@ -76,8 +76,10 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
   return (
     <div className="h-screen flex bg-gradient-subtle">
       {/* Fixed Brand Header */}
-      <div className="fixed top-0 left-0 z-50 p-4">
+      <div className="fixed top-0 left-0 right-0 z-50 p-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-foreground">PersoAgent</h1>
+        <p className="text-sm text-muted-foreground absolute left-1/2 transform -translate-x-1/2">Hello {userName}</p>
+        <div></div>
       </div>
 
       {/* Main Layout */}
@@ -93,13 +95,10 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
                 </Button>
               </div>
               
-              {/* Center Content */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 text-center">
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <span className="text-2xl">{selectedTask.icon}</span>
-                  <h2 className="text-xl font-semibold text-foreground">{selectedTask.title}</h2>
-                </div>
-                <p className="text-sm text-muted-foreground">Hello {userName}</p>
+              {/* Center Task Title */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+                <span className="text-2xl">{selectedTask.icon}</span>
+                <h2 className="text-xl font-semibold text-foreground">{selectedTask.title}</h2>
               </div>
               
               <div></div>
