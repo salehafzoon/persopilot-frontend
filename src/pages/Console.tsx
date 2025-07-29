@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Loader2, CheckCircle, User, Send, Menu, Edit } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle, User, Send, Menu, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -414,18 +414,29 @@ const Console = () => {
         <div className="max-w-8xl mx-auto">
           {/* Task Details View - when a task is selected */}
           {selectedTask && (
-            <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
+            <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow relative">
               <CardContent className="p-8">
-                {/* Header with Edit Icon */}
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h2 className="text-3xl font-bold text-foreground mb-2">
-                      {selectedTask.name}
-                    </h2>
-                  </div>
-                  <Button variant="ghost" size="sm" className="hover:bg-muted">
-                    <Edit size={20} className="text-muted-foreground" />
-                  </Button>
+                {/* Delete and Edit buttons in corners */}
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="absolute top-4 left-4 h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600"
+                >
+                  <Trash2 size={16} />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="absolute top-4 right-4 h-8 w-8 p-0 hover:bg-muted"
+                >
+                  <Edit size={16} />
+                </Button>
+
+                {/* Task Name */}
+                <div className="mb-6 mt-4">
+                  <h2 className="text-3xl font-bold text-foreground mb-2">
+                    {selectedTask.name}
+                  </h2>
                 </div>
 
                 {/* Task Description */}
@@ -457,6 +468,16 @@ const Console = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+
+                {/* Offer Message */}
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-foreground mb-3">
+                    Offer Message
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {selectedTask.offerMessage || "Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences."}
+                  </p>
                 </div>
 
                 {/* Creation Date & Time */}
@@ -577,69 +598,71 @@ const Console = () => {
                       Randomized Candidates ({personas.length} candidates)
                     </h3>
                     
-                    <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-                      {personas.map((user) => (
-                        <Card 
-                          key={user.id} 
-                          className="transition-all duration-200 bg-card hover:shadow-md"
-                        >
-                          <CardContent className="p-4">
-                            {/* User ID/Avatar */}
-                            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-muted">
-                              <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                                <User size={16} className="text-muted-foreground" />
-                              </div>
-                              <span className="font-mono text-sm font-bold text-foreground">
-                                {user.id}
-                              </span>
-                            </div>
-
-                            {/* Demographics */}
-                            <div className="mb-3">
-                              <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
-                                <span>Age: {user.age}</span>
-                                <span>Gender: {user.gender}</span>
-                              </div>
-                            </div>
-
-                            {/* User Description */}
-                            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                              {user.description}
-                            </p>
-
-                            {/* Bottom section: Assigned Group and Alignment Score */}
-                            <div className="flex items-start gap-4">
-                              {/* Assigned Group */}
-                              <div className="flex-1">
-                                <span className="text-xs font-medium text-foreground block mb-1">Assigned Group:</span>
-                                <Select defaultValue={user.score > 0.4 ? "Not Camping Enthusiast" : user.assignedGroup}>
-                                  <SelectTrigger className="w-full h-7 text-xs">
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="Camping Enthusiast">Camping Enthusiast</SelectItem>
-                                    <SelectItem value="Not Camping Enthusiast">Not Camping Enthusiast</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              
-                              {/* Alignment Score */}
-                              <div className="flex-shrink-0">
-                                <span className="text-xs font-medium text-foreground block mb-1">Alignment Score:</span>
-                                <span 
-                                  className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
-                                    user.score >= 0.7 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                                    user.score >= 0.4 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                                    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                                  }`}
-                                >
-                                  {(user.score * 100).toFixed(0)}%
+                    <div className="flex-1 overflow-y-auto mb-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        {personas.map((user) => (
+                          <Card 
+                            key={user.id} 
+                            className="transition-all duration-200 bg-card hover:shadow-md"
+                          >
+                            <CardContent className="p-4">
+                              {/* User ID/Avatar */}
+                              <div className="flex items-center gap-3 mb-3 pb-3 border-b border-muted">
+                                <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+                                  <User size={16} className="text-muted-foreground" />
+                                </div>
+                                <span className="font-mono text-sm font-bold text-foreground">
+                                  {user.id}
                                 </span>
                               </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+
+                              {/* Demographics */}
+                              <div className="mb-3">
+                                <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
+                                  <span>Age: {user.age}</span>
+                                  <span>Gender: {user.gender}</span>
+                                </div>
+                              </div>
+
+                              {/* User Description */}
+                              <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                                {user.description}
+                              </p>
+
+                              {/* Bottom section: Assigned Group and Alignment Score */}
+                              <div className="flex items-start gap-4">
+                                {/* Assigned Group */}
+                                <div className="flex-1">
+                                  <span className="text-xs font-medium text-foreground block mb-1">Assigned Group:</span>
+                                  <Select defaultValue={user.score > 0.4 ? "Not Camping Enthusiast" : user.assignedGroup}>
+                                    <SelectTrigger className="w-full h-7 text-xs">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="Camping Enthusiast">Camping Enthusiast</SelectItem>
+                                      <SelectItem value="Not Camping Enthusiast">Not Camping Enthusiast</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                
+                                {/* Alignment Score */}
+                                <div className="flex-shrink-0">
+                                  <span className="text-xs font-medium text-foreground block mb-1">Alignment Score:</span>
+                                  <span 
+                                    className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
+                                      user.score >= 0.7 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                                      user.score >= 0.4 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                    }`}
+                                  >
+                                    {(user.score * 100).toFixed(0)}%
+                                  </span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
                     </div>
                     
                     <Button 
