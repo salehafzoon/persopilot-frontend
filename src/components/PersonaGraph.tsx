@@ -112,8 +112,8 @@ const convertToReactFlowData = (graphData: GraphData) => {
       const taskIndex = taskNodesAtLevel.indexOf(firstTaskNode.id);
       const totalTasksAtLevel = taskNodesAtLevel.length;
       
-      // Calculate exact x position to match the task node + small adjustment to center
-      x = (taskIndex - (totalTasksAtLevel - 1) / 2) * 200 + 10; // Added +10 to move slightly right
+      // Calculate exact x position to match the task node + adjustment to align
+      x = (taskIndex - (totalTasksAtLevel - 1) / 2) * 200 + 50; // Added +50 to align with task node
       y = level * 150;
     } else {
       // Regular positioning for other nodes
