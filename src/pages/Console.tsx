@@ -594,25 +594,11 @@ const Console = () => {
                               </span>
                             </div>
 
-                            {/* Demographics and Alignment Score */}
+                            {/* Demographics */}
                             <div className="mb-3">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
-                                  <span>Age: {user.age}</span>
-                                  <span>Gender: {user.gender}</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-xs font-medium text-foreground">Alignment Score:</span>
-                                  <span 
-                                    className={`px-2 py-1 rounded-full text-xs font-bold ${
-                                      user.score >= 0.7 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                                      user.score >= 0.4 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                                    }`}
-                                  >
-                                    {(user.score * 100).toFixed(0)}%
-                                  </span>
-                                </div>
+                              <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
+                                <span>Age: {user.age}</span>
+                                <span>Gender: {user.gender}</span>
                               </div>
                             </div>
 
@@ -621,18 +607,35 @@ const Console = () => {
                               {user.description}
                             </p>
 
-                            {/* Assigned Group */}
-                            <div className="flex items-center gap-2">
-                              <span className="text-xs font-medium text-foreground">Assigned Group:</span>
-                              <Select defaultValue={user.score > 0.4 ? "Not Camping Enthusiast" : user.assignedGroup}>
-                                <SelectTrigger className="w-40 h-7 text-xs">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="Camping Enthusiast">Camping Enthusiast</SelectItem>
-                                  <SelectItem value="Not Camping Enthusiast">Not Camping Enthusiast</SelectItem>
-                                </SelectContent>
-                              </Select>
+                            {/* Bottom section: Assigned Group and Alignment Score */}
+                            <div className="flex items-start gap-4">
+                              {/* Assigned Group */}
+                              <div className="flex-1">
+                                <span className="text-xs font-medium text-foreground block mb-1">Assigned Group:</span>
+                                <Select defaultValue={user.score > 0.4 ? "Not Camping Enthusiast" : user.assignedGroup}>
+                                  <SelectTrigger className="w-full h-7 text-xs">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Camping Enthusiast">Camping Enthusiast</SelectItem>
+                                    <SelectItem value="Not Camping Enthusiast">Not Camping Enthusiast</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              
+                              {/* Alignment Score */}
+                              <div className="flex-shrink-0">
+                                <span className="text-xs font-medium text-foreground block mb-1">Alignment Score:</span>
+                                <span 
+                                  className={`inline-block px-2 py-1 rounded-full text-xs font-bold ${
+                                    user.score >= 0.7 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                                    user.score >= 0.4 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                                    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                  }`}
+                                >
+                                  {(user.score * 100).toFixed(0)}%
+                                </span>
+                              </div>
                             </div>
                           </CardContent>
                         </Card>
