@@ -298,6 +298,7 @@ const Console = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deletedTaskIds, setDeletedTaskIds] = useState<number[]>([]);
 
   // Form handlers
   const handleFormChange = (field: string, value: string) => {
@@ -389,6 +390,9 @@ const Console = () => {
       // Remove from newTasks if it exists there
       setNewTasks(prev => prev.filter(task => task.id !== selectedTask.id));
       
+      // Add to deleted tasks list to filter out from previousTasks
+      setDeletedTaskIds(prev => [...prev, selectedTask.id]);
+      
       // Clear selected task and show create form
       setSelectedTask(null);
       setShowPersonas(false);
@@ -418,7 +422,7 @@ const Console = () => {
               <SidebarGroupLabel>Previous Classifications</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {[...newTasks, ...previousTasks].map((task) => (
+                  {[...newTasks, ...previousTasks.filter(task => !deletedTaskIds.includes(task.id))].map((task) => (
                     <SidebarMenuItem key={task.id}>
                       <Card 
                         className="m-2 cursor-pointer hover:shadow-md transition-shadow"
