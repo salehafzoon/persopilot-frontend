@@ -569,15 +569,15 @@ const Console = () => {
                 </CardContent>
               </Card>
 
-              {/* Randomized Candidates Grid */}
+              {/* Randomized Candidates Panel */}
               {showPersonas && personas.length > 0 && !loadingPersonas && (
-                <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
-                  <CardContent className="p-8">
-                    <h3 className="text-xl font-semibold text-foreground mb-6">
+                <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow h-[600px] flex flex-col">
+                  <CardContent className="p-6 flex flex-col h-full">
+                    <h3 className="text-xl font-semibold text-foreground mb-4">
                       Randomized Candidates ({personas.length} candidates)
                     </h3>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="flex-1 overflow-y-auto space-y-4 mb-4">
                       {personas.map((user) => (
                         <Card 
                           key={user.id} 
@@ -641,6 +641,23 @@ const Console = () => {
                         </Card>
                       ))}
                     </div>
+                    
+                    <Button 
+                      className="w-full bg-primary hover:bg-primary/90 text-white"
+                      disabled={loadingPersonas}
+                    >
+                      {loadingPersonas ? (
+                        <>
+                          <Loader2 className="animate-spin mr-2" size={16} />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="mr-2" size={16} />
+                          Send Personalized Offers
+                        </>
+                      )}
+                    </Button>
                   </CardContent>
                 </Card>
               )}
