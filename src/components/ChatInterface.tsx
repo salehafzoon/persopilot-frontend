@@ -91,14 +91,14 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
                 <Button variant="ghost" onClick={onBack} className="text-muted-foreground hover:text-foreground">
                   ← Back
                 </Button>
-                <div className="flex items-center gap-2">
+              </div>
+              
+              {/* Center Content */}
+              <div className="absolute left-1/2 transform -translate-x-1/2 text-center">
+                <div className="flex items-center justify-center gap-2 mb-1">
                   <span className="text-2xl">{selectedTask.icon}</span>
                   <h2 className="text-xl font-semibold text-foreground">{selectedTask.title}</h2>
                 </div>
-              </div>
-              
-              {/* Center Greeting */}
-              <div className="absolute left-1/2 transform -translate-x-1/2">
                 <p className="text-sm text-muted-foreground">Hello {userName}</p>
               </div>
               
