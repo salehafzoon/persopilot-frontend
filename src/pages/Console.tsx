@@ -286,6 +286,7 @@ const Console = () => {
   const [showPersonas, setShowPersonas] = useState(false);
   const [newTasks, setNewTasks] = useState<any[]>([]);
   const [isCreating, setIsCreating] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // Form handlers
   const handleFormChange = (field: string, value: string) => {
@@ -329,11 +330,31 @@ const Console = () => {
   // Handle task selection from sidebar
   const handleTaskSelect = (task: any) => {
     setSelectedTask(task);
+    setIsEditing(false);
   };
 
   // Handle creating new task
   const handleCreateNew = () => {
     setSelectedTask(null);
+    setIsEditing(false);
+    // Reset form
+    setFormData({
+      title: '',
+      description: '',
+      classificationGroup: '',
+      offerMessage: ''
+    });
+  };
+
+  // Handle editing a task
+  const handleEditTask = (task: any) => {
+    setIsEditing(true);
+    setFormData({
+      title: task.name,
+      description: task.description,
+      classificationGroup: task.groups.join(', '),
+      offerMessage: task.offerMessage || "Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences."
+    });
   };
 
   return (
@@ -412,28 +433,110 @@ const Console = () => {
       {/* Scrollable Content */}
       <div className="overflow-y-auto p-6">
         <div className="max-w-8xl mx-auto">
-          {/* Task Details View - when a task is selected */}
-          {selectedTask && (
+          {/* Create/Edit Form OR Task Details View */}
+          {(!selectedTask || isEditing) ? (
+            /* Create Classification Task Form */
+            <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
+              <CardContent className="p-8">
+                <h2 className="text-3xl font-bold text-foreground mb-8">
+                  {isEditing ? 'Edit Classification Task' : 'Create Classification Task'}
+                </h2>
+
+                {/* Form Fields */}
+                <div className="space-y-6">
+                  {/* Title Input */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Task Name
+                    </label>
+                    <Input
+                      value={formData.title}
+                      onChange={(e) => handleFormChange('title', e.target.value)}
+                      placeholder="e.g., CampingAffinity"
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Description Input */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Description
+                    </label>
+                    <Input
+                      value={formData.description}
+                      onChange={(e) => handleFormChange('description', e.target.value)}
+                      placeholder="Describe what this classification task identifies..."
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Classification Groups */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Classification Groups (comma-separated)
+                    </label>
+                    <Input
+                      value={formData.classificationGroup}
+                      onChange={(e) => handleFormChange('classificationGroup', e.target.value)}
+                      placeholder="e.g., Camping Enthusiast, Not Camping Enthusiast"
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Offer Message */}
+                  <div>
+                    <label className="block text-sm font-medium text-foreground mb-2">
+                      Offer Message
+                    </label>
+                    <Input
+                      value={formData.offerMessage}
+                      onChange={(e) => handleFormChange('offerMessage', e.target.value)}
+                      placeholder="Message to send to classified users..."
+                      className="w-full"
+                    />
+                  </div>
+                </div>
+
+                {/* Submit Button */}
+                <Button 
+                  onClick={handleSubmit}
+                  disabled={!isFormValid || isCreating}
+                  className="w-full mt-8 bg-primary hover:bg-primary/90 text-white h-12"
+                >
+                  {isCreating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      {isEditing ? 'Updating...' : 'Creating...'}
+                    </>
+                   ) : (
+                     isEditing ? 'Update Classification Task' : 'Create the Classification Task'
+                   )}
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            /* Task Details View - when a task is selected and not editing */
             <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow relative">
               <CardContent className="p-8">
-                {/* Delete and Edit buttons in corners */}
+                {/* Delete and Edit buttons in corners with bigger size and margin */}
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="absolute top-4 left-4 h-8 w-8 p-0 hover:bg-red-100 hover:text-red-600"
+                  className="absolute top-6 left-6 h-10 w-10 p-0 hover:bg-red-100 hover:text-red-600"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={20} />
                 </Button>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="absolute top-4 right-4 h-8 w-8 p-0 hover:bg-muted"
+                  className="absolute top-6 right-6 h-10 w-10 p-0 hover:bg-muted"
+                  onClick={() => handleEditTask(selectedTask)}
                 >
-                  <Edit size={16} />
+                  <Edit size={20} />
                 </Button>
 
-                {/* Task Name */}
-                <div className="mb-6 mt-4">
+                {/* Task Name with more top margin */}
+                <div className="mb-6 mt-8">
                   <h2 className="text-3xl font-bold text-foreground mb-2">
                     {selectedTask.name}
                   </h2>
