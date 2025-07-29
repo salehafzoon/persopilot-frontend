@@ -73,141 +73,201 @@ const Console = () => {
   const mockUsers = [
     { 
       id: 'USER_001',
+      username: 'user_001',
+      full_name: 'Sarah Johnson',
       age: 28,
       gender: 'Female',
+      score: 0.85,
       description: 'This user often talks about hiking, outdoor meals, and weekend nature trips. Frequently shares photos from national parks and discusses camping gear. Likely a camping enthusiast who values authentic outdoor experiences.',
       assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_002',
+      username: 'user_002',
+      full_name: 'Mike Thompson',
       age: 34,
       gender: 'Male',
+      score: 0.65,
       description: 'Occasionally shares scenic photos and enjoys weekend getaways to national parks. Shows moderate interest in outdoor activities but prefers comfortable accommodations over traditional camping.',
-      assignedGroup: 'Camping Enthusiast'
+      assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_003',
+      username: 'user_003',
+      full_name: 'Alex Rivera',
       age: 25,
       gender: 'Non-binary',
+      score: 0.25,
       description: 'Focused on city life, technology, and indoor entertainment. Rarely engages with outdoor content and typically posts about restaurants, movies, and urban activities. Unlikely to be interested in camping.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_004',
+      username: 'user_004',
+      full_name: 'Emily Chen',
       age: 31,
       gender: 'Female',
+      score: 0.35,
       description: 'Enjoys outdoor running and cycling but shows limited interest in camping or wilderness activities. Prefers structured outdoor exercise over adventure camping experiences.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_005',
+      username: 'user_005',
+      full_name: 'David Martinez',
       age: 42,
       gender: 'Male',
+      score: 0.55,
       description: 'Family-oriented person who enjoys organized outdoor activities like picnics and beach visits. Interested in child-friendly outdoor experiences but not extreme camping adventures.',
-      assignedGroup: 'Camping Enthusiast'
+      assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_006',
+      username: 'user_006',
+      full_name: 'Lisa Park',
       age: 29,
       gender: 'Female',
+      score: 0.45,
       description: 'Professional photographer specializing in landscape and wildlife photography. Frequently travels to remote locations for work but camping is more of a necessity than a personal passion.',
-      assignedGroup: 'Camping Enthusiast'
+      assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_007',
+      username: 'user_007',
+      full_name: 'James Wilson',
       age: 37,
       gender: 'Male',
+      score: 0.3,
       description: 'Travel blogger who covers luxury resorts and five-star accommodations. Appreciates natural beauty but strongly prefers glamping over traditional camping experiences.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_008',
+      username: 'user_008',
+      full_name: 'Robert Bear',
       age: 45,
       gender: 'Male',
+      score: 0.95,
       description: 'Survival skills instructor and wilderness guide who lives off-grid part-time. Deeply passionate about primitive camping, bushcraft, and teaching others outdoor survival techniques.',
       assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_009',
+      username: 'user_009',
+      full_name: 'Jessica Lee',
       age: 26,
       gender: 'Female',
+      score: 0.7,
       description: 'Weekend warrior who enjoys car camping and RV trips with friends. Likes the social aspect of camping but prefers modern conveniences and established campgrounds.',
       assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_010',
+      username: 'user_010',
+      full_name: 'Maria Santos',
       age: 33,
       gender: 'Female',
+      score: 0.6,
       description: 'Environmental activist who participates in conservation efforts and clean-up campaigns. Values nature preservation but camping is secondary to environmental advocacy work.',
-      assignedGroup: 'Camping Enthusiast'
+      assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_011',
+      username: 'user_011',
+      full_name: 'Tyler Johnson',
       age: 21,
       gender: 'Male',
+      score: 0.5,
       description: 'College student who goes on occasional group camping trips for social reasons. Shows interest in outdoor activities but limited by budget and experience level.',
-      assignedGroup: 'Camping Enthusiast'
+      assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_012',
+      username: 'user_012',
+      full_name: 'Dorothy Clark',
       age: 68,
       gender: 'Female',
+      score: 0.8,
       description: 'Retired professional who recently discovered camping as a hobby. Enthusiastic about learning new outdoor skills and investing in quality camping equipment for future adventures.',
       assignedGroup: 'Camping Enthusiast'
     },
     { 
       id: 'USER_013',
+      username: 'user_013',
+      full_name: 'Kevin Brown',
       age: 29,
       gender: 'Male',
+      score: 0.15,
       description: 'Urban professional who prefers hotel stays and city breaks. Shows no interest in outdoor activities and actively avoids camping-related content.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_014',
+      username: 'user_014',
+      full_name: 'Rachel Green',
       age: 35,
       gender: 'Female',
+      score: 0.2,
       description: 'Fitness enthusiast who enjoys gym workouts and indoor sports. Rarely engages with outdoor content and prefers climate-controlled environments.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_015',
+      username: 'user_015',
+      full_name: 'Nathan Kim',
       age: 27,
       gender: 'Male',
+      score: 0.1,
       description: 'Gaming enthusiast who spends most free time indoors playing video games. Shows minimal interest in outdoor activities or nature-related content.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_016',
+      username: 'user_016',
+      full_name: 'Amanda White',
       age: 31,
       gender: 'Female',
+      score: 0.25,
       description: 'Busy parent who prefers structured indoor activities with children. Values convenience and comfort over outdoor adventures.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_017',
+      username: 'user_017',
+      full_name: 'Jordan Taylor',
       age: 24,
       gender: 'Non-binary',
+      score: 0.3,
       description: 'Art student focused on studio work and gallery exhibitions. Prefers urban cultural experiences over outdoor activities.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_018',
+      username: 'user_018',
+      full_name: 'Richard Gold',
       age: 39,
       gender: 'Male',
+      score: 0.15,
       description: 'Business executive who enjoys fine dining and luxury experiences. Shows no interest in camping or roughing it outdoors.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_019',
+      username: 'user_019',
+      full_name: 'Sophie Miller',
       age: 26,
       gender: 'Female',
+      score: 0.2,
       description: 'Fashion blogger who focuses on style and beauty content. Rarely posts about outdoor activities and prefers urban lifestyle.',
       assignedGroup: 'Not Camping Enthusiast'
     },
     { 
       id: 'USER_020',
+      username: 'user_020',
+      full_name: 'Chris Davis',
       age: 33,
       gender: 'Male',
+      score: 0.25,
       description: 'Tech worker who enjoys indoor hobbies like coding projects and home automation. Limited engagement with outdoor or camping content.',
       assignedGroup: 'Not Camping Enthusiast'
     }
@@ -300,8 +360,8 @@ const Console = () => {
                           <div className="text-xs text-muted-foreground leading-tight mb-2">
                             {task.description}
                           </div>
-                          <div className="text-xs text-muted-foreground">
-                            {new Date(task.date).toLocaleDateString()} {new Date(task.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                          <div className="text-xs text-muted-foreground" style={{ fontSize: '10px' }}>
+                            {new Date(task.date).toLocaleDateString()}
                           </div>
                         </CardContent>
                       </Card>
@@ -534,11 +594,25 @@ const Console = () => {
                               </span>
                             </div>
 
-                            {/* Demographics */}
+                            {/* Demographics and Alignment Score */}
                             <div className="mb-3">
-                              <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
-                                <span>Age: {user.age}</span>
-                                <span>Gender: {user.gender}</span>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
+                                  <span>Age: {user.age}</span>
+                                  <span>Gender: {user.gender}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <span className="text-xs font-medium text-foreground">Alignment Score:</span>
+                                  <span 
+                                    className={`px-2 py-1 rounded-full text-xs font-bold ${
+                                      user.score >= 0.7 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                                      user.score >= 0.4 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                    }`}
+                                  >
+                                    {(user.score * 100).toFixed(0)}%
+                                  </span>
+                                </div>
                               </div>
                             </div>
 
@@ -550,7 +624,7 @@ const Console = () => {
                             {/* Assigned Group */}
                             <div className="flex items-center gap-2">
                               <span className="text-xs font-medium text-foreground">Assigned Group:</span>
-                              <Select defaultValue={user.assignedGroup}>
+                              <Select defaultValue={user.score > 0.4 ? "Not Camping Enthusiast" : user.assignedGroup}>
                                 <SelectTrigger className="w-40 h-7 text-xs">
                                   <SelectValue />
                                 </SelectTrigger>
