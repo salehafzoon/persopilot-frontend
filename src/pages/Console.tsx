@@ -488,14 +488,24 @@ const Console = () => {
                   {/* Classification Groups */}
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-2">
-                      Classification Groups (comma-separated)
+                      Classification Groups
                     </label>
-                    <Input
-                      value={formData.classificationGroup}
-                      onChange={(e) => handleFormChange('classificationGroup', e.target.value)}
-                      placeholder="e.g., Camping Enthusiast, Not Camping Enthusiast"
-                      className="w-full"
-                    />
+                    <div className="flex items-center gap-4">
+                      <Input
+                        value={formData.classificationGroup}
+                        onChange={(e) => handleFormChange('classificationGroup', e.target.value)}
+                        placeholder="e.g., Camping Enthusiast, Not Camping Enthusiast"
+                        className="w-1/2"
+                      />
+                      <div className="flex gap-2">
+                        <div className="px-3 py-1 bg-black text-white text-sm rounded-md">
+                          Group A
+                        </div>
+                        <div className="px-3 py-1 bg-gray-500 text-white text-sm rounded-md">
+                          Group B
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Offer Message */}
