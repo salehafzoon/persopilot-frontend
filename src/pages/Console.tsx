@@ -486,11 +486,11 @@ const Console = () => {
                     Created
                   </h3>
                   <p className="text-muted-foreground">
-                    {selectedTask.createdAt.toLocaleDateString('en-US', {
+                    {new Date(selectedTask.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric'
-                    })} at {selectedTask.createdAt.toLocaleTimeString('en-US', {
+                    })} at {new Date(selectedTask.date).toLocaleTimeString('en-US', {
                       hour: '2-digit',
                       minute: '2-digit'
                     })}
