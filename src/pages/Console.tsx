@@ -7,6 +7,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { 
   Sidebar, 
   SidebarContent, 
   SidebarGroup, 
@@ -287,6 +297,7 @@ const Console = () => {
   const [newTasks, setNewTasks] = useState<any[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   // Form handlers
   const handleFormChange = (field: string, value: string) => {
@@ -370,6 +381,28 @@ const Console = () => {
       classificationGroup: task.groups.join(', '),
       offerMessage: task.offerMessage || "Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences."
     });
+  };
+
+  // Handle deleting a task
+  const handleDeleteTask = () => {
+    if (selectedTask) {
+      // Remove from newTasks if it exists there
+      setNewTasks(prev => prev.filter(task => task.id !== selectedTask.id));
+      
+      // Clear selected task and show create form
+      setSelectedTask(null);
+      setShowPersonas(false);
+      setIsEditing(false);
+      
+      // Reset form
+      setFormData({
+        title: '',
+        description: '',
+        classificationGroup: '',
+        offerMessage: ''
+      });
+    }
+    setShowDeleteDialog(false);
   };
 
   return (
@@ -548,6 +581,7 @@ const Console = () => {
                   variant="ghost" 
                   size="sm" 
                   className="absolute top-6 left-6 h-10 w-10 p-0 hover:bg-red-100 hover:text-red-600"
+                  onClick={() => setShowDeleteDialog(true)}
                 >
                   <Trash2 size={20} />
                 </Button>
@@ -818,6 +852,27 @@ const Console = () => {
       </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Classification Task</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{selectedTask?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteTask}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </SidebarProvider>
   );
 };
