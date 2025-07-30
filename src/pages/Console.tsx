@@ -446,7 +446,7 @@ const Console = () => {
           </div>
 
       {/* Scrollable Content */}
-      <div className="overflow-y-auto p-6">
+      <div className="overflow-y-auto p-6 bg-background">
         <div className="max-w-8xl mx-auto">
           {/* Create/Edit Form OR Task Details View */}
           {(!selectedTask || isEditing) ? (
