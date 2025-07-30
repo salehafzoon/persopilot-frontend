@@ -1,6 +1,9 @@
 import { Task } from '@/components/TaskCard';
 
-const BASE_URL =  'https://9e5f6543f808.ngrok-free.app'
+// const BASE_URL =  'https://9e5f6543f808.ngrok-free.app'
+
+const BASE_URL =  'http://localhost:8000'
+
 
 export interface LoginResponse {
   username: string;
