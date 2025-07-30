@@ -374,7 +374,7 @@ const Console = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-subtle">
+      <div className="h-screen flex w-full bg-gradient-subtle">
         {/* Sidebar */}
         <Sidebar className="border-r border-muted">
           <SidebarContent>
