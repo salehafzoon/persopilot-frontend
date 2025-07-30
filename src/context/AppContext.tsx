@@ -51,30 +51,24 @@ interface AppContextType extends AppState {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const initialMessages: Message[] = [
-  {
-    id: '1',
-    content: "I like jogging in the morning.",
-    sender: 'user',
-    timestamp: new Date()
-  },
-  {
-    id: '2',
-    content: "Great! I've noted that down as a hobby.",
-    sender: 'assistant',
-    timestamp: new Date()
-  },
-  {
-    id: '3',
-    content: "Also meditation helps me relax.",
-    sender: 'user',
-    timestamp: new Date()
-  }
-];
+const initialMessages: Message[] = [];
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [userId] = useState('user_1');
-  const [userName] = useState('Alex Johnson');
+  const getUserData = () => {
+    const stored = localStorage.getItem('userData');
+    if (stored) {
+      const userData = JSON.parse(stored);
+      return {
+        userId: userData.username || 'user_1',
+        userName: userData.full_name || 'User'
+      };
+    }
+    return { userId: 'user_1', userName: 'User' };
+  };
+
+  const { userId: initialUserId, userName: initialUserName } = getUserData();
+  const [userId] = useState(initialUserId);
+  const [userName] = useState(initialUserName);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [userGraph, setUserGraph] = useState<UserGraph | null>(null);
   const [chatMessages, setChatMessages] = useState<Message[]>(initialMessages);
