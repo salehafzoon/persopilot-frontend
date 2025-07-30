@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, LogIn } from 'lucide-react';
+import { AlertCircle, LogIn, Settings } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { loginUser, LoginResponse } from '@/services/api';
+import { loginUser, LoginResponse, getBaseUrl, setBaseUrl } from '@/services/api';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const Index = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [serverAddress, setServerAddress] = useState(getBaseUrl());
+  const [serverDialogOpen, setServerDialogOpen] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,10 +43,48 @@ const Index = () => {
     }
   };
 
+  const handleServerSettingsSave = () => {
+    setBaseUrl(serverAddress);
+    setServerDialogOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-subtle flex flex-col">
-      {/* Header with Theme Toggle */}
-      <div className="flex justify-end p-6">
+      {/* Header with Server Settings and Theme Toggle */}
+      <div className="flex justify-between p-6">
+        <Dialog open={serverDialogOpen} onOpenChange={setServerDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="sm" className="h-8 w-8 px-0">
+              <Settings className="h-[1.2rem] w-[1.2rem]" />
+              <span className="sr-only">Server settings</span>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Server Settings</DialogTitle>
+              <DialogDescription>
+                Configure the server address for API connections.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="server-address" className="text-right">
+                  Server Address
+                </Label>
+                <Input
+                  id="server-address"
+                  value={serverAddress}
+                  onChange={(e) => setServerAddress(e.target.value)}
+                  placeholder="https://example.ngrok-free.app"
+                  className="col-span-3"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleServerSettingsSave}>Save settings</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         <ThemeToggle />
       </div>
 

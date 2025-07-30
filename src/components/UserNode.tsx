@@ -11,15 +11,15 @@ interface UserNodeProps {
 }
 
 const UserNode = memo(({ data }: UserNodeProps) => {
-  const { userId } = useAppContext();
+  const { userName } = useAppContext();
 
   return (
     <div className="flex flex-col items-center">
-      {/* Larger circled user icon with user ID inside */}
+      {/* Larger circled user icon with user name inside */}
       <div className="w-20 h-20 rounded-full bg-blue-500 flex flex-col items-center justify-center">
         <User size={24} className="text-white mb-1" />
-        <div className="text-xs text-white font-medium">
-          {userId}
+        <div className="text-xs text-white font-medium text-center px-1">
+          {userName}
         </div>
       </div>
       

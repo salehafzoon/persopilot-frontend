@@ -41,12 +41,12 @@ const Chat = () => {
 
     try {
       const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-      const chatData = await initChat(userData.username, parseInt(task.id));
       
-      // Store chat session data
+      // Initialize chat session and get persona graph from response
+      const chatData = await initChat(userData.username, parseInt(task.id));
       localStorage.setItem('chatSession', JSON.stringify(chatData));
       
-      // Set user graph from API response
+      // Extract persona graph from API response
       setUserGraph(chatData.user.persona_graph);
     } catch (error) {
       console.error('Failed to initialize chat:', error);
