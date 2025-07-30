@@ -135,7 +135,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle flex flex-col">
       {/* Header with Server Settings and Theme Toggle */}
-      <div className="flex justify-between items-center p-6">
+      <div className="flex justify-between items-center p-6 bg-background">
         <div className="flex items-center gap-3">
           {/* Connection Status Indicator */}
           <div className="flex items-center gap-2">
