@@ -412,7 +412,7 @@ const Console = () => {
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col">
           {/* Fixed Header */}
-          <div className="sticky top-0 z-50 bg-gradient-subtle p-6 border-b border-muted backdrop-blur-sm">
+          <div className="sticky top-0 z-50 bg-background p-6 border-b border-muted backdrop-blur-sm">
             <div className="max-w-8xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
