@@ -265,7 +265,7 @@ const Index = () => {
               {/* Login Button */}
               <Button 
                 type="submit" 
-                className="w-full" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white" 
                 disabled={loading || !username || !password || !isOnline}
               >
                 {loading ? (
