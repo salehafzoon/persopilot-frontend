@@ -1,6 +1,26 @@
 import { Task } from '@/components/TaskCard';
 
-const BASE_URL =  'https://9e5f6543f808.ngrok-free.app'
+let BASE_URL = 'https://9e5f6543f808.ngrok-free.app';
+
+// Get current base URL
+export const getBaseUrl = (): string => {
+  const stored = localStorage.getItem('serverBaseUrl');
+  return stored || BASE_URL;
+};
+
+// Set new base URL
+export const setBaseUrl = (url: string): void => {
+  BASE_URL = url;
+  localStorage.setItem('serverBaseUrl', url);
+};
+
+// Initialize BASE_URL from localStorage on module load
+if (typeof window !== 'undefined') {
+  const stored = localStorage.getItem('serverBaseUrl');
+  if (stored) {
+    BASE_URL = stored;
+  }
+}
 
 export interface LoginResponse {
   username: string;
@@ -41,7 +61,8 @@ export interface ChatInitResponse {
 
 
 export const loginUser = async (username: string): Promise<LoginResponse> => {
-  const response = await fetch(`${BASE_URL}/login?username=${username}`, {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/login?username=${username}`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -62,7 +83,8 @@ export const loginUser = async (username: string): Promise<LoginResponse> => {
 
 
 export const initChat = async (username: string, task_id: number): Promise<ChatInitResponse> => {
-  const response = await fetch(`${BASE_URL}/chat/init?username=${username}&task_id=${task_id}`, {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/chat/init?username=${username}&task_id=${task_id}`, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -81,7 +103,8 @@ export const initChat = async (username: string, task_id: number): Promise<ChatI
 
 // Synthetic function to simulate loading tasks
 export const getTasks = async (): Promise<Task[]> => {
-  const response = await fetch(`${BASE_URL}/tasks`, {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/tasks`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
