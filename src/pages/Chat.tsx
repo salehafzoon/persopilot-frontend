@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
 import { useAppContext } from '@/context/AppContext';
-import { initChat, getTasks } from '@/services/api';
+import { initChat, getTasks, getPersonaGraph } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
@@ -41,15 +41,16 @@ const Chat = () => {
 
     try {
       const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      
+      // Get persona graph from new API
+      const personaGraph = await getPersonaGraph(userData.username, parseInt(task.id));
+      setUserGraph(personaGraph);
+      
+      // Initialize chat session
       const chatData = await initChat(userData.username, parseInt(task.id));
-      
-      // Store chat session data
       localStorage.setItem('chatSession', JSON.stringify(chatData));
-      
-      // Set user graph from API response
-      setUserGraph(chatData.user.persona_graph);
     } catch (error) {
-      console.error('Failed to initialize chat:', error);
+      console.error('Failed to load persona graph or initialize chat:', error);
     }
 
     setAnimationPhase('transitioning');
