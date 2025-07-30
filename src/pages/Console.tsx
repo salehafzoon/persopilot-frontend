@@ -526,7 +526,7 @@ const Console = () => {
                 <Button 
                   onClick={handleSubmit}
                   disabled={!isFormValid || isCreating}
-                  className="w-full mt-8 bg-primary hover:bg-primary/90 text-white h-12"
+                  className="w-full mt-8 bg-primary hover:bg-primary/90 text-primary-foreground h-12"
                 >
                   {isCreating ? (
                     <>
