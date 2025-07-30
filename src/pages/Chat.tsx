@@ -18,6 +18,7 @@ const Chat = () => {
     userId,
     setSelectedTask,
     setUserGraph,
+    setUserName,  // Add this line
     setLoading,
     setShowChat,
     setAnimationPhase,
@@ -47,7 +48,8 @@ const Chat = () => {
       localStorage.setItem('chatSession', JSON.stringify(chatData));
       
       // Extract persona graph from API response
-      setUserGraph(chatData.user.persona_graph);
+    setUserGraph(chatData.user.persona_graph);
+    setUserName(chatData.user.full_name);  // Add this line
     } catch (error) {
       console.error('Failed to initialize chat:', error);
     }

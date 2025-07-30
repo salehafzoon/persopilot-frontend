@@ -1,6 +1,6 @@
 import { Task } from '@/components/TaskCard';
 
-let BASE_URL = 'localhost:8000';
+let BASE_URL = 'http://localhost:8000';
 
 // Get current base URL
 export const getBaseUrl = (): string => {
@@ -43,6 +43,24 @@ export interface LoginResponse {
     date: string;
   }[];
 }
+
+interface GraphNode {
+  id: string;
+  label: string;
+  type: string;
+}
+
+interface GraphEdge {
+  source: string;
+  target: string;
+  label: string;
+}
+
+interface UserGraph {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+}
+
 
 export interface ChatInitResponse {
   session_id: string;
@@ -92,13 +110,16 @@ export const initChat = async (username: string, task_id: number): Promise<ChatI
     },
     mode: 'cors',
   });
-  
+
   if (!response.ok) {
     throw new Error(`Chat init failed with status: ${response.status}`);
   }
   
-  return await response.json();
+  const data = await response.json();
+  console.log('Raw response:', data);
+  return data;
 };
+
 
 
 // Synthetic function to simulate loading tasks
@@ -128,23 +149,6 @@ export const getTasks = async (): Promise<Task[]> => {
           task.name === 'Lifestyle Optimization' ? '🎯' : '🚀'
   }));
 };
-
-interface GraphNode {
-  id: string;
-  label: string;
-  type: string;
-}
-
-interface GraphEdge {
-  source: string;
-  target: string;
-  label: string;
-}
-
-interface UserGraph {
-  nodes: GraphNode[];
-  edges: GraphEdge[];
-}
 
 // Get persona graph from API
 export const getPersonaGraph = async (username: string, taskId: number): Promise<UserGraph> => {

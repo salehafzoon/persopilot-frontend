@@ -46,6 +46,7 @@ interface AppContextType extends AppState {
   setLoading: (loading: boolean) => void;
   setShowChat: (show: boolean) => void;
   setAnimationPhase: (phase: AppState['animationPhase']) => void;
+  setUserName: (name: string) => void;
   resetState: () => void;
 }
 
@@ -68,7 +69,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   const { userId: initialUserId, userName: initialUserName } = getUserData();
   const [userId] = useState(initialUserId);
-  const [userName] = useState(initialUserName);
+  const [userName, setUserName] = useState(initialUserName);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [userGraph, setUserGraph] = useState<UserGraph | null>(null);
   const [chatMessages, setChatMessages] = useState<Message[]>(initialMessages);
@@ -105,6 +106,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setLoading,
     setShowChat,
     setAnimationPhase,
+    setUserName,
     resetState,
   };
 
