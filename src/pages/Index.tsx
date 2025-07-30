@@ -140,7 +140,7 @@ const Index = () => {
           {/* Connection Status Indicator */}
           <div className="flex items-center gap-2">
             {isOnline ? (
-              <Wifi className="h-4 w-4 text-green-500" />
+              <Wifi className="h-4 w-4 text-green-600 dark:text-green-400" />
             ) : (
               <WifiOff className="h-4 w-4 text-destructive" />
             )}
@@ -254,9 +254,9 @@ const Index = () => {
 
               {/* Offline Warning */}
               {!isOnline && (
-                <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                  <WifiOff size={16} className="text-yellow-600 dark:text-yellow-400" />
-                  <span className="text-sm text-yellow-700 dark:text-yellow-300">
+                <div className="flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                  <WifiOff size={16} className="text-amber-600 dark:text-amber-400" />
+                  <span className="text-sm text-amber-700 dark:text-amber-300">
                     You are currently offline. Login will not work until connection is restored.
                   </span>
                 </div>
@@ -265,12 +265,12 @@ const Index = () => {
               {/* Login Button */}
               <Button 
                 type="submit" 
-                className="w-full bg-black hover:bg-gray-800 text-white" 
+                className="w-full" 
                 disabled={loading || !username || !password || !isOnline}
               >
                 {loading ? (
                   <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2"></div>
                     Signing in...
                   </>
                 ) : (
