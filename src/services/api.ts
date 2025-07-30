@@ -80,23 +80,46 @@ export interface ChatInitResponse {
 
 export const loginUser = async (username: string): Promise<LoginResponse> => {
   const currentBaseUrl = getBaseUrl();
-  const response = await fetch(`${currentBaseUrl}/login?username=${username}`, {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'ngrok-skip-browser-warning': 'true'
-    },
-    mode: 'cors',
-  });
   
-  const text = await response.text();
-  console.log('Raw response:', text);
-  
-  if (!response.ok) {
-    throw new Error(`Login failed with status: ${response.status}`);
+  try {
+    const response = await fetch(`${currentBaseUrl}/login?username=${username}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+      mode: 'cors',
+      // Add timeout for better error handling
+      signal: AbortSignal.timeout(10000), // 10 second timeout
+    });
+    
+    const text = await response.text();
+    console.log('Raw response:', text);
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error(`Login service not found (404). Please check server settings.`);
+      } else if (response.status === 401 || response.status === 403) {
+        throw new Error(`Invalid credentials (${response.status}). Please check your username.`);
+      } else if (response.status === 500) {
+        throw new Error(`Server error (500). Please try again later.`);
+      } else {
+        throw new Error(`Login failed with status: ${response.status}`);
+      }
+    }
+    
+    return JSON.parse(text);
+  } catch (error: any) {
+    // Handle network errors specifically
+    if (error.name === 'AbortError') {
+      throw new Error('Request timeout. Please check your connection and try again.');
+    } else if (error.message?.includes('Failed to fetch') || error.name === 'TypeError') {
+      throw new Error('Failed to fetch. Please check your internet connection or server settings.');
+    } else {
+      // Re-throw the original error if it's already a known error
+      throw error;
+    }
   }
-  
-  return JSON.parse(text);
 };
 
 

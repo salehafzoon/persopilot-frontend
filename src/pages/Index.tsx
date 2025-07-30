@@ -4,24 +4,39 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, LogIn, Settings } from 'lucide-react';
+import { AlertCircle, LogIn, Settings, Wifi, WifiOff } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { loginUser, LoginResponse, getBaseUrl, setBaseUrl } from '@/services/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [serverAddress, setServerAddress] = useState(getBaseUrl());
   const [serverDialogOpen, setServerDialogOpen] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // Check for internet connectivity
+    if (!navigator.onLine) {
+      setError('No internet connection. Please check your network and try again.');
+      setLoading(false);
+      toast({
+        variant: "destructive",
+        title: "Connection Error",
+        description: "You appear to be offline. Please check your internet connection.",
+      });
+      return;
+    }
 
     try {
       const userData = await loginUser(username);
@@ -35,9 +50,46 @@ const Index = () => {
       } else {
         setError('Unknown user role');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error);
-      setError('Login failed. Please try again.');
+      
+      // Handle different types of errors
+      if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
+        setError('Unable to connect to server. Please check your internet connection or server settings.');
+        toast({
+          variant: "destructive",
+          title: "Connection Failed",
+          description: "Cannot reach the server. Please verify your connection and server settings.",
+        });
+      } else if (error.message?.includes('500')) {
+        setError('Server error occurred. Please try again later.');
+        toast({
+          variant: "destructive",
+          title: "Server Error",
+          description: "The server encountered an error. Please try again.",
+        });
+      } else if (error.message?.includes('404')) {
+        setError('Login service not found. Please check server settings.');
+        toast({
+          variant: "destructive",
+          title: "Service Not Found",
+          description: "The login service could not be found on the server.",
+        });
+      } else if (error.message?.includes('401') || error.message?.includes('403')) {
+        setError('Invalid username or password.');
+        toast({
+          variant: "destructive",
+          title: "Authentication Failed",
+          description: "Please check your credentials and try again.",
+        });
+      } else {
+        setError('Login failed. Please try again.');
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: "An unexpected error occurred. Please try again.",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -46,12 +98,58 @@ const Index = () => {
   const handleServerSettingsSave = () => {
     setBaseUrl(serverAddress);
     setServerDialogOpen(false);
+    toast({
+      title: "Settings Saved",
+      description: "Server address has been updated successfully.",
+    });
   };
+
+  // Listen for online/offline events
+  useState(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      toast({
+        title: "Connection Restored",
+        description: "You are back online.",
+      });
+    };
+    
+    const handleOffline = () => {
+      setIsOnline(false);
+      toast({
+        variant: "destructive",
+        title: "Connection Lost",
+        description: "You appear to be offline.",
+      });
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  });
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex flex-col">
       {/* Header with Server Settings and Theme Toggle */}
-      <div className="flex justify-between p-6">
+      <div className="flex justify-between items-center p-6">
+        <div className="flex items-center gap-3">
+          {/* Connection Status Indicator */}
+          <div className="flex items-center gap-2">
+            {isOnline ? (
+              <Wifi className="h-4 w-4 text-green-500" />
+            ) : (
+              <WifiOff className="h-4 w-4 text-destructive" />
+            )}
+            <span className="text-xs text-muted-foreground">
+              {isOnline ? 'Online' : 'Offline'}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
         <Dialog open={serverDialogOpen} onOpenChange={setServerDialogOpen}>
           <DialogTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 w-8 px-0">
@@ -85,7 +183,8 @@ const Index = () => {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        <ThemeToggle />
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Main Content */}
@@ -153,11 +252,21 @@ const Index = () => {
                 </div>
               )}
 
+              {/* Offline Warning */}
+              {!isOnline && (
+                <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                  <WifiOff size={16} className="text-yellow-600 dark:text-yellow-400" />
+                  <span className="text-sm text-yellow-700 dark:text-yellow-300">
+                    You are currently offline. Login will not work until connection is restored.
+                  </span>
+                </div>
+              )}
+
               {/* Login Button */}
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={loading || !username || !password}
+                disabled={loading || !username || !password || !isOnline}
               >
                 {loading ? (
                   <>
