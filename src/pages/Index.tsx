@@ -188,7 +188,7 @@ const Index = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6">
+      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-background">
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-6xl font-bold text-foreground mb-4">
