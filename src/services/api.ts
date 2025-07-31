@@ -61,6 +61,28 @@ interface UserGraph {
   edges: GraphEdge[];
 }
 
+export interface ClassificationTaskRequest {
+  name: string;
+  description: string;
+  label1: string;
+  label2: string;
+  offer_message: string;
+}
+
+export interface LabeledUser {
+  username: string;
+  full_name: string;
+  age: number;
+  gender: string;
+  score: number;
+  reasoning: string;
+}
+
+export interface ClassificationTaskResponse {
+  id: number;
+  message: string;
+  labeled_users: LabeledUser[];
+}
 
 export interface ChatInitResponse {
   session_id: string;
@@ -144,7 +166,6 @@ export const initChat = async (username: string, task_id: number): Promise<ChatI
 };
 
 
-
 // Synthetic function to simulate loading tasks
 export const getTasks = async (): Promise<Task[]> => {
   const currentBaseUrl = getBaseUrl();
@@ -190,4 +211,78 @@ export const getPersonaGraph = async (username: string, taskId: number): Promise
 
   const data = await response.json();
   return data.persona_graph;
+};
+
+
+export const create_update_ClassificationTask = async (
+  username: string, 
+  taskData: ClassificationTaskRequest
+): Promise<ClassificationTaskResponse> => {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/classification_tasks?username=${username}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+    body: JSON.stringify(taskData),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to create classification task: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log('CLF task create/update response:', data);
+
+  // Store labeled users in localStorage
+  localStorage.setItem('labeledUsers', JSON.stringify(data.labeled_users));
+  
+  return data;
+};
+
+export interface SendOffersResponse {
+  message: string;
+  sent_to: string[];
+  already_have_offer: string[];
+}
+
+export const sendPersonalizedOffers = async (
+  taskId: number,
+  usernames: string[]
+): Promise<SendOffersResponse> => {
+
+
+  
+  const currentBaseUrl = getBaseUrl();
+  const requestBody = { usernames };
+  
+  console.log('Send offers request:', {
+    url: `${currentBaseUrl}/classification_tasks/send_offers?task_id=${taskId}`,
+    taskId,
+    usernames,
+    requestBody,
+    bodyString: JSON.stringify(requestBody)
+  });
+
+  const response = await fetch(`${currentBaseUrl}/classification_tasks/send_offers?task_id=${taskId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+    body: JSON.stringify({ usernames }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to send offers: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('Send offers response:', data);
+
+  return await data;
 };

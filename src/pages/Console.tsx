@@ -29,8 +29,8 @@ import {
   SidebarTrigger,
   useSidebar 
 } from '@/components/ui/sidebar';
+import { create_update_ClassificationTask, sendPersonalizedOffers } from '@/services/api';
 
-// Get classification tasks from stored user data
 const getUserData = () => {
   const userData = localStorage.getItem('userData');
   return userData ? JSON.parse(userData) : null;
@@ -38,212 +38,7 @@ const getUserData = () => {
 
 const Console = () => {
   const navigate = useNavigate();
-  
-  // Mock data for previously created classification tasks
   const previousTasks = getUserData()?.classification_tasks || [];
-
-  const mockUsers = [
-    { 
-      id: 'USER_001',
-      username: 'user_001',
-      full_name: 'Sarah Johnson',
-      age: 28,
-      gender: 'Female',
-      score: 0.85,
-      description: 'This user often talks about hiking, outdoor meals, and weekend nature trips. Frequently shares photos from national parks and discusses camping gear. Likely a camping enthusiast who values authentic outdoor experiences.',
-      assignedGroup: 'Camping Enthusiast'
-    },
-    { 
-      id: 'USER_002',
-      username: 'user_002',
-      full_name: 'Mike Thompson',
-      age: 34,
-      gender: 'Male',
-      score: 0.65,
-      description: 'Occasionally shares scenic photos and enjoys weekend getaways to national parks. Shows moderate interest in outdoor activities but prefers comfortable accommodations over traditional camping.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_003',
-      username: 'user_003',
-      full_name: 'Alex Rivera',
-      age: 25,
-      gender: 'Non-binary',
-      score: 0.25,
-      description: 'Focused on city life, technology, and indoor entertainment. Rarely engages with outdoor content and typically posts about restaurants, movies, and urban activities. Unlikely to be interested in camping.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_004',
-      username: 'user_004',
-      full_name: 'Emily Chen',
-      age: 31,
-      gender: 'Female',
-      score: 0.35,
-      description: 'Enjoys outdoor running and cycling but shows limited interest in camping or wilderness activities. Prefers structured outdoor exercise over adventure camping experiences.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_005',
-      username: 'user_005',
-      full_name: 'David Martinez',
-      age: 42,
-      gender: 'Male',
-      score: 0.55,
-      description: 'Family-oriented person who enjoys organized outdoor activities like picnics and beach visits. Interested in child-friendly outdoor experiences but not extreme camping adventures.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_006',
-      username: 'user_006',
-      full_name: 'Lisa Park',
-      age: 29,
-      gender: 'Female',
-      score: 0.45,
-      description: 'Professional photographer specializing in landscape and wildlife photography. Frequently travels to remote locations for work but camping is more of a necessity than a personal passion.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_007',
-      username: 'user_007',
-      full_name: 'James Wilson',
-      age: 37,
-      gender: 'Male',
-      score: 0.3,
-      description: 'Travel blogger who covers luxury resorts and five-star accommodations. Appreciates natural beauty but strongly prefers glamping over traditional camping experiences.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_008',
-      username: 'user_008',
-      full_name: 'Robert Bear',
-      age: 45,
-      gender: 'Male',
-      score: 0.95,
-      description: 'Survival skills instructor and wilderness guide who lives off-grid part-time. Deeply passionate about primitive camping, bushcraft, and teaching others outdoor survival techniques.',
-      assignedGroup: 'Camping Enthusiast'
-    },
-    { 
-      id: 'USER_009',
-      username: 'user_009',
-      full_name: 'Jessica Lee',
-      age: 26,
-      gender: 'Female',
-      score: 0.7,
-      description: 'Weekend warrior who enjoys car camping and RV trips with friends. Likes the social aspect of camping but prefers modern conveniences and established campgrounds.',
-      assignedGroup: 'Camping Enthusiast'
-    },
-    { 
-      id: 'USER_010',
-      username: 'user_010',
-      full_name: 'Maria Santos',
-      age: 33,
-      gender: 'Female',
-      score: 0.6,
-      description: 'Environmental activist who participates in conservation efforts and clean-up campaigns. Values nature preservation but camping is secondary to environmental advocacy work.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_011',
-      username: 'user_011',
-      full_name: 'Tyler Johnson',
-      age: 21,
-      gender: 'Male',
-      score: 0.5,
-      description: 'College student who goes on occasional group camping trips for social reasons. Shows interest in outdoor activities but limited by budget and experience level.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_012',
-      username: 'user_012',
-      full_name: 'Dorothy Clark',
-      age: 68,
-      gender: 'Female',
-      score: 0.8,
-      description: 'Retired professional who recently discovered camping as a hobby. Enthusiastic about learning new outdoor skills and investing in quality camping equipment for future adventures.',
-      assignedGroup: 'Camping Enthusiast'
-    },
-    { 
-      id: 'USER_013',
-      username: 'user_013',
-      full_name: 'Kevin Brown',
-      age: 29,
-      gender: 'Male',
-      score: 0.15,
-      description: 'Urban professional who prefers hotel stays and city breaks. Shows no interest in outdoor activities and actively avoids camping-related content.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_014',
-      username: 'user_014',
-      full_name: 'Rachel Green',
-      age: 35,
-      gender: 'Female',
-      score: 0.2,
-      description: 'Fitness enthusiast who enjoys gym workouts and indoor sports. Rarely engages with outdoor content and prefers climate-controlled environments.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_015',
-      username: 'user_015',
-      full_name: 'Nathan Kim',
-      age: 27,
-      gender: 'Male',
-      score: 0.1,
-      description: 'Gaming enthusiast who spends most free time indoors playing video games. Shows minimal interest in outdoor activities or nature-related content.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_016',
-      username: 'user_016',
-      full_name: 'Amanda White',
-      age: 31,
-      gender: 'Female',
-      score: 0.25,
-      description: 'Busy parent who prefers structured indoor activities with children. Values convenience and comfort over outdoor adventures.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_017',
-      username: 'user_017',
-      full_name: 'Jordan Taylor',
-      age: 24,
-      gender: 'Non-binary',
-      score: 0.3,
-      description: 'Art student focused on studio work and gallery exhibitions. Prefers urban cultural experiences over outdoor activities.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_018',
-      username: 'user_018',
-      full_name: 'Richard Gold',
-      age: 39,
-      gender: 'Male',
-      score: 0.15,
-      description: 'Business executive who enjoys fine dining and luxury experiences. Shows no interest in camping or roughing it outdoors.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_019',
-      username: 'user_019',
-      full_name: 'Sophie Miller',
-      age: 26,
-      gender: 'Female',
-      score: 0.2,
-      description: 'Fashion blogger who focuses on style and beauty content. Rarely posts about outdoor activities and prefers urban lifestyle.',
-      assignedGroup: 'Not Camping Enthusiast'
-    },
-    { 
-      id: 'USER_020',
-      username: 'user_020',
-      full_name: 'Chris Davis',
-      age: 33,
-      gender: 'Male',
-      score: 0.25,
-      description: 'Tech worker who enjoys indoor hobbies like coding projects and home automation. Limited engagement with outdoor or camping content.',
-      assignedGroup: 'Not Camping Enthusiast'
-    }
-  ];
 
   // Form state
   const [formData, setFormData] = useState({
@@ -262,12 +57,10 @@ const Console = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deletedTaskIds, setDeletedTaskIds] = useState<number[]>([]);
 
-  // Form handlers
+  const [sendingOffers, setSendingOffers] = useState(false);
+
   const handleFormChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async () => {
@@ -278,56 +71,66 @@ const Console = () => {
     setIsCreating(true);
     setLoadingPersonas(true);
     
-    // Simulate creating/updating task and loading user personas
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    if (isEditing) {
-      // If editing, just update the existing task (no need to add to menu)
-      // In a real app, this would update the task in the backend
-      console.log('Updating existing task:', formData);
-    } else {
-      // If creating new task, add to top of list
-      const newTask = {
-        id: Date.now(),
+    try {
+      const userData = getUserData();
+      const username = userData?.username;
+      
+      const taskData = {
         name: formData.title,
         description: formData.description,
         label1: formData.classificationGroup,
-        label2: `Not ${formData.classificationGroup}`,
-        offer_message: formData.offerMessage,
-        date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-        username: 'analyst_01'
+        label2: `Non- ${formData.classificationGroup}`,
+        offer_message: formData.offerMessage
       };
+
+      const response = await create_update_ClassificationTask(username, taskData);
       
-      setNewTasks(prev => [newTask, ...prev]);
+      const usersWithAssignedGroup = response.labeled_users.map(user => ({
+        ...user,
+        assignedGroup: user.score >= 0.5 ? formData.classificationGroup : `Non- ${formData.classificationGroup}`
+      }));
+
+      setPersonas(usersWithAssignedGroup);
+      
+      if (!isEditing) {
+        const newTask = {
+          id: response.id,
+          name: formData.title,
+          description: formData.description,
+          label1: formData.classificationGroup,
+          label2: `Non- ${formData.classificationGroup}`,
+          offer_message: formData.offerMessage,
+          date: new Date().toISOString().slice(0, 19).replace('T', ' '),
+          username: username
+        };
+        
+        setNewTasks(prev => [newTask, ...prev]);
+      }
+      
+    } catch (error) {
+      console.error('Failed to create classification task:', error);
     }
     
-    // Show personas for both create and edit scenarios
-    setPersonas(mockUsers);
     setShowPersonas(true);
     setLoadingPersonas(false);
     setIsCreating(false);
     
-    // Exit edit mode if we were editing
     if (isEditing) {
       setIsEditing(false);
-      // Don't clear selectedTask when editing - keep it selected to show task details
     }
   };
 
   const isFormValid = formData.title.trim() && formData.description.trim() && 
                      formData.classificationGroup.trim() && formData.offerMessage.trim();
 
-  // Handle task selection from sidebar
   const handleTaskSelect = (task: any) => {
     setSelectedTask(task);
     setIsEditing(false);
   };
 
-  // Handle creating new task
   const handleCreateNew = () => {
     setSelectedTask(null);
     setIsEditing(false);
-    // Reset form
     setFormData({
       title: '',
       description: '',
@@ -336,32 +139,23 @@ const Console = () => {
     });
   };
 
-  // Handle editing a task
   const handleEditTask = (task: any) => {
     setIsEditing(true);
     setFormData({
       title: task.name,
       description: task.description,
       classificationGroup: task.label1,
-      offerMessage: task.offer_message || "Join our exclusive camping adventure program! Get personalized gear recommendations and access to premium outdoor experiences."
+      offerMessage: task.offer_message || "Join our exclusive program!"
     });
   };
 
-  // Handle deleting a task
   const handleDeleteTask = () => {
     if (selectedTask) {
-      // Remove from newTasks if it exists there
       setNewTasks(prev => prev.filter(task => task.id !== selectedTask.id));
-      
-      // Add to deleted tasks list to filter out from previousTasks
       setDeletedTaskIds(prev => [...prev, selectedTask.id]);
-      
-      // Clear selected task and show create form
       setSelectedTask(null);
       setShowPersonas(false);
       setIsEditing(false);
-      
-      // Reset form
       setFormData({
         title: '',
         description: '',
@@ -372,6 +166,40 @@ const Console = () => {
     setShowDeleteDialog(false);
   };
 
+  const handleGroupChange = (userIndex: number, newGroup: string) => {
+    setPersonas(prev => prev.map((user, index) => 
+      index === userIndex ? { ...user, assignedGroup: newGroup } : user
+    ));
+  };
+
+  const handleSendOffers = async () => {
+    if (!selectedTask && newTasks.length === 0) return;
+    
+    setSendingOffers(true);
+    
+    try {
+      const taskId = selectedTask?.id || newTasks[0]?.id;
+      
+      // Send offers only to users assigned to the positive group
+      const usernames = personas
+        .filter(user => user.assignedGroup === formData.classificationGroup)
+        .map(user => user.username);
+      
+      const response = await sendPersonalizedOffers(taskId, usernames);
+      console.log('Offers sent:', response);
+      
+      alert(`${response.message}. Sent to: ${response.sent_to.join(', ')}`);
+      
+    } catch (error) {
+      console.error('Failed to send offers:', error);
+      alert('Failed to send offers. Please try again.');
+    }
+    
+    setSendingOffers(false);
+  };
+
+
+
   return (
     <SidebarProvider>
       <div className="h-screen flex w-full bg-gradient-subtle">
@@ -380,7 +208,7 @@ const Console = () => {
           <SidebarContent>
             <SidebarGroup>
               <div className="px-4 py-3">
-                <div className="text-sm font-bold" style={{ color: '#1e3a8a' }}>Dr. Sarah Mitchell</div>
+                <div className="text-sm font-bold" style={{ color: '#1e3a8a' }}>{getUserData()?.full_name}</div>
               </div>
               <SidebarGroupLabel>Previous Classifications</SidebarGroupLabel>
               <SidebarGroupContent>
@@ -634,9 +462,9 @@ const Console = () => {
                 
                 <div className="flex-1 overflow-y-auto mb-4">
                   <div className="grid grid-cols-2 gap-4">
-                    {personas.map((user) => (
+                    {personas.map((user, index) => (
                       <Card 
-                        key={user.id} 
+                        key={user.username} 
                         className="transition-all duration-200 bg-card hover:shadow-md"
                       >
                         <CardContent className="p-4">
@@ -646,21 +474,22 @@ const Console = () => {
                               <User size={16} className="text-muted-foreground" />
                             </div>
                             <span className="font-mono text-sm font-bold text-foreground">
-                              {user.id}
+                              {user.username}
                             </span>
                           </div>
 
-                          {/* Demographics */}
+                          {/* User Name */}
                           <div className="mb-3">
+                            <div className="text-sm font-medium text-foreground">{user.full_name}</div>
                             <div className="flex items-center gap-4 text-xs font-medium text-blue-600 dark:text-blue-400">
                               <span>Age: {user.age}</span>
                               <span>Gender: {user.gender}</span>
                             </div>
                           </div>
 
-                          {/* User Description */}
+                          {/* Reasoning */}
                           <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                            {user.description}
+                            {user.reasoning}
                           </p>
 
                           {/* Bottom section: Assigned Group and Alignment Score */}
@@ -668,13 +497,16 @@ const Console = () => {
                             {/* Assigned Group */}
                             <div className="flex-1">
                               <span className="text-xs font-medium text-foreground block mb-1">Assigned Group:</span>
-                              <Select defaultValue={user.score > 0.4 ? "Not Camping Enthusiast" : user.assignedGroup}>
+                              <Select 
+                                value={user.assignedGroup || (user.score >= 0.5 ? formData.classificationGroup : `Non- ${formData.classificationGroup}`)}
+                                onValueChange={(value) => handleGroupChange(index, value)}
+                              >
                                 <SelectTrigger className="w-full h-7 text-xs">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="Camping Enthusiast">Camping Enthusiast</SelectItem>
-                                  <SelectItem value="Not Camping Enthusiast">Not Camping Enthusiast</SelectItem>
+                                  <SelectItem value={formData.classificationGroup}>{formData.classificationGroup}</SelectItem>
+                                  <SelectItem value={`Non- ${formData.classificationGroup}`}> Non- {formData.classificationGroup}</SelectItem>
                                 </SelectContent>
                               </Select>
                             </div>
@@ -701,9 +533,10 @@ const Console = () => {
                 
                 <Button 
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                  disabled={loadingPersonas}
+                  disabled={sendingOffers}
+                  onClick={handleSendOffers}
                 >
-                  {loadingPersonas ? (
+                  {sendingOffers ? (
                     <>
                       <Loader2 className="animate-spin mr-2" size={16} />
                       Sending...
@@ -715,6 +548,7 @@ const Console = () => {
                     </>
                   )}
                 </Button>
+
               </CardContent>
             </Card>
           )}
