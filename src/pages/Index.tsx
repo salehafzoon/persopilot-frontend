@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { AlertCircle, LogIn, Settings, Wifi, WifiOff } from 'lucide-react';
+import { AlertCircle, LogIn, Settings, Wifi, WifiOff, Info } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { loginUser, LoginResponse, getBaseUrl, setBaseUrl } from '@/services/api';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -19,6 +19,7 @@ const Index = () => {
   const [loading, setLoading] = useState(false);
   const [serverAddress, setServerAddress] = useState(getBaseUrl());
   const [serverDialogOpen, setServerDialogOpen] = useState(false);
+  const [introDialogOpen, setIntroDialogOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -148,6 +149,34 @@ const Index = () => {
               {isOnline ? 'Online' : 'Offline'}
             </span>
           </div>
+          
+          {/* Intro Video Button */}
+          <Dialog open={introDialogOpen} onOpenChange={setIntroDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 px-0">
+                <Info className="h-[1.2rem] w-[1.2rem]" />
+                <span className="sr-only">Watch intro video</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[800px]">
+              <DialogHeader>
+                <DialogTitle>PersoPilot Introduction</DialogTitle>
+                <DialogDescription>
+                  Watch this introduction video to learn about PersoPilot.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="aspect-video w-full">
+                <video 
+                  controls 
+                  className="w-full h-full rounded-lg"
+                  preload="metadata"
+                >
+                  <source src="/src/PersoAgent_intro.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="flex items-center gap-2">
         <Dialog open={serverDialogOpen} onOpenChange={setServerDialogOpen}>
