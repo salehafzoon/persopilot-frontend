@@ -95,6 +95,7 @@ const Console = () => {
       setPersonas(usersWithAssignedGroup);
       
       if (!isEditing) {
+        // Only add to newTasks for new task creation
         const newTask = {
           id: response.id,
           name: formData.title,
@@ -107,6 +108,29 @@ const Console = () => {
         };
         
         setNewTasks(prev => [newTask, ...prev]);
+      } else {
+        // When editing, update the task in the appropriate list
+        if (selectedTask) {
+          const updatedTask = {
+            ...selectedTask,
+            name: formData.title,
+            description: formData.description,
+            label1: formData.classificationGroup,
+            label2: `Non- ${formData.classificationGroup}`,
+            offer_message: formData.offerMessage,
+          };
+          
+          // Check if it's in newTasks, if so update it there
+          const isInNewTasks = newTasks.some(task => task.id === selectedTask.id);
+          if (isInNewTasks) {
+            setNewTasks(prev => prev.map(task => 
+              task.id === selectedTask.id ? updatedTask : task
+            ));
+          }
+          
+          // Update selectedTask to reflect changes immediately
+          setSelectedTask(updatedTask);
+        }
       }
       
     } catch (error) {
