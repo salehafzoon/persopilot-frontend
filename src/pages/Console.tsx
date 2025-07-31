@@ -221,7 +221,12 @@ const Console = () => {
               <SidebarGroupLabel>Previous Classifications</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {[...newTasks, ...previousTasks.filter(task => !deletedTaskIds.includes(task.id))].map((task) => (
+                  {[
+                    ...newTasks.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), 
+                    ...previousTasks
+                      .filter(task => !deletedTaskIds.includes(task.id))
+                      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                  ].map((task) => (
                     <SidebarMenuItem key={task.id}>
                       <Card 
                         className="m-2 cursor-pointer hover:shadow-md transition-shadow"
