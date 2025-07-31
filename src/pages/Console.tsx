@@ -58,6 +58,8 @@ const Console = () => {
   const [deletedTaskIds, setDeletedTaskIds] = useState<number[]>([]);
 
   const [sendingOffers, setSendingOffers] = useState(false);
+  const [showOffersDialog, setShowOffersDialog] = useState(false);
+  const [offersResponse, setOffersResponse] = useState<any>(null);
 
   const handleFormChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -188,11 +190,17 @@ const Console = () => {
       const response = await sendPersonalizedOffers(taskId, usernames);
       console.log('Offers sent:', response);
       
-      alert(`${response.message}. Sent to: ${response.sent_to.join(', ')}`);
+      setOffersResponse(response);
+      setShowOffersDialog(true);
       
     } catch (error) {
       console.error('Failed to send offers:', error);
-      alert('Failed to send offers. Please try again.');
+      setOffersResponse({
+        message: 'Failed to send offers. Please try again.',
+        sent_to: [],
+        already_have_offer: []
+      });
+      setShowOffersDialog(true);
     }
     
     setSendingOffers(false);
@@ -573,6 +581,70 @@ const Console = () => {
               className="bg-red-600 hover:bg-red-700"
             >
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Offers Result Dialog */}
+      <AlertDialog open={showOffersDialog} onOpenChange={setShowOffersDialog}>
+        <AlertDialogContent className="max-w-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              Offers Status
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-left">
+              {offersResponse?.message}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="space-y-4">
+            {/* Successfully sent offers */}
+            {offersResponse?.sent_to && offersResponse.sent_to.length > 0 && (
+              <div>
+                <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  Successfully Sent ({offersResponse.sent_to.length} users)
+                </h4>
+                <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-md">
+                  <div className="flex flex-wrap gap-2">
+                    {offersResponse.sent_to.map((username: string) => (
+                      <span key={username} className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full font-mono">
+                        {username}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Users who already have offers */}
+            {offersResponse?.already_have_offer && offersResponse.already_have_offer.length > 0 && (
+              <div>
+                <h4 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+                  <User className="h-4 w-4 text-orange-600" />
+                  Already Have Offers ({offersResponse.already_have_offer.length} users)
+                </h4>
+                <div className="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-md">
+                  <div className="flex flex-wrap gap-2">
+                    {offersResponse.already_have_offer.map((username: string) => (
+                      <span key={username} className="px-2 py-1 bg-orange-100 dark:bg-orange-800 text-orange-800 dark:text-orange-100 text-xs rounded-full font-mono">
+                        {username}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <AlertDialogFooter>
+            <AlertDialogAction 
+              onClick={() => setShowOffersDialog(false)}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            >
+              Close
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
