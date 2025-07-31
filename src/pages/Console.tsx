@@ -374,7 +374,7 @@ const Console = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-subtle">
+      <div className="h-screen flex w-full bg-gradient-subtle">
         {/* Sidebar */}
         <Sidebar className="border-r border-muted">
           <SidebarContent>
@@ -410,9 +410,9 @@ const Console = () => {
         </Sidebar>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col bg-background">
           {/* Fixed Header */}
-          <div className="sticky top-0 z-50 bg-gradient-subtle p-6 border-b border-muted backdrop-blur-sm">
+          <div className="sticky top-0 z-50 bg-background p-6 border-b border-muted backdrop-blur-sm">
             <div className="max-w-8xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
@@ -446,7 +446,7 @@ const Console = () => {
           </div>
 
       {/* Scrollable Content */}
-      <div className="overflow-y-auto p-6">
+      <div className="overflow-y-auto p-6 bg-background">
         <div className="max-w-8xl mx-auto">
           {/* Create/Edit Form OR Task Details View */}
           {(!selectedTask || isEditing) ? (
@@ -526,7 +526,7 @@ const Console = () => {
                 <Button 
                   onClick={handleSubmit}
                   disabled={!isFormValid || isCreating}
-                  className="w-full mt-8 bg-primary hover:bg-primary/90 text-white h-12"
+                  className="w-full mt-8 bg-primary hover:bg-primary/90 text-primary-foreground h-12"
                 >
                   {isCreating ? (
                     <>
@@ -623,98 +623,6 @@ const Console = () => {
             </Card>
           )}
 
-          {/* Simplified Form - when no task is selected */}
-          {!selectedTask && (
-            <>
-              <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow mb-8">
-                <CardContent className="p-8">
-                  <h2 className="text-2xl font-bold text-foreground mb-6">Create New Classification Task</h2>
-                  
-                  {/* Title Field */}
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Title:
-                    </label>
-                    <Input
-                      value={formData.title}
-                      onChange={(e) => handleFormChange('title', e.target.value)}
-                      placeholder="Enter task title..."
-                      className="w-full"
-                    />
-                  </div>
-
-                  {/* Description Field */}
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Description:
-                    </label>
-                    <textarea
-                      value={formData.description}
-                      onChange={(e) => handleFormChange('description', e.target.value)}
-                      placeholder="Describe what this classification task is about..."
-                      className="w-full h-24 px-4 py-3 rounded-lg border border-muted bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                    />
-                  </div>
-
-                  {/* Classification Group Field */}
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Classification Group:
-                    </label>
-                    <div className="flex items-center gap-3">
-                      <Input
-                        value={formData.classificationGroup}
-                        onChange={(e) => handleFormChange('classificationGroup', e.target.value)}
-                        placeholder="e.g., Camping Enthusiast"
-                        className="max-w-xs"
-                      />
-                      {/* Chips - only show when input has content */}
-                      {formData.classificationGroup.trim() && (
-                        <div className="flex gap-2">
-                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-black text-white rounded-full text-sm font-medium">
-                            {formData.classificationGroup.trim()}
-                          </div>
-                          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-500 text-white rounded-full text-sm font-medium">
-                            Non-{formData.classificationGroup.trim()}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Offer Message Field */}
-                  <div className="mb-8">
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Offer message:
-                    </label>
-                    <textarea
-                      value={formData.offerMessage}
-                      onChange={(e) => handleFormChange('offerMessage', e.target.value)}
-                      placeholder="Enter the offer message to show to users..."
-                      className="w-full h-24 px-4 py-3 rounded-lg border border-muted bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
-                    />
-                  </div>
-
-                  {/* Submit Button */}
-                  <Button 
-                    onClick={handleSubmit}
-                    disabled={!isFormValid || isCreating}
-                    className="w-full bg-primary hover:bg-primary/90"
-                  >
-                    {isCreating ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        Creating...
-                      </>
-                     ) : (
-                       'Create the Classification Task'
-                     )}
-                  </Button>
-                </CardContent>
-              </Card>
-
-            </>
-          )}
 
           {/* Randomized Candidates Panel - shown after any task creation/update */}
           {showPersonas && personas.length > 0 && !loadingPersonas && (
@@ -792,7 +700,7 @@ const Console = () => {
                 </div>
                 
                 <Button 
-                  className="w-full bg-primary hover:bg-primary/90 text-white"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={loadingPersonas}
                 >
                   {loadingPersonas ? (
