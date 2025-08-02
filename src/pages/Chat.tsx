@@ -86,7 +86,7 @@ const Chat = () => {
     setLoading(false);
   };
 
-  const handleOfferResponse = async (status: 'accepted' | 'rejected') => {
+  const handleOfferResponse = async (status: 'accepted' | 'declined') => {
     if (!currentOffer) return;
     
     setIsResponding(true);
@@ -190,26 +190,27 @@ const Chat = () => {
             <X className="h-4 w-4" />
           </button>
           
+          <DialogHeader className="text-center">
+            <DialogTitle>You have a new offer!</DialogTitle>
+          </DialogHeader>
+          
           {/* Icon at top center */}
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center my-4">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
               <Gift className="w-8 h-8 text-primary" />
             </div>
           </div>
           
-          <DialogHeader className="text-center">
-            <DialogTitle>You have a new offer!</DialogTitle>
-            <DialogDescription className="mt-4">
-              {currentOffer?.offer_message}
-            </DialogDescription>
-          </DialogHeader>
+          <DialogDescription className="text-center">
+            {currentOffer?.offer_message}
+          </DialogDescription>
           <div className="flex justify-end gap-2 mt-6">
             <Button 
               variant="outline" 
-              onClick={() => handleOfferResponse('rejected')}
+              onClick={() => handleOfferResponse('declined')}
               disabled={isResponding}
             >
-              Reject
+              Decline
             </Button>
             <Button 
               onClick={() => handleOfferResponse('accepted')}
