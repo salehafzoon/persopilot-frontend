@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bot, ArrowLeft } from 'lucide-react';
+import { Bot, ArrowLeft, Gift, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
@@ -46,11 +46,14 @@ const Chat = () => {
     };
     loadTasks();
 
-    // Check for current offer
+    // Check for current offer with delay
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     if (userData.current_offer) {
       setCurrentOffer(userData.current_offer);
-      setShowOfferDialog(true);
+      // Show dialog with delay
+      setTimeout(() => {
+        setShowOfferDialog(true);
+      }, 1000);
     }
   }, []);
 
@@ -170,9 +173,31 @@ const Chat = () => {
       </div>
 
       {/* Offer Dialog */}
-      <Dialog open={showOfferDialog} onOpenChange={setShowOfferDialog}>
+      <Dialog 
+        open={showOfferDialog} 
+        onOpenChange={(open) => {
+          // Prevent closing by clicking outside
+          if (!open && showOfferDialog) return;
+          setShowOfferDialog(open);
+        }}
+      >
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
+          {/* Close button */}
+          <button 
+            onClick={() => setShowOfferDialog(false)}
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          >
+            <X className="h-4 w-4" />
+          </button>
+          
+          {/* Icon at top center */}
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+              <Gift className="w-8 h-8 text-primary" />
+            </div>
+          </div>
+          
+          <DialogHeader className="text-center">
             <DialogTitle>You have a new offer!</DialogTitle>
             <DialogDescription className="mt-4">
               {currentOffer?.offer_message}
