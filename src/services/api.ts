@@ -186,7 +186,11 @@ export const initChat = async (username: string, task_id: number): Promise<ChatI
   });
 
   if (!response.ok) {
-    throw new Error(`Chat init failed with status: ${response.status}`);
+    const errorData = await response.json().catch(() => ({}));
+    const error = new Error(`Chat init failed with status: ${response.status}`) as any;
+    error.status = response.status;
+    error.detail = errorData.detail || `HTTP ${response.status}`;
+    throw error;
   }
   
   const data = await response.json();

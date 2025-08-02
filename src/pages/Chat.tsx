@@ -87,11 +87,11 @@ const Chat = () => {
       console.error('Failed to initialize chat:', error);
       
       // Handle specific error cases
-      if (error.response?.status === 409 || error.response?.status === 503) {
+      if (error.status === 409 || error.status === 503) {
         toast({
           variant: "destructive",
           title: "Error",
-          description: error.response.data?.detail || error.message,
+          description: error.detail || error.message,
         });
       }
       
