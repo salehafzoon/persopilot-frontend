@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
 import { useAppContext } from '@/context/AppContext';
-import { initChat, getTasks } from '@/services/api';
+import { initChat, getTasks  } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {

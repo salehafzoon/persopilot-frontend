@@ -29,7 +29,7 @@ import {
   SidebarTrigger,
   useSidebar 
 } from '@/components/ui/sidebar';
-import { create_update_ClassificationTask, sendPersonalizedOffers } from '@/services/api';
+import { create_update_ClassificationTask, sendPersonalizedOffers, deleteClassificationTask  } from '@/services/api';
 
 const getUserData = () => {
   const userData = localStorage.getItem('userData');
@@ -175,22 +175,31 @@ const Console = () => {
     });
   };
 
-  const handleDeleteTask = () => {
+  const handleDeleteTask = async () => {
     if (selectedTask) {
-      setNewTasks(prev => prev.filter(task => task.id !== selectedTask.id));
-      setDeletedTaskIds(prev => [...prev, selectedTask.id]);
-      setSelectedTask(null);
-      setShowPersonas(false);
-      setIsEditing(false);
-      setFormData({
-        title: '',
-        description: '',
-        classificationGroup: '',
-        offerMessage: ''
-      });
+      try {
+        await deleteClassificationTask(selectedTask.id);
+        
+        // Remove from UI after successful API call
+        setNewTasks(prev => prev.filter(task => task.id !== selectedTask.id));
+        setDeletedTaskIds(prev => [...prev, selectedTask.id]);
+        setSelectedTask(null);
+        setShowPersonas(false);
+        setIsEditing(false);
+        setFormData({
+          title: '',
+          description: '',
+          classificationGroup: '',
+          offerMessage: ''
+        });
+      } catch (error) {
+        console.error('Failed to delete task:', error);
+        alert('Failed to delete task. Please try again.');
+      }
     }
     setShowDeleteDialog(false);
   };
+
 
   const handleGroupChange = (userIndex: number, newGroup: string) => {
     setPersonas(prev => prev.map((user, index) => 

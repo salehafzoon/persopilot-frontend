@@ -42,6 +42,11 @@ export interface LoginResponse {
     offer_message: string;
     date: string;
   }[];
+  current_offer?: {
+    task_id: number;
+    offer_message: string;
+    connection_id: number;
+  };
 }
 
 interface GraphNode {
@@ -142,6 +147,30 @@ export const loginUser = async (username: string): Promise<LoginResponse> => {
       throw error;
     }
   }
+};
+
+export const respondToOffer = async (
+  connectionId: number,
+  status: string
+): Promise<void> => {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/offers/respond?connection_id=${connectionId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to respond to offer: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log('Offer response:', data);
 };
 
 
@@ -286,3 +315,61 @@ export const sendPersonalizedOffers = async (
 
   return await data;
 };
+
+
+export const deleteClassificationTask = async (taskId: number): Promise<void> => {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/classification_tasks/?task_id=${taskId}`, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete classification task: ${response.status}`);
+  }
+  const data = await response.json();
+  console.log('CLF task delete response:', data);
+
+};
+
+
+export interface ChatMessageResponse {
+  session_id: string;
+  response: {
+    response: string;
+    reason: string;
+    used_tool: string;
+  };
+  is_persona_updated: boolean;
+  persona_graph?: UserGraph;
+  timestamp: string;
+}
+
+export const sendChatMessage = async (
+  sessionId: string,
+  message: string
+): Promise<ChatMessageResponse> => {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/chat/message?session_id=${sessionId}&message=${encodeURIComponent(message)}`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to send chat message: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log('Chat message response:', data);
+  return data;
+};
+
+

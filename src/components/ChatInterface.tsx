@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Send, Brain, Wrench } from 'lucide-react';
 import { PersonaGraph } from './PersonaGraph';
 import { useAppContext } from '@/context/AppContext';
+import { sendChatMessage } from '@/services/api';
 
 interface ChatInterfaceProps {
   onBack: () => void;
@@ -34,159 +35,63 @@ export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
     scrollToBottom();
   }, [chatMessages, isAssistantTyping]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputValue.trim()) return;
 
-    const userMessage = {
-      id: Date.now().toString(),
-      content: inputValue,
-      sender: 'user' as const,
+// In handleSendMessage function, replace the setTimeout mock with:
+const handleSendMessage = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!inputValue.trim()) return;
+
+  const userMessage = {
+    id: Date.now().toString(),
+    content: inputValue,
+    sender: 'user' as const,
+    timestamp: new Date()
+  };
+
+  addChatMessage(userMessage);
+  setInputValue('');
+  setIsAssistantTyping(true);
+
+  try {
+    // Get session from localStorage
+    const chatSession = JSON.parse(localStorage.getItem('chatSession') || '{}');
+    const sessionId = chatSession.session_id;
+
+    const response = await sendChatMessage(sessionId, inputValue);
+    
+    const assistantMessage = {
+      id: (Date.now() + 1).toString(),
+      content: response.response.response,
+      sender: 'assistant' as const,
+      timestamp: new Date(),
+      reason: response.response.reason,
+      usedTool: response.response.used_tool
+    };
+    
+    addChatMessage(assistantMessage);
+    setCurrentReason(response.response.reason);
+    setCurrentTool(response.response.used_tool);
+    
+    // Update persona graph if needed
+    if (response.is_persona_updated && response.persona_graph) {
+      setUserGraph(response.persona_graph);
+    }
+    
+  } catch (error) {
+    console.error('Failed to send message:', error);
+    // Add error message
+    const errorMessage = {
+      id: (Date.now() + 1).toString(),
+      content: 'Sorry, I encountered an error. Please try again.',
+      sender: 'assistant' as const,
       timestamp: new Date()
     };
+    addChatMessage(errorMessage);
+  }
+  
+  setIsAssistantTyping(false);
+};
 
-    addChatMessage(userMessage);
-    setInputValue('');
-    setIsAssistantTyping(true);
-
-    // Simulate server response with new format
-    setTimeout(() => {
-      setIsAssistantTyping(false);
-      
-      // Simulate server response
-      const mockServerResponse = {
-        session_id: "2f2684e3-ac19-4943-8ad4-ccc9c54a830f",
-        response: {
-          response: "It's great to know that you enjoy drinking wine at night!",
-          reason: "User expressing his/her preferences",
-          used_tool: "PersonaExtractor"
-        },
-        is_persona_updated: true,
-        persona_graph: {
-          nodes: [
-            {
-              id: "user_01",
-              label: "user_01",
-              type: "User"
-            },
-            {
-              id: "1",
-              label: "Content Consumption",
-              type: "Task"
-            },
-            {
-              id: "Book",
-              label: "Book",
-              type: "Topic"
-            },
-            {
-              id: "Game",
-              label: "Game",
-              type: "Topic"
-            },
-            {
-              id: "Movie",
-              label: "Movie",
-              type: "Topic"
-            },
-            {
-              id: "Music",
-              label: "Music",
-              type: "Topic"
-            },
-            {
-              id: "Book_reading novels",
-              label: "reading novels",
-              type: "Object"
-            },
-            {
-              id: "Movie_watching sci-fi",
-              label: "watching sci-fi",
-              type: "Object"
-            },
-            {
-              id: "Music_classical music",
-              label: "classical music",
-              type: "Object"
-            },
-            {
-              id: "Game_video games",
-              label: "video games",
-              type: "Object"
-            }
-          ],
-          edges: [
-            {
-              source: "user_01",
-              target: "1",
-              label: "has_task"
-            },
-            {
-              source: "1",
-              target: "Book",
-              label: "has_topic"
-            },
-            {
-              source: "1",
-              target: "Game",
-              label: "has_topic"
-            },
-            {
-              source: "1",
-              target: "Movie",
-              label: "has_topic"
-            },
-            {
-              source: "1",
-              target: "Music",
-              label: "has_topic"
-            },
-            {
-              source: "Book",
-              target: "Book_reading novels",
-              label: "likes"
-            },
-            {
-              source: "Movie",
-              target: "Movie_watching sci-fi",
-              label: "likes"
-            },
-            {
-              source: "Music",
-              target: "Music_classical music",
-              label: "likes"
-            },
-            {
-              source: "Game",
-              target: "Game_video games",
-              label: "plays"
-            }
-          ]
-        },
-        timestamp: "2025-07-29T09:34:34.497380"
-      };
-
-      const assistantMessage = {
-        id: (Date.now() + 1).toString(),
-        content: mockServerResponse.response.response,
-        sender: 'assistant' as const,
-        timestamp: new Date(),
-        reason: mockServerResponse.response.reason,
-        usedTool: mockServerResponse.response.used_tool
-      };
-      
-      addChatMessage(assistantMessage);
-      
-      // Update reasoning panel
-      setCurrentReason(mockServerResponse.response.reason);
-      setCurrentTool(mockServerResponse.response.used_tool);
-      
-      // Update persona graph if needed
-      if (mockServerResponse.is_persona_updated) {
-        setUserGraph(mockServerResponse.persona_graph);
-      }
-    }, 2000);
-  };
 
   // Get task-specific color for user messages
   const getUserMessageColor = () => {
