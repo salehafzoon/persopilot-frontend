@@ -89,9 +89,9 @@ const Chat = () => {
       // Handle specific error cases
       if (error.status === 409 || error.status === 503) {
         toast({
-          variant: "destructive",
-          title: "Error",
+          title: "⚠️ Error",
           description: error.detail || error.message,
+          duration: 4000, // Show for 4 seconds
         });
       }
       
