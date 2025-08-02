@@ -226,6 +226,9 @@ const Console = () => {
       setOffersResponse(response);
       setShowOffersDialog(true);
       
+      // Hide the candidates section after sending offers
+      setShowPersonas(false);
+      
     } catch (error) {
       console.error('Failed to send offers:', error);
       setOffersResponse({
@@ -234,6 +237,9 @@ const Console = () => {
         already_have_offer: []
       });
       setShowOffersDialog(true);
+      
+      // Hide the candidates section even on error
+      setShowPersonas(false);
     }
     
     setSendingOffers(false);
