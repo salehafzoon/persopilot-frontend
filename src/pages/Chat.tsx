@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Bot, ArrowLeft, Gift, X } from 'lucide-react';
+import { Bot, ArrowLeft, Gift, X, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
 import { useAppContext } from '@/context/AppContext';
 import { initChat, getTasks, respondToOffer } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import {
 
 const Chat = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showOfferDialog, setShowOfferDialog] = useState(false);
   const [currentOffer, setCurrentOffer] = useState<{
@@ -72,18 +74,32 @@ const Chat = () => {
       localStorage.setItem('chatSession', JSON.stringify(chatData));
       
       // Extract persona graph from API response
-    setUserGraph(chatData.user.persona_graph);
-    setUserName(chatData.user.full_name);  // Add this line
-    } catch (error) {
-      console.error('Failed to initialize chat:', error);
-    }
+      setUserGraph(chatData.user.persona_graph);
+      setUserName(chatData.user.full_name);
 
-    setAnimationPhase('transitioning');
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    setAnimationPhase('chat');
-    setShowChat(true);
-    setLoading(false);
+      setAnimationPhase('transitioning');
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      setAnimationPhase('chat');
+      setShowChat(true);
+      setLoading(false);
+    } catch (error: any) {
+      console.error('Failed to initialize chat:', error);
+      
+      // Handle specific error cases
+      if (error.response?.status === 409 || error.response?.status === 503) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: error.response.data?.detail || error.message,
+        });
+      }
+      
+      // Reset states and stay on task selection page
+      setSelectedTask(null);
+      setLoading(false);
+      setAnimationPhase('loading');
+    }
   };
 
   const handleOfferResponse = async (status: 'accepted' | 'declined') => {
