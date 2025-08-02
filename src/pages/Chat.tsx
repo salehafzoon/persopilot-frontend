@@ -4,12 +4,26 @@ import { Button } from '@/components/ui/button';
 import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
 import { useAppContext } from '@/context/AppContext';
-import { initChat, getTasks  } from '@/services/api';
+import { initChat, getTasks, respondToOffer } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const Chat = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [showOfferDialog, setShowOfferDialog] = useState(false);
+  const [currentOffer, setCurrentOffer] = useState<{
+    task_id: number;
+    offer_message: string;
+    connection_id: number;
+  } | null>(null);
+  const [isResponding, setIsResponding] = useState(false);
   const {
     selectedTask,
     loading,
@@ -31,6 +45,13 @@ const Chat = () => {
       setTasks(taskData);
     };
     loadTasks();
+
+    // Check for current offer
+    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+    if (userData.current_offer) {
+      setCurrentOffer(userData.current_offer);
+      setShowOfferDialog(true);
+    }
   }, []);
 
   const handleTaskSelect = async (task: Task) => {
@@ -60,6 +81,27 @@ const Chat = () => {
     setAnimationPhase('chat');
     setShowChat(true);
     setLoading(false);
+  };
+
+  const handleOfferResponse = async (status: 'accepted' | 'rejected') => {
+    if (!currentOffer) return;
+    
+    setIsResponding(true);
+    try {
+      await respondToOffer(currentOffer.connection_id, status);
+      
+      // Remove offer from userData
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      delete userData.current_offer;
+      localStorage.setItem('userData', JSON.stringify(userData));
+      
+      setShowOfferDialog(false);
+      setCurrentOffer(null);
+    } catch (error) {
+      console.error('Failed to respond to offer:', error);
+    } finally {
+      setIsResponding(false);
+    }
   };
 
   const handleBack = () => {
@@ -126,6 +168,33 @@ const Chat = () => {
           ))}
         </div>
       </div>
+
+      {/* Offer Dialog */}
+      <Dialog open={showOfferDialog} onOpenChange={setShowOfferDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>You have a new offer!</DialogTitle>
+            <DialogDescription className="mt-4">
+              {currentOffer?.offer_message}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2 mt-6">
+            <Button 
+              variant="outline" 
+              onClick={() => handleOfferResponse('rejected')}
+              disabled={isResponding}
+            >
+              Reject
+            </Button>
+            <Button 
+              onClick={() => handleOfferResponse('accepted')}
+              disabled={isResponding}
+            >
+              {isResponding ? 'Responding...' : 'Accept'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
