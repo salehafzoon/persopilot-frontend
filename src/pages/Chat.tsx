@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Bot, ArrowLeft, Gift, X, AlertCircle } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Bot, ArrowLeft, Gift, X, AlertCircle, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { TaskCard, Task } from '@/components/TaskCard';
 import { ChatInterface } from '@/components/ChatInterface';
@@ -26,6 +26,7 @@ const Chat = () => {
     connection_id: number;
   } | null>(null);
   const [isResponding, setIsResponding] = useState(false);
+  const sessionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const {
     selectedTask,
     loading,
@@ -34,12 +35,60 @@ const Chat = () => {
     userId,
     setSelectedTask,
     setUserGraph,
-    setUserName,  // Add this line
+    setUserName,
     setLoading,
     setShowChat,
     setAnimationPhase,
     resetState,
   } = useAppContext();
+
+  // Function to handle session timeout
+  const handleSessionTimeout = () => {
+    toast({
+      description: (
+        <div className="flex flex-col items-center gap-3">
+          <Clock size={32} className="text-destructive" />
+          <span className="text-center text-lg">Your session has expired due to inactivity. Please select a task again.</span>
+        </div>
+      ),
+      duration: 4000,
+    });
+    
+    // Reset to task selection
+    resetState();
+    setShowChat(false);
+    setAnimationPhase('loading');
+  };
+
+  // Function to start session timeout
+  const startSessionTimeout = (expiresInSeconds: number) => {
+    // Clear any existing timeout
+    if (sessionTimeoutRef.current) {
+      clearTimeout(sessionTimeoutRef.current);
+    }
+    
+    // Set new timeout
+    sessionTimeoutRef.current = setTimeout(() => {
+      handleSessionTimeout();
+    }, expiresInSeconds * 1000);
+  };
+
+  // Function to reset session timeout (called when user sends message)
+  const resetSessionTimeout = () => {
+    const chatSession = JSON.parse(localStorage.getItem('chatSession') || '{}');
+    if (chatSession.expires_in) {
+      startSessionTimeout(chatSession.expires_in);
+    }
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (sessionTimeoutRef.current) {
+        clearTimeout(sessionTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -76,6 +125,9 @@ const Chat = () => {
       // Extract persona graph from API response
       setUserGraph(chatData.user.persona_graph);
       setUserName(chatData.user.full_name);
+
+      // Start session timeout
+      startSessionTimeout(chatData.expires_in);
 
       setAnimationPhase('transitioning');
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -133,7 +185,7 @@ const Chat = () => {
   };
 
   if (showChat && selectedTask) {
-    return <ChatInterface onBack={handleBack} />;
+    return <ChatInterface onBack={handleBack} onResetTimeout={resetSessionTimeout} />;
   }
 
   return (

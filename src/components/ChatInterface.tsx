@@ -8,9 +8,10 @@ import { sendChatMessage } from '@/services/api';
 
 interface ChatInterfaceProps {
   onBack: () => void;
+  onResetTimeout?: () => void;
 }
 
-export const ChatInterface = ({ onBack }: ChatInterfaceProps) => {
+export const ChatInterface = ({ onBack, onResetTimeout }: ChatInterfaceProps) => {
   const {
     selectedTask,
     chatMessages,
@@ -76,6 +77,9 @@ const handleSendMessage = async (e: React.FormEvent) => {
     if (response.is_persona_updated && response.persona_graph) {
       setUserGraph(response.persona_graph);
     }
+    
+    // Reset session timeout after successful message
+    onResetTimeout?.();
     
   } catch (error) {
     console.error('Failed to send message:', error);
