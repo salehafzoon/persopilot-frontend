@@ -246,8 +246,6 @@ const Console = () => {
     setSendingOffers(false);
   };
 
-
-
   return (
     <SidebarProvider>
       <div className="h-screen flex w-full bg-gradient-subtle">
@@ -291,7 +289,7 @@ const Console = () => {
         </Sidebar>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col bg-background">
+        <div className="flex-1 flex flex-col bg-background" style={{ marginLeft: '320px' }}>
           {/* Fixed Header */}
           <div className="sticky top-0 z-50 bg-background p-6 border-b border-muted backdrop-blur-sm">
             <div className="max-w-8xl mx-auto">
