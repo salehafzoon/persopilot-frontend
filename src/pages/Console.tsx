@@ -82,7 +82,8 @@ const Console = () => {
         description: formData.description,
         label1: formData.classificationGroup,
         label2: `Non- ${formData.classificationGroup}`,
-        offer_message: formData.offerMessage
+        offer_message: formData.offerMessage,
+        ...(isEditing && selectedTask && { id: selectedTask.id })
       };
 
       const response = await create_update_ClassificationTask(username, taskData);
