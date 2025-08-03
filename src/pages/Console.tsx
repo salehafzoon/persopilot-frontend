@@ -82,7 +82,8 @@ const Console = () => {
         description: formData.description,
         label1: formData.classificationGroup,
         label2: `Non- ${formData.classificationGroup}`,
-        offer_message: formData.offerMessage
+        offer_message: formData.offerMessage,
+        ...(isEditing && selectedTask && { id: selectedTask.id })
       };
 
       const response = await create_update_ClassificationTask(username, taskData);
@@ -251,7 +252,7 @@ const Console = () => {
     <SidebarProvider>
       <div className="h-screen flex w-full bg-gradient-subtle">
         {/* Sidebar */}
-        <Sidebar className="border-r border-muted">
+        <Sidebar className="border-r border-muted w-80">
           <SidebarContent>
             <SidebarGroup>
               <div className="px-4 py-3">
