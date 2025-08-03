@@ -72,7 +72,6 @@ export interface ClassificationTaskRequest {
   label1: string;
   label2: string;
   offer_message: string;
-  id?: number;
 }
 
 export interface LabeledUser {
