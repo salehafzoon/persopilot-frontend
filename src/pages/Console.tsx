@@ -252,7 +252,7 @@ const Console = () => {
     <SidebarProvider>
       <div className="h-screen flex w-full bg-gradient-subtle">
         {/* Sidebar */}
-        <Sidebar className="border-r border-muted w-80">
+        <Sidebar className="border-r border-muted" style={{ minWidth: '320px', maxWidth: '320px' }}>
           <SidebarContent>
             <SidebarGroup>
               <div className="px-4 py-3">
