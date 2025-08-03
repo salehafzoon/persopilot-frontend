@@ -250,7 +250,7 @@ const Console = () => {
     <SidebarProvider>
       <div className="h-screen flex w-full bg-gradient-subtle">
         {/* Sidebar */}
-        <Sidebar className="border-r border-muted" style={{ minWidth: '320px', maxWidth: '320px' }}>
+        <Sidebar className="w-[30%] border-r border-muted">
           <SidebarContent>
             <SidebarGroup>
               <div className="px-4 py-3">
@@ -289,7 +289,7 @@ const Console = () => {
         </Sidebar>
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col bg-background" style={{ marginLeft: '320px' }}>
+        <div className="w-[70%] flex flex-col bg-background">
           {/* Fixed Header */}
           <div className="sticky top-0 z-50 bg-background p-6 border-b border-muted backdrop-blur-sm">
             <div className="max-w-8xl mx-auto">
