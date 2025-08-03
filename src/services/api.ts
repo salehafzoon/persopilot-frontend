@@ -377,3 +377,63 @@ export const sendChatMessage = async (
 };
 
 
+export interface ClassificationPrediction {
+  username: string;
+  predicted_label: string;
+  confidence: number;
+  prediction_date: string;
+}
+
+export interface PredictionDetail {
+  username: string;
+  predicted_label: string;
+  confidence: number;
+  actual_status: string | null;
+  actual_label: string;
+  is_correct: boolean | null;
+}
+
+export interface AccuracyMetrics {
+  overall_accuracy: number | null;
+  correct_predictions: number;
+  total_evaluated: number;
+  total_predictions: number;
+  prediction_details: PredictionDetail[];
+}
+
+export interface OfferStatistics {
+  total_offers: number;
+  waiting_offers: number;
+  accepted_offers: number;
+  declined_offers: number;
+}
+
+export interface ClassificationResultsResponse {
+  classification_task_id: number;
+  task_name: string;
+  predictions: ClassificationPrediction[];
+  accuracy_metrics: AccuracyMetrics;
+  offer_statistics: OfferStatistics;
+}
+
+export const getClassificationResults = async (
+  classificationTaskId: number
+): Promise<ClassificationResultsResponse> => {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/classification/results?classification_task_id=${classificationTaskId}`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to get classification results: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log('Classification results response:', data);
+  return data;
+};
