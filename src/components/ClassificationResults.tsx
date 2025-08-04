@@ -187,7 +187,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
         {mergedData.length > 0 && (
           <div className="mt-8">
             <h3 className="text-xl font-semibold text-foreground mb-4">
-              Recent Predictions (Top 20)
+              Recent Predictions (Last 20)
             </h3>
             <div className="rounded-md border">
               <Table>
