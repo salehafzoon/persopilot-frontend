@@ -29,7 +29,8 @@ import {
   SidebarTrigger,
   useSidebar 
 } from '@/components/ui/sidebar';
-import { create_update_ClassificationTask, sendPersonalizedOffers, deleteClassificationTask  } from '@/services/api';
+import { create_update_ClassificationTask, sendPersonalizedOffers, deleteClassificationTask, getClassificationResults, ClassificationResultsResponse } from '@/services/api';
+import { ClassificationResults } from '@/components/ClassificationResults';
 
 const getUserData = () => {
   const userData = localStorage.getItem('userData');
@@ -60,6 +61,8 @@ const Console = () => {
   const [sendingOffers, setSendingOffers] = useState(false);
   const [showOffersDialog, setShowOffersDialog] = useState(false);
   const [offersResponse, setOffersResponse] = useState<any>(null);
+  const [classificationResults, setClassificationResults] = useState<ClassificationResultsResponse | null>(null);
+  const [loadingResults, setLoadingResults] = useState(false);
 
   const handleFormChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -150,9 +153,21 @@ const Console = () => {
   const isFormValid = formData.title.trim() && formData.description.trim() && 
                      formData.classificationGroup.trim() && formData.offerMessage.trim();
 
-  const handleTaskSelect = (task: any) => {
+  const handleTaskSelect = async (task: any) => {
     setSelectedTask(task);
     setIsEditing(false);
+    setClassificationResults(null);
+    
+    // Load classification results for the selected task
+    setLoadingResults(true);
+    try {
+      const results = await getClassificationResults(task.id);
+      setClassificationResults(results);
+    } catch (error) {
+      console.error('Failed to load classification results:', error);
+    } finally {
+      setLoadingResults(false);
+    }
   };
 
   const handleCreateNew = () => {
@@ -504,6 +519,34 @@ const Console = () => {
             </Card>
           )}
 
+          {/* Classification Results - shown when a task is selected */}
+          {selectedTask && !isEditing && (
+            <div className="mt-8">
+              {loadingResults ? (
+                <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
+                  <CardContent className="p-8">
+                    <div className="flex items-center justify-center">
+                      <Loader2 className="h-8 w-8 animate-spin mr-3" />
+                      <span className="text-lg text-muted-foreground">Loading classification results...</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ) : classificationResults ? (
+                <ClassificationResults 
+                  accuracyMetrics={classificationResults.accuracy_metrics}
+                  offerStatistics={classificationResults.offer_statistics}
+                />
+              ) : (
+                <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
+                  <CardContent className="p-8">
+                    <div className="text-center text-muted-foreground">
+                      No classification results available for this task.
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
 
           {/* Randomized Candidates Panel - shown after any task creation/update */}
           {showPersonas && personas.length > 0 && !loadingPersonas && (
