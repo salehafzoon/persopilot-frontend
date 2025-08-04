@@ -535,7 +535,7 @@ const Console = () => {
                 <ClassificationResults 
                   accuracyMetrics={classificationResults.accuracy_metrics}
                   offerStatistics={classificationResults.offer_statistics}
-                  predictionDetails={classificationResults.prediction_details || []}
+                  predictionDetails={classificationResults.accuracy_metrics?.prediction_details || []}
                   predictions={classificationResults.predictions || []}
                 />
               ) : (
