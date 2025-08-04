@@ -535,6 +535,8 @@ const Console = () => {
                 <ClassificationResults 
                   accuracyMetrics={classificationResults.accuracy_metrics}
                   offerStatistics={classificationResults.offer_statistics}
+                  predictionDetails={classificationResults.prediction_details || []}
+                  predictions={classificationResults.predictions || []}
                 />
               ) : (
                 <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">

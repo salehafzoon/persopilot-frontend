@@ -415,6 +415,7 @@ export interface ClassificationResultsResponse {
   predictions: ClassificationPrediction[];
   accuracy_metrics: AccuracyMetrics;
   offer_statistics: OfferStatistics;
+  prediction_details?: any[];
 }
 
 export const getClassificationResults = async (

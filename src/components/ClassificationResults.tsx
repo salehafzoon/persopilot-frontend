@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 interface AccuracyMetrics {
@@ -15,9 +16,20 @@ interface OfferStatistics {
   declined_offers: number;
 }
 
+interface PredictionDetail {
+  [key: string]: any; // Dynamic keys from prediction_details
+}
+
+interface Prediction {
+  prediction_date: string;
+  [key: string]: any;
+}
+
 interface ClassificationResultsProps {
   accuracyMetrics: AccuracyMetrics | null;
   offerStatistics: OfferStatistics;
+  predictionDetails?: PredictionDetail[];
+  predictions?: Prediction[];
 }
 
 const COLORS = {
@@ -26,12 +38,34 @@ const COLORS = {
   waiting: 'hsl(220, 13%, 69%)', // grey
 };
 
-export const ClassificationResults = ({ accuracyMetrics, offerStatistics }: ClassificationResultsProps) => {
+export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predictionDetails = [], predictions = [] }: ClassificationResultsProps) => {
   const pieData = [
     { name: 'Accepted', value: offerStatistics.accepted_offers, color: COLORS.accepted },
     { name: 'Declined', value: offerStatistics.declined_offers, color: COLORS.declined },
     { name: 'Waiting', value: offerStatistics.waiting_offers, color: COLORS.waiting },
   ].filter(item => item.value > 0); // Only show non-zero values
+
+  // Merge prediction details with prediction dates and sort by date
+  const mergedData = predictionDetails.map((detail, index) => {
+    const prediction = predictions[index] || {} as Prediction;
+    return {
+      ...detail,
+      prediction_date: (prediction as any).prediction_date || 'N/A'
+    };
+  }).sort((a, b) => {
+    if (a.prediction_date === 'N/A') return 1;
+    if (b.prediction_date === 'N/A') return -1;
+    return new Date(b.prediction_date).getTime() - new Date(a.prediction_date).getTime();
+  }).slice(0, 20);
+
+  // Get table columns (excluding prediction_date as it will be added as last column)
+  const getTableColumns = () => {
+    if (predictionDetails.length === 0) return [];
+    const firstDetail = predictionDetails[0];
+    return Object.keys(firstDetail).filter(key => key !== 'prediction_date');
+  };
+
+  const tableColumns = getTableColumns();
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
     if (percent < 0.05) return null; // Don't show labels for very small slices
@@ -148,6 +182,46 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics }: Clas
             </div>
           </div>
         </div>
+
+        {/* Prediction Details Table */}
+        {mergedData.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-xl font-semibold text-foreground mb-4">
+              Recent Predictions (Top 20)
+            </h3>
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    {tableColumns.map((column) => (
+                      <TableHead key={column} className="capitalize">
+                        {column.replace(/_/g, ' ')}
+                      </TableHead>
+                    ))}
+                    <TableHead>Prediction Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {mergedData.map((row, index) => (
+                    <TableRow key={index}>
+                      {tableColumns.map((column) => (
+                        <TableCell key={column}>
+                          {row[column]?.toString() || 'N/A'}
+                        </TableCell>
+                      ))}
+                      <TableCell>
+                        {row.prediction_date !== 'N/A' 
+                          ? new Date(row.prediction_date).toLocaleDateString()
+                          : 'N/A'
+                        }
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
