@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 interface AccuracyMetrics {
-  overall_accuracy: number;
+  overall_accuracy: number | null;
   correct_predictions: number;
   total_evaluated: number;
   total_predictions: number;
@@ -16,7 +16,7 @@ interface OfferStatistics {
 }
 
 interface ClassificationResultsProps {
-  accuracyMetrics: AccuracyMetrics;
+  accuracyMetrics: AccuracyMetrics | null;
   offerStatistics: OfferStatistics;
 }
 
@@ -68,27 +68,41 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics }: Clas
           <div className="flex-1">
             <div className="mb-6">
               <div className="text-4xl font-bold text-primary mb-2">
-                {(accuracyMetrics.overall_accuracy * 100).toFixed(2)}%
+                {accuracyMetrics?.overall_accuracy !== null && accuracyMetrics?.overall_accuracy !== undefined
+                  ? `${(accuracyMetrics.overall_accuracy * 100).toFixed(2)}%`
+                  : '-.--%'
+                }
               </div>
               <div className="text-lg font-medium text-muted-foreground">
                 Overall Accuracy
               </div>
+              {(!accuracyMetrics || accuracyMetrics.overall_accuracy === null) && (
+                <div className="text-sm text-muted-foreground mt-2">
+                  Waiting for users to respond to offers...
+                </div>
+              )}
             </div>
             
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-foreground">Correct Predictions:</span>
-                <span className="font-medium text-foreground">{accuracyMetrics.correct_predictions}</span>
+            {accuracyMetrics ? (
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-foreground">Correct Predictions:</span>
+                  <span className="font-medium text-foreground">{accuracyMetrics.correct_predictions}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-foreground">Total Evaluated:</span>
+                  <span className="font-medium text-foreground">{accuracyMetrics.total_evaluated}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-foreground">Total Predictions:</span>
+                  <span className="font-medium text-foreground">{accuracyMetrics.total_predictions}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-foreground">Total Evaluated:</span>
-                <span className="font-medium text-foreground">{accuracyMetrics.total_evaluated}</span>
+            ) : (
+              <div className="text-center text-muted-foreground py-4">
+                No accuracy data available yet
               </div>
-              <div className="flex justify-between">
-                <span className="text-foreground">Total Predictions:</span>
-                <span className="font-medium text-foreground">{accuracyMetrics.total_predictions}</span>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Right side - Offer Statistics */}
