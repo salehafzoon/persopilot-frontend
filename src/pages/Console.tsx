@@ -537,6 +537,17 @@ const Console = () => {
                   offerStatistics={classificationResults.offer_statistics}
                   predictionDetails={classificationResults.accuracy_metrics?.prediction_details || []}
                   predictions={classificationResults.predictions || []}
+                  classificationTaskId={selectedTask?.id}
+                  onResultsUpdate={(data) => {
+                    if (classificationResults) {
+                      setClassificationResults({
+                        ...classificationResults,
+                        accuracy_metrics: data.accuracyMetrics || classificationResults.accuracy_metrics,
+                        offer_statistics: data.offerStatistics,
+                        predictions: data.predictions as any[] || []
+                      });
+                    }
+                  }}
                 />
               ) : (
                 <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">

@@ -2,23 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
-import { trainAndPredict, TrainAndPredictResponse } from '@/services/api';
+import { trainAndPredict, TrainAndPredictResponse, AccuracyMetrics, OfferStatistics } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
-
-interface AccuracyMetrics {
-  overall_accuracy: number | null;
-  correct_predictions: number;
-  total_evaluated: number;
-  total_predictions: number;
-}
-
-interface OfferStatistics {
-  total_offers: number;
-  waiting_offers: number;
-  accepted_offers: number;
-  declined_offers: number;
-}
 
 interface PredictionDetail {
   [key: string]: any; // Dynamic keys from prediction_details
