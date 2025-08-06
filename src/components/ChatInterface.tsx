@@ -171,7 +171,62 @@ const handleSendMessage = async (e: React.FormEvent) => {
                     </div>
                   ) : (
                     <div className="bg-white text-black p-3 rounded-2xl rounded-br-sm border border-border">
-                      <p className="text-sm">{message.content}</p>
+                      <div className="text-sm">
+                        {(() => {
+                          const content = message.content;
+                          const lines = content.split('\n');
+                          const result = [];
+                          let currentListItems = [];
+                          let inList = false;
+                          
+                          for (let i = 0; i < lines.length; i++) {
+                            const line = lines[i].trim();
+                            
+                            // Check if line is a list item (starts with - or * or number.)
+                            if (line.match(/^[-*]\s/) || line.match(/^\d+\.\s/)) {
+                              if (!inList) {
+                                // Starting a new list
+                                if (result.length > 0) {
+                                  result.push(<div key={`text-${i}`} className="mb-2">{result.pop()}</div>);
+                                }
+                                inList = true;
+                                currentListItems = [];
+                              }
+                              // Remove the list marker and add to current list
+                              const listItem = line.replace(/^[-*]\s/, '').replace(/^\d+\.\s/, '');
+                              currentListItems.push(<li key={`item-${i}`}>{listItem}</li>);
+                            } else {
+                              // Not a list item
+                              if (inList) {
+                                // End the current list
+                                result.push(
+                                  <ul key={`list-${i}`} className="list-disc list-inside space-y-1 mb-2">
+                                    {currentListItems}
+                                  </ul>
+                                );
+                                currentListItems = [];
+                                inList = false;
+                              }
+                              
+                              if (line) {
+                                result.push(line);
+                                if (i < lines.length - 1) result.push(<br key={`br-${i}`} />);
+                              }
+                            }
+                          }
+                          
+                          // Handle case where message ends with a list
+                          if (inList && currentListItems.length > 0) {
+                            result.push(
+                              <ul key="final-list" className="list-disc list-inside space-y-1">
+                                {currentListItems}
+                              </ul>
+                            );
+                          }
+                          
+                          return result;
+                        })()}
+                      </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
