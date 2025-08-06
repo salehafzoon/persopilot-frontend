@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 import { trainAndPredict, TrainAndPredictResponse, AccuracyMetrics, OfferStatistics } from '@/services/api';
 import { useToast } from '@/hooks/use-toast';
@@ -238,7 +239,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
             <h3 className="text-xl font-semibold text-foreground mb-4">
               Recent Predictions (Last 20)
             </h3>
-            <div className="rounded-md border">
+            <ScrollArea className="h-80 rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -268,7 +269,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
                   ))}
                 </TableBody>
               </Table>
-            </div>
+            </ScrollArea>
           </div>
         )}
         
