@@ -60,18 +60,48 @@ const handleSendMessage = async (e: React.FormEvent) => {
 
     const response = await sendChatMessage(sessionId, inputValue);
     
+    // Parse the response which might contain JSON followed by additional content
+    let parsedResponse;
+    try {
+      // Check if response.response is a string that needs parsing or already an object
+      const responseData = response.response as any; // Type assertion to handle API inconsistency
+      
+      if (typeof responseData === 'string') {
+        // Extract just the JSON part if the response contains additional content
+        const jsonMatch = responseData.match(/^\{[\s\S]*?\n\}/);
+        if (jsonMatch) {
+          parsedResponse = JSON.parse(jsonMatch[0]);
+        } else {
+          // Fallback: try to parse the entire response as JSON
+          parsedResponse = JSON.parse(responseData);
+        }
+      } else {
+        // response.response is already an object
+        parsedResponse = responseData;
+      }
+    } catch (error) {
+      console.error('Failed to parse response JSON:', error);
+      // Fallback: use the response as-is if it's an object, or create a default structure
+      const responseData = response.response as any;
+      if (typeof responseData === 'object') {
+        parsedResponse = responseData;
+      } else {
+        parsedResponse = { response: responseData, reason: 'Response parsing error', used_tool: 'None' };
+      }
+    }
+    
     const assistantMessage = {
       id: (Date.now() + 1).toString(),
-      content: response.response.response,
+      content: parsedResponse.response,
       sender: 'assistant' as const,
       timestamp: new Date(),
-      reason: response.response.reason,
-      usedTool: response.response.used_tool
+      reason: parsedResponse.reason,
+      usedTool: parsedResponse.used_tool
     };
     
     addChatMessage(assistantMessage);
-    setCurrentReason(response.response.reason);
-    setCurrentTool(response.response.used_tool);
+    setCurrentReason(parsedResponse.reason);
+    setCurrentTool(parsedResponse.used_tool);
     
     // Update persona graph if needed
     if (response.is_persona_updated && response.persona_graph) {
