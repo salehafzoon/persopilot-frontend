@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Send, Brain, Wrench } from 'lucide-react';
 import { PersonaGraph } from './PersonaGraph';
 import { useAppContext } from '@/context/AppContext';
-import { sendChatMessage } from '@/services/api';
+import { sendChatMessage, deleteChatSession } from '@/services/api';
 
 interface ChatInterfaceProps {
   onBack: () => void;
@@ -128,7 +128,17 @@ const handleSendMessage = async (e: React.FormEvent) => {
           <header className="bg-card/90 backdrop-blur-sm border-b border-border p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Button variant="ghost" onClick={onBack} className="text-muted-foreground hover:text-foreground">
+                <Button variant="ghost" onClick={async () => {
+                  try {
+                    const chatSession = JSON.parse(localStorage.getItem('chatSession') || '{}');
+                    if (chatSession.session_id) {
+                      await deleteChatSession(chatSession.session_id);
+                    }
+                  } catch (error) {
+                    console.error('Failed to delete chat session:', error);
+                  }
+                  onBack();
+                }} className="text-muted-foreground hover:text-foreground">
                   ← Back
                 </Button>
               </div>
