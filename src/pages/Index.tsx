@@ -311,14 +311,6 @@ const Index = () => {
               </Button>
             </form>
 
-            {/* Demo Credentials */}
-            <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-              <p className="text-sm font-medium text-foreground mb-2">Demo Credentials:</p>
-              <div className="text-xs text-muted-foreground space-y-1">
-                <div>• <strong>user_01</strong> + <strong>pass1</strong> → User Panel</div>
-                <div>• <strong>analyst_01</strong> + <strong>pass2</strong> → Analyst Panel</div>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
