@@ -5,6 +5,7 @@ import { Send, Brain, Wrench } from 'lucide-react';
 import { PersonaGraph } from './PersonaGraph';
 import { useAppContext } from '@/context/AppContext';
 import { sendChatMessage, deleteChatSession } from '@/services/api';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatInterfaceProps {
   onBack: () => void;
@@ -19,6 +20,8 @@ export const ChatInterface = ({ onBack, onResetTimeout }: ChatInterfaceProps) =>
     userName,
     setUserGraph,
   } = useAppContext();
+
+  const navigate = useNavigate();
 
   const [inputValue, setInputValue] = useState('');
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
@@ -137,7 +140,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
                   } catch (error) {
                     console.error('Failed to delete chat session:', error);
                   }
-                  onBack();
+                  navigate('/');
                 }} className="text-muted-foreground hover:text-foreground">
                   ← Back
                 </Button>
