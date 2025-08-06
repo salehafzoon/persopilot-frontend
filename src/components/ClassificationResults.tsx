@@ -276,7 +276,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
         <div className="mt-8 flex justify-center">
           <Button 
             onClick={handleRandomClassification}
-            disabled={isLoading || !classificationTaskId}
+            disabled={isLoading || !classificationTaskId || !accuracyMetrics?.overall_accuracy}
             className="px-8 py-2"
           >
             {isLoading ? "Classifying..." : "Randomly Classify New Users"}
