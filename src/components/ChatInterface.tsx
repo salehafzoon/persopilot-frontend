@@ -140,7 +140,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
                   } catch (error) {
                     console.error('Failed to delete chat session:', error);
                   }
-                  navigate('/');
+                  navigate('/chat');
                 }} className="text-muted-foreground hover:text-foreground">
                   ← Back
                 </Button>
