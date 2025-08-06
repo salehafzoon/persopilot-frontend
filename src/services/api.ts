@@ -439,3 +439,65 @@ export const getClassificationResults = async (
   console.log('Classification results response:', data);
   return data;
 };
+
+
+export const deleteChatSession = async (sessionId: string): Promise<void> => {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/chat/delete?session_id=${sessionId}`, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete chat session: ${response.status}`);
+  }
+};
+
+
+export interface TrainingData {
+  accepted_count?: number;
+  declined_count?: number;
+  total_responses?: number;
+  success?: boolean;
+  training_size?: number;
+  accepted?: number;
+  declined?: number;
+}
+
+export interface TrainAndPredictResponse {
+  success: boolean;
+  classification_task_id: number;
+  task_name?: string;
+  error?: string;
+  training_data: TrainingData;
+  predictions: ClassificationPrediction[];
+  accuracy_metrics?: AccuracyMetrics;
+  offer_statistics?: OfferStatistics;
+  message?: string;
+}
+
+
+export const trainAndPredict = async (classificationTaskId: number): Promise<any> => {
+  const currentBaseUrl = getBaseUrl();
+  const response = await fetch(`${currentBaseUrl}/classification/train_and_predict?classification_task_id=${classificationTaskId}`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'ngrok-skip-browser-warning': 'true'
+    },
+    mode: 'cors',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to train and predict: ${response.status}`);
+  }
+
+  const data = await response.json();
+  console.log('Train and predict response:', data);
+  return data;
+};
+
