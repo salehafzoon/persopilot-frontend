@@ -81,7 +81,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
         }
         toast({
           title: "Success",
-          description: "Random classification completed successfully",
+          description: response.message || "Random classification completed successfully",
         });
       }
     } catch (error: any) {
