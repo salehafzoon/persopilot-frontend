@@ -1,6 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
+import { trainAndPredict, TrainAndPredictResponse } from '@/services/api';
+import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 interface AccuracyMetrics {
   overall_accuracy: number | null;
@@ -30,6 +34,8 @@ interface ClassificationResultsProps {
   offerStatistics: OfferStatistics;
   predictionDetails?: PredictionDetail[];
   predictions?: Prediction[];
+  classificationTaskId?: number;
+  onResultsUpdate?: (data: { accuracyMetrics: AccuracyMetrics | null; offerStatistics: OfferStatistics; predictionDetails?: PredictionDetail[]; predictions?: Prediction[]; }) => void;
 }
 
 const COLORS = {
@@ -38,7 +44,64 @@ const COLORS = {
   waiting: 'hsl(220, 13%, 69%)', // grey
 };
 
-export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predictionDetails = [], predictions = [] }: ClassificationResultsProps) => {
+export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predictionDetails = [], predictions = [], classificationTaskId, onResultsUpdate }: ClassificationResultsProps) => {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRandomClassification = async () => {
+    if (!classificationTaskId) {
+      toast({
+        title: "Error",
+        description: "No classification task selected",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await trainAndPredict(classificationTaskId);
+      
+      if (response.success === false) {
+        // Handle insufficient data error
+        toast({
+          title: "Insufficient Training Data",
+          description: response.error || "Not enough training data available",
+          variant: "destructive",
+        });
+      } else {
+        // Success - update the results
+        if (onResultsUpdate && response.accuracy_metrics && response.offer_statistics) {
+          onResultsUpdate({
+            accuracyMetrics: response.accuracy_metrics,
+            offerStatistics: response.offer_statistics,
+            predictionDetails: response.predictions?.map((p: any) => ({ ...p })) || [],
+            predictions: response.predictions || []
+          });
+        }
+        toast({
+          title: "Success",
+          description: "Random classification completed successfully",
+        });
+      }
+    } catch (error: any) {
+      if (error.message && error.message.includes('404')) {
+        toast({
+          title: "Classification Task Not Found",
+          description: "Classification task not found",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to perform random classification",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const pieData = [
     { name: 'Accepted', value: offerStatistics.accepted_offers, color: COLORS.accepted },
     { name: 'Declined', value: offerStatistics.declined_offers, color: COLORS.declined },
@@ -222,6 +285,17 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
             </div>
           </div>
         )}
+        
+        {/* Random Classification Button */}
+        <div className="mt-8 flex justify-center">
+          <Button 
+            onClick={handleRandomClassification}
+            disabled={isLoading || !classificationTaskId}
+            className="px-8 py-2"
+          >
+            {isLoading ? "Classifying..." : "Randomly Classify New Users"}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
