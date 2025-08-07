@@ -141,11 +141,11 @@ const Index = () => {
           {/* Connection Status Indicator */}
           <div className="flex items-center gap-2">
             {isOnline ? (
-              <Wifi className="h-6 w-6 text-green-600 dark:text-green-400" />
+              <Wifi className="h-12 w-12 text-green-600 dark:text-green-400" />
             ) : (
-              <WifiOff className="h-6 w-6 text-destructive" />
+              <WifiOff className="h-12 w-12 text-destructive" />
             )}
-            <span className="text-sm text-muted-foreground">
+            <span className="text-lg text-muted-foreground">
               {isOnline ? 'Online' : 'Offline'}
             </span>
           </div>
@@ -153,8 +153,8 @@ const Index = () => {
           {/* Intro Video Button */}
           <Dialog open={introDialogOpen} onOpenChange={setIntroDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="lg" className="h-12 w-12 px-0">
-                <Info className="h-7 w-7" />
+              <Button variant="ghost" size="lg" className="h-24 w-24 px-0">
+                <Info className="h-14 w-14" />
                 <span className="sr-only">Watch intro video</span>
               </Button>
             </DialogTrigger>
@@ -181,8 +181,8 @@ const Index = () => {
         <div className="flex items-center gap-2">
         <Dialog open={serverDialogOpen} onOpenChange={setServerDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="lg" className="h-12 w-12 px-0">
-              <Settings className="h-7 w-7" />
+            <Button variant="ghost" size="lg" className="h-24 w-24 px-0">
+              <Settings className="h-14 w-14" />
               <span className="sr-only">Server settings</span>
             </Button>
           </DialogTrigger>
