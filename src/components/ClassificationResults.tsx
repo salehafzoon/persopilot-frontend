@@ -22,6 +22,7 @@ interface ClassificationResultsProps {
   predictionDetails?: PredictionDetail[];
   predictions?: Prediction[];
   classificationTaskId?: number;
+  hideRecentPredictions?: boolean;
   onResultsUpdate?: (data: { accuracyMetrics: AccuracyMetrics | null; offerStatistics: OfferStatistics; predictionDetails?: PredictionDetail[]; predictions?: Prediction[]; }) => void;
 }
 
@@ -31,7 +32,7 @@ const COLORS = {
   waiting: 'hsl(220, 13%, 69%)', // grey
 };
 
-export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predictionDetails = [], predictions = [], classificationTaskId, onResultsUpdate }: ClassificationResultsProps) => {
+export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predictionDetails = [], predictions = [], classificationTaskId, hideRecentPredictions = false, onResultsUpdate }: ClassificationResultsProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -234,7 +235,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
         </div>
 
         {/* Prediction Details Table */}
-        {mergedData.length > 0 && (
+        {mergedData.length > 0 && !hideRecentPredictions && (
           <div className="mt-8">
             <h3 className="text-xl font-semibold text-foreground mb-4">
               Recent Predictions (Last 20)
