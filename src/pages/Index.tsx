@@ -181,7 +181,7 @@ const Index = () => {
         <div className="flex items-center gap-2">
         <Dialog open={serverDialogOpen} onOpenChange={setServerDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="lg" className="h-12 w-12 px-0">
+            <Button variant="ghost" size="lg" className="h-16 w-16 px-0">
               <Settings className="h-12 w-12" />
               <span className="sr-only">Server settings</span>
             </Button>
