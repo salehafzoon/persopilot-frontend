@@ -153,8 +153,8 @@ const Index = () => {
           {/* Intro Video Button */}
           <Dialog open={introDialogOpen} onOpenChange={setIntroDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-10 w-10 px-0">
-                <Info className="h-6 w-6" />
+              <Button variant="ghost" size="lg" className="h-12 w-12 px-0">
+                <Info className="h-7 w-7" />
                 <span className="sr-only">Watch intro video</span>
               </Button>
             </DialogTrigger>
@@ -181,8 +181,8 @@ const Index = () => {
         <div className="flex items-center gap-2">
         <Dialog open={serverDialogOpen} onOpenChange={setServerDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-10 w-10 px-0">
-              <Settings className="h-6 w-6" />
+            <Button variant="ghost" size="lg" className="h-12 w-12 px-0">
+              <Settings className="h-7 w-7" />
               <span className="sr-only">Server settings</span>
             </Button>
           </DialogTrigger>
