@@ -182,7 +182,7 @@ const Index = () => {
         <Dialog open={serverDialogOpen} onOpenChange={setServerDialogOpen}>
           <DialogTrigger asChild>
             <Button variant="ghost" size="lg" className="h-12 w-12 px-0">
-              <Settings className="h-10 w-10" />
+              <Settings className="h-12 w-12" />
               <span className="sr-only">Server settings</span>
             </Button>
           </DialogTrigger>
