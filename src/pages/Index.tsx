@@ -158,7 +158,7 @@ const Index = () => {
                 <span className="sr-only">Watch intro video</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[800px]">
+            <DialogContent className="sm:max-w-[1040px]">
               <DialogHeader>
                 <DialogTitle>PersoPilot Introduction</DialogTitle>
                 <DialogDescription>
