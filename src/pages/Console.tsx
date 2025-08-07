@@ -157,6 +157,7 @@ const Console = () => {
     setSelectedTask(task);
     setIsEditing(false);
     setClassificationResults(null);
+    setShowPersonas(false); // Hide randomized candidates when selecting another task
     
     // Load classification results for the selected task
     setLoadingResults(true);
@@ -538,6 +539,7 @@ const Console = () => {
                   predictionDetails={classificationResults.accuracy_metrics?.prediction_details || []}
                   predictions={classificationResults.predictions || []}
                   classificationTaskId={selectedTask?.id}
+                  hideRecentPredictions={showPersonas} // Hide recent predictions when showing candidates
                   onResultsUpdate={(data) => {
                     if (classificationResults) {
                       setClassificationResults({
