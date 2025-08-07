@@ -141,11 +141,7 @@ const Console = () => {
       console.error('Failed to create classification task:', error);
     }
     
-    
-    // Only show personas panel for new task creation, not for editing
-    if (!isEditing) {
-      setShowPersonas(true);
-    }
+    setShowPersonas(true);
     setLoadingPersonas(false);
     setIsCreating(false);
     
