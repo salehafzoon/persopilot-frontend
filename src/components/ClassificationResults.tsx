@@ -192,44 +192,47 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
 
           {/* Right side - Offer Statistics */}
           <div className="flex-1">
-            <div className="mb-6">
-              <div className="text-3xl font-bold text-primary mb-2">
-                {offerStatistics.total_offers}
+            <div className="flex items-center gap-6">
+              {/* Pie Chart */}
+              <div className="w-48 h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={renderCustomizedLabel}
+                      outerRadius={70}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Legend 
+                      verticalAlign="bottom" 
+                      height={36}
+                      formatter={(value, entry: any) => (
+                        <span style={{ color: entry.color }}>
+                          {value}: {entry.payload.value}
+                        </span>
+                      )}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-              <div className="text-lg font-medium text-muted-foreground">
-                Total Offers
-              </div>
-            </div>
 
-            {/* Pie Chart */}
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={renderCustomizedLabel}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Legend 
-                    verticalAlign="bottom" 
-                    height={36}
-                    formatter={(value, entry: any) => (
-                      <span style={{ color: entry.color }}>
-                        {value}: {entry.payload.value}
-                      </span>
-                    )}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              {/* Total Offers */}
+              <div className="flex-1">
+                <div className="text-3xl font-bold text-primary mb-2">
+                  {offerStatistics.total_offers}
+                </div>
+                <div className="text-lg font-medium text-muted-foreground">
+                  Total Offers
+                </div>
+              </div>
             </div>
           </div>
         </div>
