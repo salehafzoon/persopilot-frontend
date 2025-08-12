@@ -467,8 +467,8 @@ const Console = () => {
 
                 {/* Layout with Description (75%) and Classification Groups (25%) */}
                 <div className="flex gap-8 mb-8">
-                  {/* Task Description - 75% */}
-                  <div className="w-3/4">
+                  {/* Task Description - 70% */}
+                  <div className="w-[70%]">
                     <h3 className="text-base font-semibold text-foreground mb-3">
                       Description
                     </h3>
@@ -477,8 +477,8 @@ const Console = () => {
                     </p>
                   </div>
 
-                  {/* Classification Groups - 25% */}
-                  <div className="w-1/4">
+                  {/* Classification Groups - 30% */}
+                  <div className="w-[30%]">
                     <h3 className="text-base font-semibold text-foreground mb-3">
                       Classification Groups
                     </h3>
@@ -505,10 +505,10 @@ const Console = () => {
 
                 {/* Creation Date & Time */}
                 <div className="mb-4">
-                  <h3 className="text-base font-semibold text-foreground mb-3">
+                  <h3 className="text-sm font-semibold text-foreground mb-3">
                     Created
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     {new Date(selectedTask.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
