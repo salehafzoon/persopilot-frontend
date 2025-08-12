@@ -320,13 +320,13 @@ const handleSendMessage = async (e: React.FormEvent) => {
             </h3>
           </header>
           
-          {/* Top 2/3: Persona Graph */}
-          <div className="flex-1 overflow-hidden h-2/3">
+          {/* Top 1/2: Persona Graph */}
+          <div className="flex-1 overflow-hidden h-1/2">
             <PersonaGraph />
           </div>
 
-          {/* Bottom 1/3: Reasoning Panel */}
-          <div className="h-1/3 p-4 border-t border-border">
+          {/* Bottom 1/2: Reasoning Panel */}
+          <div className="h-1/2 p-4 border-t border-border">
             <div className="bg-card rounded-lg p-4 shadow-soft border border-border h-full flex flex-col">
               <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Wrench size={16} />
