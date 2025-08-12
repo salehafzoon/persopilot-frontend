@@ -439,7 +439,7 @@ const Console = () => {
           ) : (
             /* Task Details View - when a task is selected and not editing */
             <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow relative">
-              <CardContent className="p-8">
+              <CardContent className="p-6">
                 {/* Delete and Edit buttons in corners with bigger size and margin */}
                 <Button 
                   variant="ghost" 
