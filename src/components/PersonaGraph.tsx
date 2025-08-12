@@ -43,7 +43,7 @@ const getNodeColor = (type: string): string => {
     case 'Topic':
       return '#6b7280'; // gray
     case 'Object':
-      return '#10b981'; // green
+      return '#047857'; // darker green
     default:
       return '#6b7280';
   }
@@ -141,7 +141,7 @@ const convertToReactFlowData = (graphData: GraphData) => {
         border: 'none',
         borderRadius: '8px',
         padding: '10px',
-        fontSize: '12px',
+        fontSize: '14px',
         fontWeight: 'bold',
         minWidth: '100px',
         textAlign: 'center',
@@ -162,7 +162,7 @@ const convertToReactFlowData = (graphData: GraphData) => {
         strokeWidth: 2,
       },
       labelStyle: {
-        fontSize: '10px',
+        fontSize: '12px',
         fontWeight: 'bold',
         fill: '#475569',
       },

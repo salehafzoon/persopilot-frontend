@@ -134,7 +134,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
       case 'Content Consumption':
         return 'bg-blue-500';
       case 'Lifestyle Optimization':
-        return 'bg-emerald-500';
+        return 'bg-emerald-700';
       case 'Career Development':
         return 'bg-purple-500';
       default:
@@ -194,15 +194,15 @@ const handleSendMessage = async (e: React.FormEvent) => {
               >
                 <div className={`relative max-w-[70%] ${message.sender === 'user' ? '' : ''}`}>
                   {message.sender === 'user' ? (
-                    <div className={`${getUserMessageColor()} text-white p-3 rounded-2xl rounded-bl-sm`}>
-                      <p className="text-sm">{message.content}</p>
+                   <div className={`${getUserMessageColor()} text-white p-3 rounded-2xl rounded-bl-sm`}>
+                      <p className="text-base">{message.content}</p>
                       <p className="text-xs text-white/70 mt-1">
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                   ) : (
-                    <div className="bg-white text-black p-3 rounded-2xl rounded-br-sm border border-border">
-                      <div className="text-sm">
+                     <div className="bg-white text-black p-3 rounded-2xl rounded-br-sm border border-border">
+                       <div className="text-base">
                         {(() => {
                           const content = message.content;
                           const lines = content.split('\n');
@@ -348,9 +348,9 @@ const handleSendMessage = async (e: React.FormEvent) => {
                           </div>
                         )}
                         
-                        <div className="text-sm text-muted-foreground">
-                          {message.reason}
-                        </div>
+                         <div className="text-base text-muted-foreground">
+                           {message.reason}
+                         </div>
                         
                         <div className="text-xs text-muted-foreground/70 mt-1">
                           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
