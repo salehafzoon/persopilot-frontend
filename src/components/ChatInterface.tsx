@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Brain, Wrench } from 'lucide-react';
 import { PersonaGraph } from './PersonaGraph';
 import { useAppContext } from '@/context/AppContext';
@@ -326,24 +327,44 @@ const handleSendMessage = async (e: React.FormEvent) => {
 
           {/* Bottom 1/3: Reasoning Panel */}
           <div className="h-1/3 p-4 border-t border-border">
-            <div className="bg-card rounded-lg p-4 shadow-soft border border-border h-full">
+            <div className="bg-card rounded-lg p-4 shadow-soft border border-border h-full flex flex-col">
               <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Wrench size={16} />
-                Reasoning
+                Reasoning History
               </h4>
               
-              {currentTool && currentTool !== 'Non' && (
-                <div className="mb-3">
-                  <div className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
-                    <Wrench size={12} />
-                    {currentTool}
-                  </div>
+              <ScrollArea className="flex-1">
+                <div className="space-y-3 pr-4">
+                  {chatMessages
+                    .filter(message => message.sender === 'assistant' && (message.reason || message.usedTool))
+                    .map((message) => (
+                      <div key={`reasoning-${message.id}`} className="border-b border-border/30 pb-3 last:border-b-0">
+                        {message.usedTool && message.usedTool !== 'Non' && (
+                          <div className="mb-2">
+                            <div className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                              <Wrench size={12} />
+                              {message.usedTool}
+                            </div>
+                          </div>
+                        )}
+                        
+                        <div className="text-sm text-muted-foreground">
+                          {message.reason}
+                        </div>
+                        
+                        <div className="text-xs text-muted-foreground/70 mt-1">
+                          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </div>
+                    ))}
+                  
+                  {chatMessages.filter(message => message.sender === 'assistant' && (message.reason || message.usedTool)).length === 0 && (
+                    <div className="text-sm text-muted-foreground text-center py-4">
+                      Waiting for assistant response...
+                    </div>
+                  )}
                 </div>
-              )}
-              
-              <div className="text-sm text-muted-foreground">
-                {currentReason || 'Waiting for assistant response...'}
-              </div>
+              </ScrollArea>
             </div>
           </div>
         </div>
