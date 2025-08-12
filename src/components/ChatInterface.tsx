@@ -154,7 +154,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
       {/* Main Layout */}
       <div className="flex w-full pt-16">
         {/* Left 55%: Chatbot Panel */}
-        <div className="w-11/20 flex flex-col border-r border-border">
+        <div className="w-[55%] flex flex-col border-r border-border">
           {/* Chat Header */}
           <header className="bg-card/90 backdrop-blur-sm border-b border-border p-4">
             <div className="flex items-center justify-between">
@@ -312,7 +312,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
         </div>
 
         {/* Right 45%: Persona Graph + Explanation Panel */}
-        <div className="w-9/20 flex flex-col bg-card">
+        <div className="w-[45%] flex flex-col bg-card">
           <header className="p-4 border-b border-border">
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <Brain size={20} />
