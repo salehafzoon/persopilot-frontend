@@ -333,7 +333,7 @@ const handleSendMessage = async (e: React.FormEvent) => {
                 Reasoning History
               </h4>
               
-              <ScrollArea className="flex-1">
+              <ScrollArea className="flex-1 max-h-full overflow-hidden">
                 <div className="space-y-3 pr-4">
                   {chatMessages
                     .filter(message => message.sender === 'assistant' && (message.reason || message.usedTool))
