@@ -465,10 +465,20 @@ const Console = () => {
                   </h2>
                 </div>
 
-                {/* Layout with Classification Groups (1/3) and Description (2/3) */}
+                {/* Layout with Description (75%) and Classification Groups (25%) */}
                 <div className="flex gap-8 mb-8">
-                  {/* Classification Groups - 1/3 */}
-                  <div className="w-1/3">
+                  {/* Task Description - 75% */}
+                  <div className="w-3/4">
+                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                      Description
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {selectedTask.description}
+                    </p>
+                  </div>
+
+                  {/* Classification Groups - 25% */}
+                  <div className="w-1/4">
                     <h3 className="text-lg font-semibold text-foreground mb-3">
                       Classification Groups
                     </h3>
@@ -480,16 +490,6 @@ const Console = () => {
                         {selectedTask.label2}
                       </div>
                     </div>
-                  </div>
-
-                  {/* Task Description - 2/3 */}
-                  <div className="w-2/3">
-                    <h3 className="text-lg font-semibold text-foreground mb-3">
-                      Description
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {selectedTask.description}
-                    </p>
                   </div>
                 </div>
 
