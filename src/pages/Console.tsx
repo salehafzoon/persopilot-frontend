@@ -482,7 +482,7 @@ const Console = () => {
                     <h3 className="text-lg font-semibold text-foreground mb-3">
                       Classification Groups
                     </h3>
-                    <div className="flex flex-col gap-3">
+                    <div className="flex gap-3">
                       <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/20">
                         {selectedTask.label1}
                       </div>
