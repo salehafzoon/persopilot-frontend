@@ -465,28 +465,31 @@ const Console = () => {
                   </h2>
                 </div>
 
-                {/* Task Description */}
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-foreground mb-3">
-                    Description
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {selectedTask.description}
-                  </p>
-                </div>
+                {/* Layout with Classification Groups (1/3) and Description (2/3) */}
+                <div className="flex gap-8 mb-8">
+                  {/* Classification Groups - 1/3 */}
+                  <div className="w-1/3">
+                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                      Classification Groups
+                    </h3>
+                    <div className="flex flex-col gap-3">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/20">
+                        {selectedTask.label1}
+                      </div>
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-secondary/10 text-secondary-foreground border border-secondary/20">
+                        {selectedTask.label2}
+                      </div>
+                    </div>
+                  </div>
 
-                {/* Classification Groups */}
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-foreground mb-3">
-                    Classification Groups
-                  </h3>
-                  <div className="flex gap-3">
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/20">
-                      {selectedTask.label1}
-                    </div>
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-secondary/10 text-secondary-foreground border border-secondary/20">
-                      {selectedTask.label2}
-                    </div>
+                  {/* Task Description - 2/3 */}
+                  <div className="w-2/3">
+                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                      Description
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {selectedTask.description}
+                    </p>
                   </div>
                 </div>
 
