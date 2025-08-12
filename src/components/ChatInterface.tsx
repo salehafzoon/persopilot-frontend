@@ -153,8 +153,8 @@ const handleSendMessage = async (e: React.FormEvent) => {
 
       {/* Main Layout */}
       <div className="flex w-full pt-16">
-        {/* Left 3/5: Chatbot Panel */}
-        <div className="w-3/5 flex flex-col border-r border-border">
+        {/* Left 55%: Chatbot Panel */}
+        <div className="w-11/20 flex flex-col border-r border-border">
           {/* Chat Header */}
           <header className="bg-card/90 backdrop-blur-sm border-b border-border p-4">
             <div className="flex items-center justify-between">
@@ -311,8 +311,8 @@ const handleSendMessage = async (e: React.FormEvent) => {
           </div>
         </div>
 
-        {/* Right 2/5: Persona Graph + Explanation Panel */}
-        <div className="w-2/5 flex flex-col bg-card">
+        {/* Right 45%: Persona Graph + Explanation Panel */}
+        <div className="w-9/20 flex flex-col bg-card">
           <header className="p-4 border-b border-border">
             <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <Brain size={20} />
@@ -320,13 +320,13 @@ const handleSendMessage = async (e: React.FormEvent) => {
             </h3>
           </header>
           
-          {/* Top 1/2: Persona Graph */}
-          <div className="flex-1 overflow-hidden h-1/2">
+          {/* Top 60%: Persona Graph */}
+          <div className="flex-1 overflow-hidden" style={{ height: '60%' }}>
             <PersonaGraph />
           </div>
 
-          {/* Bottom 1/2: Reasoning Panel */}
-          <div className="h-1/2 p-4 border-t border-border">
+          {/* Bottom 40%: Reasoning Panel */}
+          <div className="p-4 border-t border-border" style={{ height: '40%' }}>
             <div className="bg-card rounded-lg p-4 shadow-soft border border-border h-full flex flex-col">
               <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
                 <Wrench size={16} />
