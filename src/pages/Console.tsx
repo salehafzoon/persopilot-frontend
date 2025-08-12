@@ -329,7 +329,7 @@ const Console = () => {
 
           <div className="flex justify-between items-center">
             <div></div>
-            <h1 className="text-4xl font-bold text-foreground">
+            <h1 className="text-3xl font-bold text-foreground">
               Analysis Console
             </h1>
             <Button 

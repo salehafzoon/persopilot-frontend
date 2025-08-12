@@ -143,7 +143,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
   return (
     <Card className="bg-card/50 backdrop-blur-sm border-muted shadow-glow">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-foreground">
+        <CardTitle className="text-xl font-bold text-foreground">
           Classification Results
         </CardTitle>
       </CardHeader>
@@ -152,7 +152,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
           {/* Left side - Accuracy Metrics */}
           <div className="flex-1">
             <div className="mb-6">
-              <div className="text-4xl font-bold text-primary mb-2">
+              <div className="text-3xl font-bold text-primary mb-2">
                 {accuracyMetrics?.overall_accuracy !== null && accuracyMetrics?.overall_accuracy !== undefined
                   ? `${(accuracyMetrics.overall_accuracy * 100).toFixed(2)}%`
                   : '-.--%'
@@ -193,7 +193,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
           {/* Right side - Offer Statistics */}
           <div className="flex-1">
             <div className="mb-6">
-              <div className="text-4xl font-bold text-primary mb-2">
+              <div className="text-3xl font-bold text-primary mb-2">
                 {offerStatistics.total_offers}
               </div>
               <div className="text-lg font-medium text-muted-foreground">
