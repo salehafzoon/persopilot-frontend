@@ -460,7 +460,7 @@ const Console = () => {
 
                 {/* Task Name with more top margin */}
                 <div className="mb-6 mt-8">
-                  <h2 className="text-3xl font-bold text-foreground mb-2">
+                  <h2 className="text-2xl font-bold text-foreground mb-2">
                     {selectedTask.name}
                   </h2>
                 </div>
@@ -469,24 +469,24 @@ const Console = () => {
                 <div className="flex gap-8 mb-8">
                   {/* Task Description - 75% */}
                   <div className="w-3/4">
-                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                    <h3 className="text-base font-semibold text-foreground mb-3">
                       Description
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {selectedTask.description}
                     </p>
                   </div>
 
                   {/* Classification Groups - 25% */}
                   <div className="w-1/4">
-                    <h3 className="text-lg font-semibold text-foreground mb-3">
+                    <h3 className="text-base font-semibold text-foreground mb-3">
                       Classification Groups
                     </h3>
                     <div className="flex gap-3">
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-primary/10 text-primary border border-primary/20">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
                         {selectedTask.label1}
                       </div>
-                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium bg-secondary/10 text-secondary-foreground border border-secondary/20">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium bg-secondary/10 text-secondary-foreground border border-secondary/20">
                         {selectedTask.label2}
                       </div>
                     </div>
@@ -495,20 +495,20 @@ const Console = () => {
 
                 {/* Offer Message */}
                 <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-foreground mb-3">
+                  <h3 className="text-base font-semibold text-foreground mb-3">
                     Offer Message
                   </h3>
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {selectedTask.offer_message}
                   </p>
                 </div>
 
                 {/* Creation Date & Time */}
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-foreground mb-3">
+                <div className="mb-4">
+                  <h3 className="text-base font-semibold text-foreground mb-3">
                     Created
                   </h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm text-muted-foreground">
                     {new Date(selectedTask.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
