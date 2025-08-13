@@ -188,13 +188,13 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
 
           {/* Right side - Offer Statistics */}
           <div className="flex-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-end gap-1">
               {/* Total Offers */}
               <div className="w-1/2">
-                <div className="text-3xl font-bold text-primary mb-2 w-1/2">
+                <div className="text-3xl font-bold text-primary mb-2 w-1/2 text-right">
                   {offerStatistics.total_offers}
                 </div>
-                <div className="text-lg font-medium text-muted-foreground w-1/2">
+                <div className="text-lg font-medium text-muted-foreground w-1/2 text-right">
                   Total Offers
                 </div>
               </div>
