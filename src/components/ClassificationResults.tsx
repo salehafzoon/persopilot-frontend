@@ -200,7 +200,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
               </div>
 
               {/* Pie Chart */}
-              <div className="w-48 h-48">
+              <div className="w-80 h-48">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -221,9 +221,9 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
                       verticalAlign="middle" 
                       align="left"
                       layout="vertical"
-                      wrapperStyle={{ paddingRight: '20px' }}
+                      wrapperStyle={{ paddingRight: '40px', fontSize: '12px' }}
                       formatter={(value, entry: any) => (
-                        <span style={{ color: entry.color }}>
+                        <span style={{ color: entry.color, fontSize: '12px' }}>
                           {value}: {entry.payload.value}
                         </span>
                       )}
