@@ -458,8 +458,22 @@ const Console = () => {
                   <Edit size={20} />
                 </Button>
 
-                {/* Task Name with more top margin */}
-                <div className="mb-6 mt-8">
+                {/* Creation Date in bottom right corner */}
+                <div className="absolute bottom-6 right-6">
+                  <p className="text-xs text-muted-foreground">
+                    Created {new Date(selectedTask.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })} at {new Date(selectedTask.date).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
+
+                {/* Task Name with more top margin to distance from buttons */}
+                <div className="mb-6 mt-16">
                   <h2 className="text-2xl font-bold text-foreground mb-2">
                     {selectedTask.name}
                   </h2>
@@ -500,23 +514,6 @@ const Console = () => {
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     {selectedTask.offer_message}
-                  </p>
-                </div>
-
-                {/* Creation Date & Time */}
-                <div className="mb-4">
-                  <h3 className="text-sm font-semibold text-foreground mb-3">
-                    Created
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(selectedTask.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })} at {new Date(selectedTask.date).toLocaleTimeString('en-US', {
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
                   </p>
                 </div>
               </CardContent>

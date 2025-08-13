@@ -175,10 +175,6 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
                   <span className="font-medium text-foreground">{accuracyMetrics.correct_predictions}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-foreground">Total Evaluated:</span>
-                  <span className="font-medium text-foreground">{accuracyMetrics.total_evaluated}</span>
-                </div>
-                <div className="flex justify-between">
                   <span className="text-foreground">Total Predictions:</span>
                   <span className="font-medium text-foreground">{accuracyMetrics.total_predictions}</span>
                 </div>
@@ -193,6 +189,16 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
           {/* Right side - Offer Statistics */}
           <div className="flex-1">
             <div className="flex items-center gap-6">
+              {/* Total Offers */}
+              <div className="flex-1">
+                <div className="text-3xl font-bold text-primary mb-2">
+                  {offerStatistics.total_offers}
+                </div>
+                <div className="text-lg font-medium text-muted-foreground">
+                  Total Offers
+                </div>
+              </div>
+
               {/* Pie Chart */}
               <div className="w-48 h-48">
                 <ResponsiveContainer width="100%" height="100%">
@@ -222,16 +228,6 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
                     />
                   </PieChart>
                 </ResponsiveContainer>
-              </div>
-
-              {/* Total Offers */}
-              <div className="flex-1">
-                <div className="text-3xl font-bold text-primary mb-2">
-                  {offerStatistics.total_offers}
-                </div>
-                <div className="text-lg font-medium text-muted-foreground">
-                  Total Offers
-                </div>
               </div>
             </div>
           </div>
