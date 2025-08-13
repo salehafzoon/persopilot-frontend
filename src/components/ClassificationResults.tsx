@@ -218,8 +218,10 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
                       ))}
                     </Pie>
                     <Legend 
-                      verticalAlign="bottom" 
-                      height={36}
+                      verticalAlign="middle" 
+                      align="left"
+                      layout="vertical"
+                      wrapperStyle={{ paddingRight: '20px' }}
                       formatter={(value, entry: any) => (
                         <span style={{ color: entry.color }}>
                           {value}: {entry.payload.value}
