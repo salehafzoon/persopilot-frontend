@@ -150,7 +150,7 @@ export const ClassificationResults = ({ accuracyMetrics, offerStatistics, predic
       <CardContent>
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Left side - Accuracy Metrics */}
-          <div className="flex-1">
+          <div className="w-[35%]">
             <div className="mb-6">
               <div className="text-3xl font-bold text-primary mb-2">
                 {accuracyMetrics?.overall_accuracy !== null && accuracyMetrics?.overall_accuracy !== undefined
