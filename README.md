@@ -1,18 +1,34 @@
-# Welcome to your Lovable project
+# PersoPilot
+### An Adaptive AI-Copilot for Transparent Contextualized Persona Classification and Personalized Response Generation 
+![Python](https://img.shields.io/badge/Python-Compatible-green.svg)
 
-## Project info
+## Abstract
+Understanding and classifying user personas is critical for delivering effective personalization. While persona information offers valuable insights, its full potential is realized only when it is contextualized, linking user characteristics with situational context to enable more precise and meaningful service provision. Existing systems often treat persona and context as separate inputs, limiting their ability to generate nuanced, adaptive interactions. To address this gap, we present PersoPilot, an agentic AI-Copilot that integrates persona understanding with contextual analysis to support both end users and analysts. End users interact through a transparent, explainable chat interface, where they can express preferences in natural language, request recommendations, and receive information tailored to their immediate task. On the analyst side, PersoPilot delivers a transparent, reasoning-powered labeling assistant, integrated with an active learning–driven classification process that adapts over time with new labeled data. This feedback loop enables targeted service recommendations and adaptive personalization, bridging the gap between raw persona data and actionable, context-aware insights.
 
-**URL**: https://lovable.dev/projects/9141cdaf-3d0d-4195-a889-c72fa548749c
 
-## How can I edit this code?
+## Figures
 
-There are several ways of editing your application.
+| ![First Image Description](documents/persopilot_overview.png) | 
+|:----------------------------------------------------------:|
+| Fig.1 - PersoPilot architecture overview.|
 
-**Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/9141cdaf-3d0d-4195-a889-c72fa548749c) and start prompting.
+| ![User interface (PersoAgent) screenshot](documents/user_interface.png) | 
+|:----------------------------------------------------------:|
+| Fig.2 - User interface (PersoAgent) screenshot.|
 
-Changes made via Lovable will be committed automatically to this repo.
+
+| ![Analyst interface screenshots](documents/analyst_interface.png) | 
+|:----------------------------------------------------------:|
+| Fig.3 - Analyst interface screenshots.|
+
+| ![Classification results](documents/analyst_interface.png) | 
+|:----------------------------------------------------------:|
+| Fig.4 - Classification results.|
+
+
+## Getting Started
+
 
 **Use your preferred IDE**
 
@@ -36,38 +52,4 @@ npm i
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/9141cdaf-3d0d-4195-a889-c72fa548749c) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
