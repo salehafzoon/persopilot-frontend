@@ -22,7 +22,7 @@ Understanding and classifying user personas is critical for delivering effective
 |:----------------------------------------------------------:|
 | Fig.3 - Analyst interface screenshots.|
 
-| ![Classification results](documents/analyst_interface.png) | 
+| ![Classification results](documents/analyst_screenshot.png) | 
 |:----------------------------------------------------------:|
 | Fig.4 - Classification results.|
 
