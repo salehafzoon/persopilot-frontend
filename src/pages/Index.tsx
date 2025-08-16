@@ -171,7 +171,7 @@ const Index = () => {
                   className="w-full h-full rounded-lg"
                   preload="metadata"
                 >
-                  <source src="/src/PersoAgent_intro.mp4" type="video/mp4" />
+                  <source src="/src/PersoPilot_intro.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
