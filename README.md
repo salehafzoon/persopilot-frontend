@@ -18,25 +18,20 @@ Understanding and classifying user personas is critical for delivering effective
 | Fig.2 - User interface (PersoAgent) screenshot.|
 
 
-| ![Analyst interface screenshots](documents/analyst_interface.png) | 
-|:----------------------------------------------------------:|
-| Fig.3 - Analyst interface screenshots.|
+<div align="center">
 
-| ![Classification results](documents/analyst_screenshot.png) | 
-|:----------------------------------------------------------:|
-| Fig.4 - Classification results.|
+  <img src="documents/analyst_interface.png" alt="Analyst interface screenshots" width="600"><br/>
+  <em>Fig.3 – Analyst interface screenshots.</em>
+
+  <br/><br/>
+
+  <img src="documents/analyst_screenshot.png" alt="Classification results" width="600"><br/>
+  <em>Fig.4 – Classification results.</em>
+
+</div>
 
 
 ## Getting Started
-
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
 
 ```sh
 # Step 1: Clone the repository using the project's Git URL.
